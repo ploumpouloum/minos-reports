@@ -23,26 +23,32 @@ export const useMainStore = defineStore('main', {
     }) as RootState,
   getters: {
     startDays(state) {
-      return new Set(state.stations.map((station: Station) => station.startDateTime.toISOString().split('T')[0]))
+      return new Set(
+        state.stations.map((station: Station) => station.startDateTime.toISOString().split('T')[0])
+      )
     },
     getStations(state) {
-      return (day: String): Station[] => {
-        return state.stations.filter((station: Station) => station.startDateTime.toISOString().split('T')[0] == day)
+      return (day: string): Station[] => {
+        return state.stations.filter(
+          (station: Station) => station.startDateTime.toISOString().split('T')[0] == day
+        )
       }
     },
     getStation(state) {
-      return (stationId: String): Station => {
+      return (stationId: string): Station => {
         return state.stations.filter((station: Station) => station.id == stationId)[0]
       }
     },
     getVolunteer(state) {
-      return (volunteerId: String): Volunteer => {
+      return (volunteerId: string): Volunteer => {
         return state.volunteers.filter((volunteer: Volunteer) => volunteer.id == volunteerId)[0]
       }
     },
     getStationAssignments(state) {
-      return (stationId: String): Assignment[] => {
-        return state.assignments.filter((assignment: Assignment) => assignment.idStation == stationId)
+      return (stationId: string): Assignment[] => {
+        return state.assignments.filter(
+          (assignment: Assignment) => assignment.idStation == stationId
+        )
       }
     }
   },
@@ -52,61 +58,101 @@ export const useMainStore = defineStore('main', {
       this.errorMessage = ''
       this.errorDetails = ''
       this.volunteers = [
-        { id: "ba", firstname: "Mohamed", lastname: "Benali" } as Volunteer, 
-        { id: "bc", firstname: "Claire", lastname: "Dubois" } as Volunteer,
-        { id: "bc", firstname: "Claire", lastname: "Dubois" } as Volunteer,
-        { id: "bd", firstname: "Nathan", lastname: "Cohen" } as Volunteer,
-        { id: "be", firstname: "Fatoumata", lastname: "Diara" } as Volunteer,
-        { id: "bf", firstname: "Jean-Pierre", lastname: "Leclerc" } as Volunteer,
-        { id: "bg", firstname: "Lina", lastname: "Ferreira" } as Volunteer,
-        { id: "bh", firstname: "Yasmine", lastname: "Haddad" } as Volunteer,
-        { id: "bi", firstname: "Noé", lastname: "Nguyen" } as Volunteer,
-        { id: "bj", firstname: "Adèle", lastname: "Kone" } as Volunteer,
-        { id: "bk", firstname: "Victorien", lastname: "Dupuis" } as Volunteer,
+        { id: 'ba', firstname: 'Mohamed', lastname: 'Benali' } as Volunteer,
+        { id: 'bc', firstname: 'Claire', lastname: 'Dubois' } as Volunteer,
+        { id: 'bc', firstname: 'Claire', lastname: 'Dubois' } as Volunteer,
+        { id: 'bd', firstname: 'Nathan', lastname: 'Cohen' } as Volunteer,
+        { id: 'be', firstname: 'Fatoumata', lastname: 'Diara' } as Volunteer,
+        { id: 'bf', firstname: 'Jean-Pierre', lastname: 'Leclerc' } as Volunteer,
+        { id: 'bg', firstname: 'Lina', lastname: 'Ferreira' } as Volunteer,
+        { id: 'bh', firstname: 'Yasmine', lastname: 'Haddad' } as Volunteer,
+        { id: 'bi', firstname: 'Noé', lastname: 'Nguyen' } as Volunteer,
+        { id: 'bj', firstname: 'Adèle', lastname: 'Kone' } as Volunteer,
+        { id: 'bk', firstname: 'Victorien', lastname: 'Dupuis' } as Volunteer
       ]
       this.stations = [
-        { id: "aa", label: "Poste 1", startDateTime: new Date(2025, 5, 30, 12), endDateTime: new Date(2025, 5, 30, 18)} as Station, 
-        { id: "ab", label: "Poste 2", startDateTime: new Date(2025, 5, 30, 11), endDateTime: new Date(2025, 5, 30, 15)} as Station, 
-        { id: "ac", label: "Poste 1", startDateTime: new Date(2025, 5, 31, 12), endDateTime: new Date(2025, 5, 31, 18)} as Station, 
-        { id: "ad", label: "Poste 2", startDateTime: new Date(2025, 5, 31, 10), endDateTime: new Date(2025, 5, 31, 16)} as Station, 
-        { id: "ae", label: "Poste 3", startDateTime: new Date(2025, 5, 30, 12), endDateTime: new Date(2025, 5, 30, 18)} as Station, 
-        { id: "af", label: "Poste 4", startDateTime: new Date(2025, 5, 30, 11), endDateTime: new Date(2025, 5, 30, 15)} as Station, 
-        { id: "ag", label: "Poste 3", startDateTime: new Date(2025, 5, 31, 12), endDateTime: new Date(2025, 5, 31, 18)} as Station, 
-        { id: "ah", label: "Poste 4", startDateTime: new Date(2025, 5, 31, 10), endDateTime: new Date(2025, 5, 31, 16)} as Station, 
+        {
+          id: 'aa',
+          label: 'Poste 1',
+          startDateTime: new Date(2025, 5, 30, 12),
+          endDateTime: new Date(2025, 5, 30, 18)
+        } as Station,
+        {
+          id: 'ab',
+          label: 'Poste 2',
+          startDateTime: new Date(2025, 5, 30, 11),
+          endDateTime: new Date(2025, 5, 30, 15)
+        } as Station,
+        {
+          id: 'ac',
+          label: 'Poste 1',
+          startDateTime: new Date(2025, 5, 31, 12),
+          endDateTime: new Date(2025, 5, 31, 18)
+        } as Station,
+        {
+          id: 'ad',
+          label: 'Poste 2',
+          startDateTime: new Date(2025, 5, 31, 10),
+          endDateTime: new Date(2025, 5, 31, 16)
+        } as Station,
+        {
+          id: 'ae',
+          label: 'Poste 3',
+          startDateTime: new Date(2025, 5, 30, 12),
+          endDateTime: new Date(2025, 5, 30, 18)
+        } as Station,
+        {
+          id: 'af',
+          label: 'Poste 4',
+          startDateTime: new Date(2025, 5, 30, 11),
+          endDateTime: new Date(2025, 5, 30, 15)
+        } as Station,
+        {
+          id: 'ag',
+          label: 'Poste 3',
+          startDateTime: new Date(2025, 5, 31, 12),
+          endDateTime: new Date(2025, 5, 31, 18)
+        } as Station,
+        {
+          id: 'ah',
+          label: 'Poste 4',
+          startDateTime: new Date(2025, 5, 31, 10),
+          endDateTime: new Date(2025, 5, 31, 16)
+        } as Station
       ]
       this.assignments = [
-        { idStation: "aa", idVolunteer: 'bd', role: 'CI' } as Assignment,
-        { idStation: "aa", idVolunteer: 'bg', role: 'PSE2' } as Assignment,
-        { idStation: "aa", idVolunteer: 'ba', role: 'PSE2' } as Assignment,
-        { idStation: "aa", idVolunteer: 'be', role: 'PSE1' } as Assignment,
-        { idStation: "ab", idVolunteer: 'bk', role: 'CI' } as Assignment,
-        { idStation: "ab", idVolunteer: 'bc', role: 'PSE2' } as Assignment,
-        { idStation: "ab", idVolunteer: 'bf', role: 'PSE2' } as Assignment,
-        { idStation: "ab", idVolunteer: 'bj', role: 'LOG' } as Assignment,
-        { idStation: "ac", idVolunteer: 'bd', role: 'CI' } as Assignment,
-        { idStation: "ac", idVolunteer: 'bj', role: 'LOG' } as Assignment,
-        { idStation: "ac", idVolunteer: 'bg', role: 'PSE2' } as Assignment,
-        { idStation: "ac", idVolunteer: 'ba', role: 'PSE2' } as Assignment,
-        { idStation: "ac", idVolunteer: 'bi', role: 'STAG' } as Assignment,
-        { idStation: "ad", idVolunteer: 'bk', role: 'CI' } as Assignment,
-        { idStation: "ad", idVolunteer: 'bf', role: 'PSE2' } as Assignment,
-        { idStation: "ad", idVolunteer: 'be', role: 'PSE1' } as Assignment,
-        { idStation: "ae", idVolunteer: 'bd', role: 'CI' } as Assignment,
-        { idStation: "ae", idVolunteer: 'bg', role: 'PSE2' } as Assignment,
-        { idStation: "ae", idVolunteer: 'ba', role: 'PSE2' } as Assignment,
-        { idStation: "ae", idVolunteer: 'be', role: 'PSE1' } as Assignment,
-        { idStation: "af", idVolunteer: 'bk', role: 'CI' } as Assignment,
-        { idStation: "af", idVolunteer: 'bc', role: 'PSE2' } as Assignment,
-        { idStation: "af", idVolunteer: 'bf', role: 'PSE2' } as Assignment,
-        { idStation: "af", idVolunteer: 'bj', role: 'LOG' } as Assignment,
-        { idStation: "ag", idVolunteer: 'bd', role: 'CI' } as Assignment,
-        { idStation: "ag", idVolunteer: 'bj', role: 'LOG' } as Assignment,
-        { idStation: "ag", idVolunteer: 'bg', role: 'PSE2' } as Assignment,
-        { idStation: "ag", idVolunteer: 'ba', role: 'PSE2' } as Assignment,
-        { idStation: "ag", idVolunteer: 'bi', role: 'STAG' } as Assignment,
-        { idStation: "ah", idVolunteer: 'bk', role: 'CI' } as Assignment,
-        { idStation: "ah", idVolunteer: 'bf', role: 'PSE2' } as Assignment,
-        { idStation: "ah", idVolunteer: 'be', role: 'PSE1' } as Assignment,
+        { idStation: 'aa', idVolunteer: 'bd', role: 'CI' } as Assignment,
+        { idStation: 'aa', idVolunteer: 'bg', role: 'PSE2' } as Assignment,
+        { idStation: 'aa', idVolunteer: 'ba', role: 'PSE2' } as Assignment,
+        { idStation: 'aa', idVolunteer: 'be', role: 'PSE1' } as Assignment,
+        { idStation: 'ab', idVolunteer: 'bk', role: 'CI' } as Assignment,
+        { idStation: 'ab', idVolunteer: 'bc', role: 'PSE2' } as Assignment,
+        { idStation: 'ab', idVolunteer: 'bf', role: 'PSE2' } as Assignment,
+        { idStation: 'ab', idVolunteer: 'bj', role: 'LOG' } as Assignment,
+        { idStation: 'ac', idVolunteer: 'bd', role: 'CI' } as Assignment,
+        { idStation: 'ac', idVolunteer: 'bj', role: 'LOG' } as Assignment,
+        { idStation: 'ac', idVolunteer: 'bg', role: 'PSE2' } as Assignment,
+        { idStation: 'ac', idVolunteer: 'ba', role: 'PSE2' } as Assignment,
+        { idStation: 'ac', idVolunteer: 'bi', role: 'STAG' } as Assignment,
+        { idStation: 'ad', idVolunteer: 'bk', role: 'CI' } as Assignment,
+        { idStation: 'ad', idVolunteer: 'bf', role: 'PSE2' } as Assignment,
+        { idStation: 'ad', idVolunteer: 'be', role: 'PSE1' } as Assignment,
+        { idStation: 'ae', idVolunteer: 'bd', role: 'CI' } as Assignment,
+        { idStation: 'ae', idVolunteer: 'bg', role: 'PSE2' } as Assignment,
+        { idStation: 'ae', idVolunteer: 'ba', role: 'PSE2' } as Assignment,
+        { idStation: 'ae', idVolunteer: 'be', role: 'PSE1' } as Assignment,
+        { idStation: 'af', idVolunteer: 'bk', role: 'CI' } as Assignment,
+        { idStation: 'af', idVolunteer: 'bc', role: 'PSE2' } as Assignment,
+        { idStation: 'af', idVolunteer: 'bf', role: 'PSE2' } as Assignment,
+        { idStation: 'af', idVolunteer: 'bj', role: 'LOG' } as Assignment,
+        { idStation: 'ag', idVolunteer: 'bd', role: 'CI' } as Assignment,
+        { idStation: 'ag', idVolunteer: 'bj', role: 'LOG' } as Assignment,
+        { idStation: 'ag', idVolunteer: 'bg', role: 'PSE2' } as Assignment,
+        { idStation: 'ag', idVolunteer: 'ba', role: 'PSE2' } as Assignment,
+        { idStation: 'ag', idVolunteer: 'bi', role: 'STAG' } as Assignment,
+        { idStation: 'ah', idVolunteer: 'bk', role: 'CI' } as Assignment,
+        { idStation: 'ah', idVolunteer: 'bf', role: 'PSE2' } as Assignment,
+        { idStation: 'ah', idVolunteer: 'be', role: 'PSE1' } as Assignment
       ]
       return
     },

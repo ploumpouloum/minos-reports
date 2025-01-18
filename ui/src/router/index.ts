@@ -7,7 +7,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'report1',
-      component: Report1View,
+      component: Report1View
     }
   ],
   scrollBehavior() {
