@@ -1,5 +1,6 @@
 import dataclasses
 import logging
+import os
 import sys
 from typing import Any
 
@@ -57,6 +58,8 @@ class Context:
         NAME, level=logging.DEBUG, log_format=DEFAULT_FORMAT_WITH_THREADS
     )
 
+    database_url: str = os.getenv("POSTGRES_URI")
+
     @classmethod
     def setup(cls, **kwargs: Any):
         new_instance = cls(**kwargs)
@@ -71,7 +74,10 @@ class Context:
             cls._instance = new_instance
 
     @classmethod
-    def get(cls) -> "Context":
+    def get(cls, *, fallback_to_class: bool) -> "Context":
         if not cls._instance:
-            raise OSError("Uninitialized context")  # pragma: no cover
+            if fallback_to_class:
+                return Context
+            else:
+                raise OSError("Uninitialized context")  # pragma: no cover
         return cls._instance

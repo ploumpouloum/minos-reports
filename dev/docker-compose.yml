@@ -1,0 +1,16 @@
+services:
+  postgresdb:
+    image: postgres:17.2
+    container_name: mn_postgresdb
+    ports:
+      - 127.0.0.1:5432:5432
+    volumes:
+      - pg_data_minos_reports:/var/lib/postgresql/data
+      - ./postgres-initdb:/docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_DB=minos
+      - POSTGRES_USER=minos
+      - POSTGRES_PASSWORD=minospass
+
+volumes:
+  pg_data_minos_reports:
