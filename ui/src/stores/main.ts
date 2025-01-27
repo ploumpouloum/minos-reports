@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia'
 import axios, { AxiosError } from 'axios'
-import type { Assignment, Station, Volunteer } from '@/types/main'
+import type { Assignment, Shift, Station, Volunteer } from '@/types/main'
 
 export type RootState = {
   assignments: Assignment[]
+  shifts: Shift[]
   stations: Station[]
   volunteers: Volunteer[]
   isLoading: boolean
@@ -15,6 +16,7 @@ export const useMainStore = defineStore('main', {
   state: () =>
     ({
       assignments: [],
+      shifts: [],
       stations: [],
       volunteers: [],
       isLoading: false,
@@ -24,14 +26,19 @@ export const useMainStore = defineStore('main', {
   getters: {
     startDays(state) {
       return new Set(
-        state.stations.map((station: Station) => station.startDateTime.toISOString().split('T')[0])
+        state.shifts.map((shift: Shift) => shift.startDateTime.toISOString().split('T')[0])
       )
     },
-    getStations(state) {
-      return (day: string): Station[] => {
-        return state.stations.filter(
-          (station: Station) => station.startDateTime.toISOString().split('T')[0] == day
+    getShifts(state) {
+      return (day: string): Shift[] => {
+        return state.shifts.filter(
+          (shift: Shift) => shift.startDateTime.toISOString().split('T')[0] == day
         )
+      }
+    },
+    getShift(state) {
+      return (shiftId: string): Shift => {
+        return state.shifts.filter((shift: Shift) => shift.id == shiftId)[0]
       }
     },
     getStation(state) {
@@ -44,10 +51,10 @@ export const useMainStore = defineStore('main', {
         return state.volunteers.filter((volunteer: Volunteer) => volunteer.id == volunteerId)[0]
       }
     },
-    getStationAssignments(state) {
-      return (stationId: string): Assignment[] => {
+    getShiftAssignments(state) {
+      return (shiftId: string): Assignment[] => {
         return state.assignments.filter(
-          (assignment: Assignment) => assignment.idStation == stationId
+          (assignment: Assignment) => assignment.idShift == shiftId
         )
       }
     }
@@ -70,89 +77,107 @@ export const useMainStore = defineStore('main', {
         { id: 'bj', firstname: 'Adèle', lastname: 'Kone' } as Volunteer,
         { id: 'bk', firstname: 'Victorien', lastname: 'Dupuis' } as Volunteer
       ]
+      this.shifts = [
+        {
+          id: 'aa',
+          idStation: 'aa',
+          startDateTime: new Date(2025, 5, 30, 12),
+          endDateTime: new Date(2025, 5, 30, 18)
+        } as Shift,
+        {
+          id: 'ab',
+          idStation: 'ab',
+          startDateTime: new Date(2025, 5, 30, 11),
+          endDateTime: new Date(2025, 5, 30, 15)
+        } as Shift,
+        {
+          id: 'ac',
+          idStation: 'aa',
+          startDateTime: new Date(2025, 5, 31, 12),
+          endDateTime: new Date(2025, 5, 31, 18)
+        } as Shift,
+        {
+          id: 'ad',
+          idStation: 'ab',
+          startDateTime: new Date(2025, 5, 31, 10),
+          endDateTime: new Date(2025, 5, 31, 16)
+        } as Shift,
+        {
+          id: 'ae',
+          idStation: 'ae',
+          startDateTime: new Date(2025, 5, 30, 12),
+          endDateTime: new Date(2025, 5, 30, 18)
+        } as Shift,
+        {
+          id: 'af',
+          idStation: 'af',
+          startDateTime: new Date(2025, 5, 30, 11),
+          endDateTime: new Date(2025, 5, 30, 15)
+        } as Shift,
+        {
+          id: 'ag',
+          idStation: 'ae',
+          startDateTime: new Date(2025, 5, 31, 12),
+          endDateTime: new Date(2025, 5, 31, 18)
+        } as Shift,
+        {
+          id: 'ah',
+          idStation: 'af',
+          startDateTime: new Date(2025, 5, 31, 10),
+          endDateTime: new Date(2025, 5, 31, 16)
+        } as Shift
+      ]
       this.stations = [
         {
           id: 'aa',
           label: 'Poste 1',
-          startDateTime: new Date(2025, 5, 30, 12),
-          endDateTime: new Date(2025, 5, 30, 18)
         } as Station,
         {
           id: 'ab',
           label: 'Poste 2',
-          startDateTime: new Date(2025, 5, 30, 11),
-          endDateTime: new Date(2025, 5, 30, 15)
-        } as Station,
-        {
-          id: 'ac',
-          label: 'Poste 1',
-          startDateTime: new Date(2025, 5, 31, 12),
-          endDateTime: new Date(2025, 5, 31, 18)
-        } as Station,
-        {
-          id: 'ad',
-          label: 'Poste 2',
-          startDateTime: new Date(2025, 5, 31, 10),
-          endDateTime: new Date(2025, 5, 31, 16)
         } as Station,
         {
           id: 'ae',
           label: 'Poste 3',
-          startDateTime: new Date(2025, 5, 30, 12),
-          endDateTime: new Date(2025, 5, 30, 18)
         } as Station,
         {
           id: 'af',
           label: 'Poste 4',
-          startDateTime: new Date(2025, 5, 30, 11),
-          endDateTime: new Date(2025, 5, 30, 15)
         } as Station,
-        {
-          id: 'ag',
-          label: 'Poste 3',
-          startDateTime: new Date(2025, 5, 31, 12),
-          endDateTime: new Date(2025, 5, 31, 18)
-        } as Station,
-        {
-          id: 'ah',
-          label: 'Poste 4',
-          startDateTime: new Date(2025, 5, 31, 10),
-          endDateTime: new Date(2025, 5, 31, 16)
-        } as Station
       ]
       this.assignments = [
-        { idStation: 'aa', idVolunteer: 'bd', role: 'CI' } as Assignment,
-        { idStation: 'aa', idVolunteer: 'bg', role: 'PSE2' } as Assignment,
-        { idStation: 'aa', idVolunteer: 'ba', role: 'PSE2' } as Assignment,
-        { idStation: 'aa', idVolunteer: 'be', role: 'PSE1' } as Assignment,
-        { idStation: 'ab', idVolunteer: 'bk', role: 'CI' } as Assignment,
-        { idStation: 'ab', idVolunteer: 'bc', role: 'PSE2' } as Assignment,
-        { idStation: 'ab', idVolunteer: 'bf', role: 'PSE2' } as Assignment,
-        { idStation: 'ab', idVolunteer: 'bj', role: 'LOG' } as Assignment,
-        { idStation: 'ac', idVolunteer: 'bd', role: 'CI' } as Assignment,
-        { idStation: 'ac', idVolunteer: 'bj', role: 'LOG' } as Assignment,
-        { idStation: 'ac', idVolunteer: 'bg', role: 'PSE2' } as Assignment,
-        { idStation: 'ac', idVolunteer: 'ba', role: 'PSE2' } as Assignment,
-        { idStation: 'ac', idVolunteer: 'bi', role: 'STAG' } as Assignment,
-        { idStation: 'ad', idVolunteer: 'bk', role: 'CI' } as Assignment,
-        { idStation: 'ad', idVolunteer: 'bf', role: 'PSE2' } as Assignment,
-        { idStation: 'ad', idVolunteer: 'be', role: 'PSE1' } as Assignment,
-        { idStation: 'ae', idVolunteer: 'bd', role: 'CI' } as Assignment,
-        { idStation: 'ae', idVolunteer: 'bg', role: 'PSE2' } as Assignment,
-        { idStation: 'ae', idVolunteer: 'ba', role: 'PSE2' } as Assignment,
-        { idStation: 'ae', idVolunteer: 'be', role: 'PSE1' } as Assignment,
-        { idStation: 'af', idVolunteer: 'bk', role: 'CI' } as Assignment,
-        { idStation: 'af', idVolunteer: 'bc', role: 'PSE2' } as Assignment,
-        { idStation: 'af', idVolunteer: 'bf', role: 'PSE2' } as Assignment,
-        { idStation: 'af', idVolunteer: 'bj', role: 'LOG' } as Assignment,
-        { idStation: 'ag', idVolunteer: 'bd', role: 'CI' } as Assignment,
-        { idStation: 'ag', idVolunteer: 'bj', role: 'LOG' } as Assignment,
-        { idStation: 'ag', idVolunteer: 'bg', role: 'PSE2' } as Assignment,
-        { idStation: 'ag', idVolunteer: 'ba', role: 'PSE2' } as Assignment,
-        { idStation: 'ag', idVolunteer: 'bi', role: 'STAG' } as Assignment,
-        { idStation: 'ah', idVolunteer: 'bk', role: 'CI' } as Assignment,
-        { idStation: 'ah', idVolunteer: 'bf', role: 'PSE2' } as Assignment,
-        { idStation: 'ah', idVolunteer: 'be', role: 'PSE1' } as Assignment
+        { idShift: 'aa', idVolunteer: 'bd', role: 'CI' } as Assignment,
+        { idShift: 'aa', idVolunteer: 'bg', role: 'PSE2' } as Assignment,
+        { idShift: 'aa', idVolunteer: 'ba', role: 'PSE2' } as Assignment,
+        { idShift: 'aa', idVolunteer: 'be', role: 'PSE1' } as Assignment,
+        { idShift: 'ab', idVolunteer: 'bk', role: 'CI' } as Assignment,
+        { idShift: 'ab', idVolunteer: 'bc', role: 'PSE2' } as Assignment,
+        { idShift: 'ab', idVolunteer: 'bf', role: 'PSE2' } as Assignment,
+        { idShift: 'ab', idVolunteer: 'bj', role: 'LOG' } as Assignment,
+        { idShift: 'ac', idVolunteer: 'bd', role: 'CI' } as Assignment,
+        { idShift: 'ac', idVolunteer: 'bj', role: 'LOG' } as Assignment,
+        { idShift: 'ac', idVolunteer: 'bg', role: 'PSE2' } as Assignment,
+        { idShift: 'ac', idVolunteer: 'ba', role: 'PSE2' } as Assignment,
+        { idShift: 'ac', idVolunteer: 'bi', role: 'STAG' } as Assignment,
+        { idShift: 'ad', idVolunteer: 'bk', role: 'CI' } as Assignment,
+        { idShift: 'ad', idVolunteer: 'bf', role: 'PSE2' } as Assignment,
+        { idShift: 'ad', idVolunteer: 'be', role: 'PSE1' } as Assignment,
+        { idShift: 'ae', idVolunteer: 'bd', role: 'CI' } as Assignment,
+        { idShift: 'ae', idVolunteer: 'bg', role: 'PSE2' } as Assignment,
+        { idShift: 'ae', idVolunteer: 'ba', role: 'PSE2' } as Assignment,
+        { idShift: 'ae', idVolunteer: 'be', role: 'PSE1' } as Assignment,
+        { idShift: 'af', idVolunteer: 'bk', role: 'CI' } as Assignment,
+        { idShift: 'af', idVolunteer: 'bc', role: 'PSE2' } as Assignment,
+        { idShift: 'af', idVolunteer: 'bf', role: 'PSE2' } as Assignment,
+        { idShift: 'af', idVolunteer: 'bj', role: 'LOG' } as Assignment,
+        { idShift: 'ag', idVolunteer: 'bd', role: 'CI' } as Assignment,
+        { idShift: 'ag', idVolunteer: 'bj', role: 'LOG' } as Assignment,
+        { idShift: 'ag', idVolunteer: 'bg', role: 'PSE2' } as Assignment,
+        { idShift: 'ag', idVolunteer: 'ba', role: 'PSE2' } as Assignment,
+        { idShift: 'ag', idVolunteer: 'bi', role: 'STAG' } as Assignment,
+        { idShift: 'ah', idVolunteer: 'bk', role: 'CI' } as Assignment,
+        { idShift: 'ah', idVolunteer: 'bf', role: 'PSE2' } as Assignment,
+        { idShift: 'ah', idVolunteer: 'be', role: 'PSE1' } as Assignment
       ]
       return
     },

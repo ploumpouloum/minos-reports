@@ -3,49 +3,50 @@ import { ref } from 'vue'
 import type { Ref } from 'vue'
 import { useMainStore } from '@/stores/main'
 import Report1Assignement from './Report1Assignement.vue'
-import type { Station } from '../types/main.ts'
+import type { Station, Shift } from '../types/main.ts'
 
 const main = useMainStore()
 
 const props = defineProps({
-  stationId: {
+  shiftId: {
     type: String,
     required: true
   }
 })
 
-const station: Ref<Station | null> = ref(main.getStation(props.stationId))
+const shift: Ref<Shift | null> = ref(main.getShift(props.shiftId))
+const station: Ref<Station | null> = ref(shift.value ? main.getStation(shift.value.idStation): null)
 </script>
 
 <template>
-  <table v-if="station">
+  <table v-if="shift && station">
     <thead>
       <tr>
         <th colspan="2">
           {{ station.label }} de
           {{
-            station.startDateTime.toLocaleTimeString('fr-FR', {
+            shift.startDateTime.toLocaleTimeString('fr-FR', {
               hour: '2-digit',
               minute: '2-digit'
             })
           }}
           à
           {{
-            station.endDateTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+            shift.endDateTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
           }}
         </th>
       </tr>
     </thead>
     <tbody>
       <tr
-        v-for="assignment in main.getStationAssignments(station.id)"
-        :key="assignment.idVolunteer + assignment.idStation"
+        v-for="assignment in main.getShiftAssignments(shift.id)"
+        :key="assignment.idVolunteer + assignment.idShift"
       >
         <Report1Assignement :assignment="assignment" />
       </tr>
     </tbody>
   </table>
-  <div v-else>Station not found</div>
+  <div v-else>Shift or station not found</div>
 </template>
 
 <style lang="css">

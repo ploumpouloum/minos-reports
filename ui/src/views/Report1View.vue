@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useMainStore } from '@/stores/main'
-import Report1Station from '../components/Report1Station.vue'
+import Report1Shift from '../components/Report1Shift.vue'
 
 const main = useMainStore()
 
@@ -10,11 +10,11 @@ main.fetchData()
 <template>
   <div class="report">
     <template v-for="startDay in main.startDays" :key="startDay">
-      <div v-for="(station, index) in main.getStations(startDay)" :key="station.id">
+      <div v-for="(shift, index) in main.getShifts(startDay)" :key="shift.id">
         <div class="day" v-if="index == 0">
           {{ new Date(startDay).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long' }) }}
         </div>
-        <Report1Station :stationId="station.id" />
+        <Report1Shift :shiftId="shift.id" />
       </div>
     </template>
   </div>

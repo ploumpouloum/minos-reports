@@ -1,8 +1,13 @@
+export interface Shift {
+  id: string
+  idStation: string
+  startDateTime: Date
+  endDateTime: Date
+}
+
 export interface Station {
   id: string
   label: string
-  startDateTime: Date
-  endDateTime: Date
 }
 
 export interface Volunteer {
@@ -12,7 +17,7 @@ export interface Volunteer {
 }
 
 export interface Assignment {
-  idStation: string
+  idShift: string
   idVolunteer: string
   role: string
 }
