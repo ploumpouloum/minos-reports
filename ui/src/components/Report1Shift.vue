@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import type { Ref } from 'vue'
 import { useMainStore } from '@/stores/main'
 import Report1Assignement from './Report1Assignement.vue'
@@ -15,7 +15,7 @@ const props = defineProps({
 })
 
 const shift: Ref<Shift | null> = ref(main.getShift(props.shiftId))
-const station: Ref<Station | null> = ref(shift.value ? main.getStation(shift.value.idStation): null)
+const station: Ref<Station | null> = ref(shift.value ? main.getStation(shift.value.stationId): null)
 </script>
 
 <template>
@@ -25,14 +25,14 @@ const station: Ref<Station | null> = ref(shift.value ? main.getStation(shift.val
         <th colspan="2">
           {{ station.label }} de
           {{
-            shift.startDateTime.toLocaleTimeString('fr-FR', {
+            new Date(shift.startDateTime).toLocaleTimeString('fr-FR', {
               hour: '2-digit',
               minute: '2-digit'
             })
           }}
           à
           {{
-            shift.endDateTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+            new Date(shift.endDateTime).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
           }}
         </th>
       </tr>
@@ -40,7 +40,7 @@ const station: Ref<Station | null> = ref(shift.value ? main.getStation(shift.val
     <tbody>
       <tr
         v-for="assignment in main.getShiftAssignments(shift.id)"
-        :key="assignment.idVolunteer + assignment.idShift"
+        :key="assignment.volunteerId + assignment.shiftId"
       >
         <Report1Assignement :assignment="assignment" />
       </tr>

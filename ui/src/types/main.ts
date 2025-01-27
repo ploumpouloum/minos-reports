@@ -1,8 +1,8 @@
 export interface Shift {
   id: string
-  idStation: string
-  startDateTime: Date
-  endDateTime: Date
+  stationId: string
+  startDateTime: string
+  endDateTime: string
 }
 
 export interface Station {
@@ -17,7 +17,7 @@ export interface Volunteer {
 }
 
 export interface Assignment {
-  idShift: string
-  idVolunteer: string
+  shiftId: string
+  volunteerId: string
   role: string
 }

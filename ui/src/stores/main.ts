@@ -26,14 +26,14 @@ export const useMainStore = defineStore('main', {
   getters: {
     startDays(state) {
       return new Set(
-        state.shifts.map((shift: Shift) => shift.startDateTime.toISOString().split('T')[0])
+        state.shifts.map((shift: Shift) => shift.startDateTime.split('T')[0])
       )
     },
     getShifts(state) {
       return (day: string): Shift[] => {
         return state.shifts.filter(
-          (shift: Shift) => shift.startDateTime.toISOString().split('T')[0] == day
-        ).sort(function (shift1: Shift, shift2: Shift) { return shift1.startDateTime.getTime() - shift2.startDateTime.getTime() })
+          (shift: Shift) => shift.startDateTime.split('T')[0] == day
+        ).sort(function (shift1: Shift, shift2: Shift) { return new Date(shift1.startDateTime).getTime() - new Date(shift2.startDateTime).getTime() })
       }
     },
     getShift(state) {
@@ -54,7 +54,7 @@ export const useMainStore = defineStore('main', {
     getShiftAssignments(state) {
       return (shiftId: string): Assignment[] => {
         return state.assignments.filter(
-          (assignment: Assignment) => assignment.idShift == shiftId
+          (assignment: Assignment) => assignment.shiftId == shiftId
         )
       }
     }
@@ -64,132 +64,28 @@ export const useMainStore = defineStore('main', {
       this.isLoading = true
       this.errorMessage = ''
       this.errorDetails = ''
-      this.volunteers = [
-        { id: 'ba', firstname: 'Mohamed', lastname: 'Benali' } as Volunteer,
-        { id: 'bc', firstname: 'Claire', lastname: 'Dubois' } as Volunteer,
-        { id: 'bc', firstname: 'Claire', lastname: 'Dubois' } as Volunteer,
-        { id: 'bd', firstname: 'Nathan', lastname: 'Cohen' } as Volunteer,
-        { id: 'be', firstname: 'Fatoumata', lastname: 'Diara' } as Volunteer,
-        { id: 'bf', firstname: 'Jean-Pierre', lastname: 'Leclerc' } as Volunteer,
-        { id: 'bg', firstname: 'Lina', lastname: 'Ferreira' } as Volunteer,
-        { id: 'bh', firstname: 'Yasmine', lastname: 'Haddad' } as Volunteer,
-        { id: 'bi', firstname: 'Noé', lastname: 'Nguyen' } as Volunteer,
-        { id: 'bj', firstname: 'Adèle', lastname: 'Kone' } as Volunteer,
-        { id: 'bk', firstname: 'Victorien', lastname: 'Dupuis' } as Volunteer
-      ]
-      this.shifts = [
-        {
-          id: 'aa1',
-          idStation: 'aa',
-          startDateTime: new Date(2025, 5, 30, 12),
-          endDateTime: new Date(2025, 5, 30, 14)
-        } as Shift,
-        {
-          id: 'ab',
-          idStation: 'ab',
-          startDateTime: new Date(2025, 5, 30, 11),
-          endDateTime: new Date(2025, 5, 30, 15)
-        } as Shift,
-        {
-          id: 'ac',
-          idStation: 'aa',
-          startDateTime: new Date(2025, 5, 31, 12),
-          endDateTime: new Date(2025, 5, 31, 18)
-        } as Shift,
-        {
-          id: 'ad',
-          idStation: 'ab',
-          startDateTime: new Date(2025, 5, 31, 10),
-          endDateTime: new Date(2025, 5, 31, 16)
-        } as Shift,
-        {
-          id: 'ae',
-          idStation: 'ae',
-          startDateTime: new Date(2025, 5, 30, 12),
-          endDateTime: new Date(2025, 5, 30, 18)
-        } as Shift,
-        {
-          id: 'aa2',
-          idStation: 'aa',
-          startDateTime: new Date(2025, 5, 30, 14),
-          endDateTime: new Date(2025, 5, 30, 18)
-        } as Shift,
-        {
-          id: 'af',
-          idStation: 'af',
-          startDateTime: new Date(2025, 5, 30, 11),
-          endDateTime: new Date(2025, 5, 30, 15)
-        } as Shift,
-        {
-          id: 'ag',
-          idStation: 'ae',
-          startDateTime: new Date(2025, 5, 31, 12),
-          endDateTime: new Date(2025, 5, 31, 18)
-        } as Shift,
-        {
-          id: 'ah',
-          idStation: 'af',
-          startDateTime: new Date(2025, 5, 31, 10),
-          endDateTime: new Date(2025, 5, 31, 16)
-        } as Shift
-      ]
-      this.stations = [
-        {
-          id: 'aa',
-          label: 'Poste 1',
-        } as Station,
-        {
-          id: 'ab',
-          label: 'Poste 2',
-        } as Station,
-        {
-          id: 'ae',
-          label: 'Poste 3',
-        } as Station,
-        {
-          id: 'af',
-          label: 'Poste 4',
-        } as Station,
-      ]
-      this.assignments = [
-        { idShift: 'aa1', idVolunteer: 'bd', role: 'CI' } as Assignment,
-        { idShift: 'aa1', idVolunteer: 'bg', role: 'PSE2' } as Assignment,
-        { idShift: 'aa1', idVolunteer: 'ba', role: 'PSE2' } as Assignment,
-        { idShift: 'aa1', idVolunteer: 'be', role: 'PSE1' } as Assignment,
-        { idShift: 'aa2', idVolunteer: 'bd', role: 'CI' } as Assignment,
-        { idShift: 'aa2', idVolunteer: 'bg', role: 'PSE2' } as Assignment,
-        { idShift: 'aa2', idVolunteer: 'ba', role: 'PSE2' } as Assignment,
-        { idShift: 'aa2', idVolunteer: 'be', role: 'PSE1' } as Assignment,
-        { idShift: 'ab', idVolunteer: 'bk', role: 'CI' } as Assignment,
-        { idShift: 'ab', idVolunteer: 'bc', role: 'PSE2' } as Assignment,
-        { idShift: 'ab', idVolunteer: 'bf', role: 'PSE2' } as Assignment,
-        { idShift: 'ab', idVolunteer: 'bj', role: 'LOG' } as Assignment,
-        { idShift: 'ac', idVolunteer: 'bd', role: 'CI' } as Assignment,
-        { idShift: 'ac', idVolunteer: 'bj', role: 'LOG' } as Assignment,
-        { idShift: 'ac', idVolunteer: 'bg', role: 'PSE2' } as Assignment,
-        { idShift: 'ac', idVolunteer: 'ba', role: 'PSE2' } as Assignment,
-        { idShift: 'ac', idVolunteer: 'bi', role: 'STAG' } as Assignment,
-        { idShift: 'ad', idVolunteer: 'bk', role: 'CI' } as Assignment,
-        { idShift: 'ad', idVolunteer: 'bf', role: 'PSE2' } as Assignment,
-        { idShift: 'ad', idVolunteer: 'be', role: 'PSE1' } as Assignment,
-        { idShift: 'ae', idVolunteer: 'bd', role: 'CI' } as Assignment,
-        { idShift: 'ae', idVolunteer: 'bg', role: 'PSE2' } as Assignment,
-        { idShift: 'ae', idVolunteer: 'ba', role: 'PSE2' } as Assignment,
-        { idShift: 'ae', idVolunteer: 'be', role: 'PSE1' } as Assignment,
-        { idShift: 'af', idVolunteer: 'bk', role: 'CI' } as Assignment,
-        { idShift: 'af', idVolunteer: 'bc', role: 'PSE2' } as Assignment,
-        { idShift: 'af', idVolunteer: 'bf', role: 'PSE2' } as Assignment,
-        { idShift: 'af', idVolunteer: 'bj', role: 'LOG' } as Assignment,
-        { idShift: 'ag', idVolunteer: 'bd', role: 'CI' } as Assignment,
-        { idShift: 'ag', idVolunteer: 'bj', role: 'LOG' } as Assignment,
-        { idShift: 'ag', idVolunteer: 'bg', role: 'PSE2' } as Assignment,
-        { idShift: 'ag', idVolunteer: 'ba', role: 'PSE2' } as Assignment,
-        { idShift: 'ag', idVolunteer: 'bi', role: 'STAG' } as Assignment,
-        { idShift: 'ah', idVolunteer: 'bk', role: 'CI' } as Assignment,
-        { idShift: 'ah', idVolunteer: 'bf', role: 'PSE2' } as Assignment,
-        { idShift: 'ah', idVolunteer: 'be', role: 'PSE1' } as Assignment
-      ]
-      return
+
+      return axios.get('http://127.0.0.1:61010/data').then(
+        (response) => {
+          this.isLoading = false
+          console.log(response.data["stations"])
+          this.volunteers = response.data["volunteers"] as Volunteer[]
+          this.shifts = response.data["shifts"] as Shift[]
+          this.stations = response.data["stations"] as Station[]
+          this.assignments = response.data["assignments"] as Assignment[]
+        },
+        (error) => {
+          this.isLoading = false
+          this.volunteers = []
+          this.shifts = []
+          this.stations = []
+          this.assignments = []
+          this.errorMessage = 'Failed to load data.'
+          if (error instanceof AxiosError) {
+            this.handleAxiosError(error)
+          }
+        }
+      )
     },
     checkResponseObject(response: unknown, msg: string = '') {
       if (response === null || typeof response !== 'object') {

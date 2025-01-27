@@ -4,6 +4,7 @@ from pathlib import Path
 import tempfile
 from typing import Annotated
 from fastapi import FastAPI, File, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 import csv
 import datetime
 
@@ -11,6 +12,16 @@ from minosreports.db import dbsession
 from minosreports.db.models import Shift, Station, Volunteer, Assignment
 
 app = FastAPI()
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 async def root():
@@ -38,16 +49,16 @@ async def data():
             "shifts": [
                 {
                     "id": shift.id,
-                    "station_id": shift.station_id,
-                    "start_date_time": shift.startDateTime,
-                    "end_date_time": shift.endDateTime,
+                    "stationId": shift.station_id,
+                    "startDateTime": shift.startDateTime,
+                    "endDateTime": shift.endDateTime,
                 } for shift in session.execute(sa.select(Shift)).scalars()
             ], 
             "assignments": [
                 {
                     "id": assignment.id,
-                    "shift_id": assignment.shift_id,
-                    "volunteer_id": assignment.volunteer_id,
+                    "shiftId": assignment.shift_id,
+                    "volunteerId": assignment.volunteer_id,
                     "role": assignment.role,
                 } for assignment in session.execute(sa.select(Assignment)).scalars()
             ]

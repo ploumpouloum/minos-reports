@@ -10,7 +10,7 @@ main.fetchData()
 <template>
   <div class="report">
     <template v-for="startDay in main.startDays" :key="startDay">
-      <div v-for="(shift, index) in main.getShifts(startDay)" :key="shift.id">
+      <div class="shift" v-for="(shift, index) in main.getShifts(startDay)" :key="shift.id">
         <div class="day" v-if="index == 0">
           {{ new Date(startDay).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long' }) }}
         </div>
@@ -30,6 +30,10 @@ main.fetchData()
 .report > * {
   margin-left: 30px;
   margin-right: 30px;
+}
+
+.shift {
+  width: 300px;
 }
 
 .break {

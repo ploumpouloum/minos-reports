@@ -13,7 +13,7 @@ const props = defineProps({
   }
 })
 
-const volunteer: Ref<Volunteer | null> = ref(main.getVolunteer(props.assignment.idVolunteer))
+const volunteer: Ref<Volunteer | null> = ref(main.getVolunteer(props.assignment.volunteerId))
 </script>
 
 <template>
