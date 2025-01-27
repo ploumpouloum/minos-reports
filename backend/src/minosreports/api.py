@@ -16,6 +16,45 @@ app = FastAPI()
 async def root():
     return {"message": "Hello World"}
 
+@app.get("/data")
+async def data():
+
+    @dbsession
+    def data_inner(session: so.Session):
+        return {
+            "volunteers": [
+                {
+                    "id": volunteer.id,
+                    "firstname": volunteer.firstname,
+                    "lastname": volunteer.lastname,
+                } for volunteer in session.execute(sa.select(Volunteer)).scalars()
+            ], 
+            "stations": [
+                {
+                    "id": station.id,
+                    "label": station.label,
+                } for station in session.execute(sa.select(Station)).scalars()
+            ], 
+            "shifts": [
+                {
+                    "id": shift.id,
+                    "station_id": shift.station_id,
+                    "start_date_time": shift.startDateTime,
+                    "end_date_time": shift.endDateTime,
+                } for shift in session.execute(sa.select(Shift)).scalars()
+            ], 
+            "assignments": [
+                {
+                    "id": assignment.id,
+                    "shift_id": assignment.shift_id,
+                    "volunteer_id": assignment.volunteer_id,
+                    "role": assignment.role,
+                } for assignment in session.execute(sa.select(Assignment)).scalars()
+            ]
+        }
+
+    return data_inner()
+
 
 @app.post("/uploadaffectation/")
 async def create_upload_affectation(
