@@ -33,7 +33,7 @@ export const useMainStore = defineStore('main', {
       return (day: string): Shift[] => {
         return state.shifts.filter(
           (shift: Shift) => shift.startDateTime.toISOString().split('T')[0] == day
-        )
+        ).sort(function (shift1: Shift, shift2: Shift) { return shift1.startDateTime.getTime() - shift2.startDateTime.getTime() })
       }
     },
     getShift(state) {
@@ -79,10 +79,10 @@ export const useMainStore = defineStore('main', {
       ]
       this.shifts = [
         {
-          id: 'aa',
+          id: 'aa1',
           idStation: 'aa',
           startDateTime: new Date(2025, 5, 30, 12),
-          endDateTime: new Date(2025, 5, 30, 18)
+          endDateTime: new Date(2025, 5, 30, 14)
         } as Shift,
         {
           id: 'ab',
@@ -106,6 +106,12 @@ export const useMainStore = defineStore('main', {
           id: 'ae',
           idStation: 'ae',
           startDateTime: new Date(2025, 5, 30, 12),
+          endDateTime: new Date(2025, 5, 30, 18)
+        } as Shift,
+        {
+          id: 'aa2',
+          idStation: 'aa',
+          startDateTime: new Date(2025, 5, 30, 14),
           endDateTime: new Date(2025, 5, 30, 18)
         } as Shift,
         {
@@ -146,10 +152,14 @@ export const useMainStore = defineStore('main', {
         } as Station,
       ]
       this.assignments = [
-        { idShift: 'aa', idVolunteer: 'bd', role: 'CI' } as Assignment,
-        { idShift: 'aa', idVolunteer: 'bg', role: 'PSE2' } as Assignment,
-        { idShift: 'aa', idVolunteer: 'ba', role: 'PSE2' } as Assignment,
-        { idShift: 'aa', idVolunteer: 'be', role: 'PSE1' } as Assignment,
+        { idShift: 'aa1', idVolunteer: 'bd', role: 'CI' } as Assignment,
+        { idShift: 'aa1', idVolunteer: 'bg', role: 'PSE2' } as Assignment,
+        { idShift: 'aa1', idVolunteer: 'ba', role: 'PSE2' } as Assignment,
+        { idShift: 'aa1', idVolunteer: 'be', role: 'PSE1' } as Assignment,
+        { idShift: 'aa2', idVolunteer: 'bd', role: 'CI' } as Assignment,
+        { idShift: 'aa2', idVolunteer: 'bg', role: 'PSE2' } as Assignment,
+        { idShift: 'aa2', idVolunteer: 'ba', role: 'PSE2' } as Assignment,
+        { idShift: 'aa2', idVolunteer: 'be', role: 'PSE1' } as Assignment,
         { idShift: 'ab', idVolunteer: 'bk', role: 'CI' } as Assignment,
         { idShift: 'ab', idVolunteer: 'bc', role: 'PSE2' } as Assignment,
         { idShift: 'ab', idVolunteer: 'bf', role: 'PSE2' } as Assignment,
