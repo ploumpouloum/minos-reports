@@ -4,6 +4,8 @@ from uuid import UUID
 
 from sqlalchemy import (
     DateTime,
+    ForeignKey,
+    Index,
     text,
 )
 from sqlalchemy.orm import (
@@ -51,8 +53,8 @@ class Volunteer(Base):
     id: Mapped[UUID] = mapped_column(
         init=False, primary_key=True, server_default=text("uuid_generate_v4()")
     )
-    firstname: Mapped[str]
-    lastname: Mapped[str]
+    firstname: Mapped[str]  = mapped_column(index=True)
+    lastname: Mapped[str] = mapped_column(index=True)
 
     assignments: Mapped[list["Assignment"]] = relationship(
         back_populates="volunteer", cascade="all, delete-orphan", init=False
@@ -66,12 +68,29 @@ class Station(Base):
     id: Mapped[UUID] = mapped_column(
         init=False, primary_key=True, server_default=text("uuid_generate_v4()")
     )
-    label: Mapped[str]
-    startDateTime: Mapped[datetime]
-    endDateTime: Mapped[datetime]
+    label: Mapped[str] = mapped_column(index=True)
 
-    assignments: Mapped[list["Assignment"]] = relationship(
+    shifts: Mapped[list["Shift"]] = relationship(
         back_populates="station", cascade="all, delete-orphan", init=False
+    )
+    
+
+class Shift(Base):
+    """A shift, i.e. a station time slots where volunteers needs to be affected"""
+
+    __tablename__ = "shift"
+    id: Mapped[UUID] = mapped_column(
+        init=False, primary_key=True, server_default=text("uuid_generate_v4()")
+    )
+    startDateTime: Mapped[datetime] = mapped_column(index=True)
+    endDateTime: Mapped[datetime] = mapped_column(index=True)
+    station_id: Mapped[int] = mapped_column(
+        ForeignKey("station.id"), init=False, index=True
+    )
+    station: Mapped["Station"] = relationship(back_populates="shifts", init=False)
+    
+    assignments: Mapped[list["Assignment"]] = relationship(
+        back_populates="shift", cascade="all, delete-orphan", init=False
     )
 
 
@@ -82,6 +101,12 @@ class Assignment(Base):
     id: Mapped[UUID] = mapped_column(
         init=False, primary_key=True, server_default=text("uuid_generate_v4()")
     )
+    volunteer_id: Mapped[int] = mapped_column(
+        ForeignKey("volunteer.id"), init=False, index=True, nullable=True
+    )
     volunteer: Mapped["Volunteer"] = relationship(back_populates="assignments", init=False)
-    station: Mapped["Station"] = relationship(back_populates="assignments", init=False)
-    role: Mapped[str]
+    shift_id: Mapped[int] = mapped_column(
+        ForeignKey("shift.id"), init=False, index=True
+    )
+    shift: Mapped["Shift"] = relationship(back_populates="assignments", init=False)
+    role: Mapped[str] = mapped_column(index=True)
