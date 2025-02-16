@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import type { Ref } from 'vue'
 import { useMainStore } from '@/stores/main'
 import Report1Assignement from './Report1Assignement.vue'
@@ -15,7 +15,9 @@ const props = defineProps({
 })
 
 const shift: Ref<Shift | null> = ref(main.getShift(props.shiftId))
-const station: Ref<Station | null> = ref(shift.value ? main.getStation(shift.value.stationId): null)
+const station: Ref<Station | null> = ref(
+  shift.value ? main.getStation(shift.value.stationId) : null
+)
 </script>
 
 <template>
@@ -32,7 +34,10 @@ const station: Ref<Station | null> = ref(shift.value ? main.getStation(shift.val
           }}
           à
           {{
-            new Date(shift.endDateTime).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+            new Date(shift.endDateTime).toLocaleTimeString('fr-FR', {
+              hour: '2-digit',
+              minute: '2-digit'
+            })
           }}
         </th>
       </tr>

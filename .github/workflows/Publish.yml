@@ -18,9 +18,9 @@ jobs:
       - name: Build and publish Docker Image for UI
         uses: openzim/docker-publish-action@v10
         with:
-          image-name: openzim/zimit-frontend-ui
+          image-name: ploumpouloum/minos-reports-ui
           on-master: latest
-          restrict-to: openzim/zimit-frontend
+          restrict-to: ploumpouloum/minos-reports
           registries: ghcr.io
           dockerfile: Dockerfile-ui
           # prettier-ignore
@@ -31,9 +31,9 @@ jobs:
       - name: Build and publish Docker Image for API
         uses: openzim/docker-publish-action@v10
         with:
-          image-name: openzim/zimit-frontend-api
+          image-name: ploumpouloum/minos-reports-api
           on-master: latest
-          restrict-to: openzim/zimit-frontend
+          restrict-to: ploumpouloum/minos-reports
           registries: ghcr.io
           dockerfile: Dockerfile-api
           # prettier-ignore

@@ -6,7 +6,6 @@ import * as directives from 'vuetify/directives'
 import { mount } from '@vue/test-utils'
 import { createTestingPinia } from '@pinia/testing'
 import HeaderBar from '../HeaderBar.vue'
-import { useMainStore } from '@/stores/main'
 import { vi } from 'vitest'
 const vuetify = createVuetify({
   components,

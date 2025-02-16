@@ -2,8 +2,10 @@ import subprocess
 from pathlib import Path
 
 from minosreports.context import Context
+
 context = Context.get()
 logger = context.logger
+
 
 class Initializer:
     @staticmethod

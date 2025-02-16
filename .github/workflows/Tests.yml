@@ -29,11 +29,11 @@ jobs:
         working-directory: api
         run: inv coverage --args "-vvv"
 
-      - name: Upload coverage report to codecov
-        uses: codecov/codecov-action@v4
-        with:
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
+      # - name: Upload coverage report to codecov
+      #   uses: codecov/codecov-action@v4
+      #   with:
+      #     fail_ci_if_error: true
+      #     token: ${{ secrets.CODECOV_TOKEN }}
 
   build_docker:
     runs-on: ubuntu-24.04
@@ -55,9 +55,10 @@ jobs:
         run: |
           docker build -t minos-reports-api . -f Dockerfile-api
 
-      - name: Ensure we can start the Docker image for API
-        run: |
-          docker run -d --rm --name test_container minos-reports-api
-          sleep 5
-          docker ps | grep test_container
-          docker stop test_container
+      # We need a DB to start API ...
+      # - name: Ensure we can start the Docker image for API
+      #   run: |
+      #     docker run -d --rm --name test_container minos-reports-api
+      #     sleep 5
+      #     docker ps | grep test_container
+      #     docker stop test_container

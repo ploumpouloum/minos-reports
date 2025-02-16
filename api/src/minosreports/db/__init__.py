@@ -6,9 +6,11 @@ from sqlalchemy.orm import Session as OrmSession
 from sqlalchemy.orm import sessionmaker
 
 from minosreports.context import Context
+
 context = Context.get(fallback_to_class=True)
 
 Session = sessionmaker(bind=create_engine(url=context.database_url, echo=False))
+
 
 def dbsession(func: Callable[..., Any]) -> Callable[..., Any]:
     """Decorator to create an SQLAlchemy ORM session object and wrap the function
@@ -32,13 +34,13 @@ def gen_dbsession() -> Generator[OrmSession, None, None]:
         yield session
 
 
-def dbsession_manual(func):
+def dbsession_manual(func: Any):
     """Decorator to create an SQLAlchemy ORM session object and wrap the function
     inside the session. A `session` argument is automatically set. Transaction must
     be managed by the developer (e.g. perform a commit / rollback).
     """
 
-    def inner(*args, **kwargs):
+    def inner(*args: Any, **kwargs: Any) -> Any:
         with Session() as session:
             kwargs["session"] = session
             return func(*args, **kwargs)

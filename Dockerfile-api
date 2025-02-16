@@ -1,6 +1,6 @@
 
 FROM python:3.12-alpine
-LABEL org.opencontainers.image.source https://github.com/openzim/zimit-frontend
+LABEL org.opencontainers.image.source https://github.com/ploumpouloum/minos-report
 
 # Specifying a workdir which is not "/"" is mandatory for proper uvicorn watchfiles
 # operation (used mostly only in dev, but changing the workdir does not harm production)

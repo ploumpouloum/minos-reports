@@ -1,10 +1,8 @@
 import os
-
 from logging.config import fileConfig
 
-from sqlalchemy import create_engine
-
 from alembic import context
+from sqlalchemy import create_engine
 
 from minosreports.db.models import Base
 
@@ -61,12 +59,13 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
-    connectable = create_engine(os.getenv("POSTGRES_URI"), echo=False)
+    database_url = os.getenv("POSTGRES_URI", "")
+    if not database_url:
+        raise Exception("POSTGRES_URI environment variable is mandatory")
+    connectable = create_engine(database_url, echo=False)
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()
