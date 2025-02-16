@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import axios, { AxiosError } from 'axios'
 import type { Assignment, Shift, Station, Volunteer } from '@/types/main'
+import Manques1Shift from '@/components/Manques1Shift.vue'
 
 export type RootState = {
   assignments: Assignment[]
@@ -25,14 +26,21 @@ export const useMainStore = defineStore('main', {
     }) as RootState,
   getters: {
     startDays(state) {
-      return new Set(
+      return Array.from(new Set(
         state.shifts.map((shift: Shift) => shift.startDateTime.split('T')[0])
-      )
+      ))
     },
     getShifts(state) {
       return (day: string): Shift[] => {
         return state.shifts.filter(
           (shift: Shift) => shift.startDateTime.split('T')[0] == day
+        ).sort(function (shift1: Shift, shift2: Shift) { return new Date(shift1.startDateTime).getTime() - new Date(shift2.startDateTime).getTime() })
+      }
+    },
+    getShiftsWithManques(state) {
+      return (day: string, showComplet: boolean): Shift[] => {
+        return state.shifts.filter(
+          (shift: Shift) => shift.startDateTime.split('T')[0] == day && (Object.keys(this.getManques(shift.id)).length > 0 || showComplet)
         ).sort(function (shift1: Shift, shift2: Shift) { return new Date(shift1.startDateTime).getTime() - new Date(shift2.startDateTime).getTime() })
       }
     },
@@ -57,6 +65,28 @@ export const useMainStore = defineStore('main', {
           (assignment: Assignment) => assignment.shiftId == shiftId
         )
       }
+    },
+    getManques(state) {
+      return (shiftId: string): {[dict_key: string]: number} => {
+        return state.assignments.filter(
+          (assignment: Assignment) => assignment.shiftId == shiftId && !assignment.volunteerId
+        ).reduce((manques: {[dict_key: string]: number}, assignment) => { 
+          manques[assignment.role] = (manques[assignment.role] || 0) + 1
+          return manques
+        }, {})
+      }
+    },
+    getTotalManques(state) {
+      return (day: string, showComplet: boolean): {[dict_key: string]: number} => {
+        const shifts = this.getShiftsWithManques(day, showComplet)
+        return state.assignments.filter(
+          (assignment: Assignment) => shifts.some((shift) => assignment.shiftId == shift.id) && !assignment.volunteerId
+        ).reduce((manques: {[dict_key: string]: number}, assignment) => { 
+          manques[assignment.role] = (manques[assignment.role] || 0) + 1
+          return manques
+        }, {})
+
+      }
     }
   },
   actions: {
@@ -65,7 +95,7 @@ export const useMainStore = defineStore('main', {
       this.errorMessage = ''
       this.errorDetails = ''
 
-      return axios.get('http://127.0.0.1:61010/data').then(
+      return axios.get('http://127.0.0.1:8000/data').then(
         (response) => {
           this.isLoading = false
           console.log(response.data["stations"])

@@ -20,7 +20,7 @@ main.fetchData()
   </div>
 </template>
 
-<style lang="css">
+<style scoped lang="css">
 .report {
   display: flex;
   flex-flow: column wrap;
