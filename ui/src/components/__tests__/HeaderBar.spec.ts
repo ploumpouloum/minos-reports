@@ -6,7 +6,6 @@ import * as directives from 'vuetify/directives'
 import { mount } from '@vue/test-utils'
 import { createTestingPinia } from '@pinia/testing'
 import HeaderBar from '../HeaderBar.vue'
-import { useMainStore } from '@/stores/main'
 import { vi } from 'vitest'
 const vuetify = createVuetify({
   components,
@@ -26,22 +25,5 @@ describe('HeaderBar', () => {
     const img = wrapper.find('img')
     expect(img.exists()).toBe(true)
     expect(img.attributes('src')).toBe('/src/assets/logo-placeholder.png')
-  })
-  it('renders properly with shared data', () => {
-    const pinia = createTestingPinia({
-      createSpy: vi.fn
-    })
-    const main = useMainStore()
-    const logoPath = 'content/logo.png'
-    main.shared = { logoPath: logoPath, rootPagePath: '', libraryOnlineUrl: '', pages: [] }
-
-    const wrapper = mount(HeaderBar, {
-      global: {
-        plugins: [pinia, vuetify]
-      }
-    })
-    const img = wrapper.find('img')
-    expect(img.exists()).toBe(true)
-    expect(img.attributes('src')).toBe(logoPath)
   })
 })

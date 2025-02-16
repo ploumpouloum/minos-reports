@@ -6,7 +6,6 @@ from typing import Any
 
 from minosreports.constants import (
     NAME,
-    VERSION,
 )
 
 DEFAULT_FORMAT_WITH_THREADS = (
@@ -21,7 +20,7 @@ def getLogger(  # noqa: N802 (intentionally matches the stdlib getLogger name)
     level: int = logging.INFO,
 ):
     """configured logger for most usages"""
-    
+
     # set arbitrary level for some known verbose dependencies
     # prevents them from polluting logs
     for logger_name in set(VERBOSE_DEPENDENCIES):
@@ -37,6 +36,7 @@ def getLogger(  # noqa: N802 (intentionally matches the stdlib getLogger name)
     logger.addHandler(console_handler)
 
     return logger
+
 
 @dataclasses.dataclass(kw_only=True)
 class Context:
@@ -58,7 +58,10 @@ class Context:
         NAME, level=logging.DEBUG, log_format=DEFAULT_FORMAT_WITH_THREADS
     )
 
-    database_url: str = os.getenv("POSTGRES_URI")
+    database_url: str = os.getenv("POSTGRES_URI", "")  # noqa: RUF009
+
+    if not database_url:
+        raise Exception("POSTGRES_URI environment variable is mandatory")
 
     @classmethod
     def setup(cls, **kwargs: Any):
@@ -74,7 +77,7 @@ class Context:
             cls._instance = new_instance
 
     @classmethod
-    def get(cls, *, fallback_to_class: bool) -> "Context":
+    def get(cls, *, fallback_to_class: bool = False) -> "Context | type[Context]":
         if not cls._instance:
             if fallback_to_class:
                 return Context
