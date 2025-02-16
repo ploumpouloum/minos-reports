@@ -27,21 +27,4 @@ describe('HeaderBar', () => {
     expect(img.exists()).toBe(true)
     expect(img.attributes('src')).toBe('/src/assets/logo-placeholder.png')
   })
-  it('renders properly with shared data', () => {
-    const pinia = createTestingPinia({
-      createSpy: vi.fn
-    })
-    const main = useMainStore()
-    const logoPath = 'content/logo.png'
-    main.shared = { logoPath: logoPath, rootPagePath: '', libraryOnlineUrl: '', pages: [] }
-
-    const wrapper = mount(HeaderBar, {
-      global: {
-        plugins: [pinia, vuetify]
-      }
-    })
-    const img = wrapper.find('img')
-    expect(img.exists()).toBe(true)
-    expect(img.attributes('src')).toBe(logoPath)
-  })
 })

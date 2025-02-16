@@ -11,6 +11,46 @@ services:
       - POSTGRES_DB=minos
       - POSTGRES_USER=minos
       - POSTGRES_PASSWORD=minospass
+  minosreports_api:
+    build:
+      dockerfile: Dockerfile-api
+      context: ..
+    volumes:
+      - ../api/src/minosreports:/usr/local/lib/python3.12/site-packages/minosreports
+    command:
+      - uvicorn
+      - minosreports.api:app
+      - --host
+      - "0.0.0.0"
+      - --port
+      - "80"
+      - --reload
+      - --reload-dir
+      - /usr/local/lib/python3.12/site-packages/minosreports
+    ports:
+      - 127.0.0.1:8000:80
+    environment:
+      - POSTGRES_URI=postgresql+psycopg://minos:minospass@postgresdb:5432/minos
+    depends_on:
+      - postgresdb
+  minosreports_ui_dev:
+    build:
+      dockerfile: dev/minosreports_ui_dev/Dockerfile
+      context: ..
+    volumes:
+      - ../ui/src:/app/src
+    ports:
+      - 127.0.0.1:8001:80
+    depends_on:
+      - minosreports_api
+  minosreports_ui_prod:
+    build:
+      dockerfile: Dockerfile-ui
+      context: ..
+    ports:
+      - 127.0.0.1:8002:80
+    depends_on:
+      - minosreports_api
 
 volumes:
   pg_data_minos_reports:
