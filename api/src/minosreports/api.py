@@ -13,7 +13,7 @@ from minosreports.context import Context
 from minosreports.db import dbsession
 from minosreports.db.models import Assignment, Shift, Station, Volunteer
 
-context = Context.get()
+context = Context.get(fallback_to_class=True)
 logger = context.logger
 
 app = FastAPI()

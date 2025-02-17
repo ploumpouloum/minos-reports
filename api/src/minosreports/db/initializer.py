@@ -3,7 +3,7 @@ from pathlib import Path
 
 from minosreports.context import Context
 
-context = Context.get()
+context = Context.get(fallback_to_class=True)
 logger = context.logger
 
 
