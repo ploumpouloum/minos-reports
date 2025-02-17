@@ -9,6 +9,7 @@ jobs:
   build-and-deploy:
     name: Build and deploy
 
+    environment: publish
     runs-on: ubuntu-24.04
 
     steps:
@@ -25,7 +26,7 @@ jobs:
           dockerfile: Dockerfile-ui
           # prettier-ignore
           credentials:
-            GHCRIO_USERNAME=${{ secrets.GHCR_USERNAME }}
+            GHCRIO_USERNAME=${{ vars.GHCR_USERNAME }}
             GHCRIO_TOKEN=${{ secrets.GHCR_TOKEN }}
 
       - name: Build and publish Docker Image for API
@@ -38,19 +39,5 @@ jobs:
           dockerfile: Dockerfile-api
           # prettier-ignore
           credentials:
-            GHCRIO_USERNAME=${{ secrets.GHCR_USERNAME }}
+            GHCRIO_USERNAME=${{ vars.GHCR_USERNAME }}
             GHCRIO_TOKEN=${{ secrets.GHCR_TOKEN }}
-
-      - name: Deploy Zimit frontend UI changes to zimit.kiwix.org
-        uses: actions-hub/kubectl@master
-        env:
-          KUBE_CONFIG: ${{ secrets.ZIMIT_KUBE_CONFIG }}
-        with:
-          args: rollout restart deployments zimit-frontend-ui-deployment -n zimit
-
-      - name: Deploy Zimit frontend API changes to zimit.kiwix.org
-        uses: actions-hub/kubectl@master
-        env:
-          KUBE_CONFIG: ${{ secrets.ZIMIT_KUBE_CONFIG }}
-        with:
-          args: rollout restart deployments zimit-frontend-api-deployment -n zimit
