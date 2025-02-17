@@ -24,8 +24,7 @@ jobs:
           restrict-to: ploumpouloum/minos-reports
           registries: ghcr.io
           dockerfile: Dockerfile-ui
-          # prettier-ignore
-          credentials:
+          credentials: |
             GHCRIO_USERNAME=${{ vars.GHCR_USERNAME }}
             GHCRIO_TOKEN=${{ secrets.GHCR_TOKEN }}
 
@@ -37,7 +36,6 @@ jobs:
           restrict-to: ploumpouloum/minos-reports
           registries: ghcr.io
           dockerfile: Dockerfile-api
-          # prettier-ignore
-          credentials:
+          credentials: |
             GHCRIO_USERNAME=${{ vars.GHCR_USERNAME }}
             GHCRIO_TOKEN=${{ secrets.GHCR_TOKEN }}
