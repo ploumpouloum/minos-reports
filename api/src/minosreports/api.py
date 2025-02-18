@@ -38,8 +38,8 @@ async def root():
 async def data():
 
     @dbsession
-    def data_inner(session: so.Session):
-        return {
+    def data_inner(session: so.Session):  # pyright: ignore[reportUnknownParameterType]
+        return {  # pyright: ignore[reportUnknownVariableType]
             "volunteers": [
                 {
                     "id": volunteer.id,
