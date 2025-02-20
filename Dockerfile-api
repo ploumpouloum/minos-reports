@@ -9,9 +9,7 @@ WORKDIR "/home"
 # Install necessary packages (only pip so far)
 RUN python -m pip install --no-cache-dir -U \
     pip
-
-# Set to your client origin(s)
-ENV ALLOWED_ORIGINS http://localhost:8001|http://127.0.0.1:8001
+    && alias cdh="cd /usr/local/lib/python3.12/site-packages/minosreports"
 
 # Copy minimal files for installation of project dependencies
 COPY api/pyproject.toml api/README.md /src/
