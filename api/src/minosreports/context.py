@@ -63,6 +63,8 @@ class Context:
     if not database_url:
         raise Exception("POSTGRES_URI environment variable is mandatory")
 
+    api_root_path: str = os.getenv("API_ROOT_PATH", "")  # noqa: RUF009
+
     @classmethod
     def setup(cls, **kwargs: Any):
         new_instance = cls(**kwargs)
