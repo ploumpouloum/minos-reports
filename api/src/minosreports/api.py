@@ -16,7 +16,7 @@ from minosreports.db.models import Assignment, Shift, Station, Volunteer
 context = Context.get(fallback_to_class=True)
 logger = context.logger
 
-app = FastAPI()
+app = FastAPI(root_path=context.api_root_path)
 
 origins = ["*"]
 
