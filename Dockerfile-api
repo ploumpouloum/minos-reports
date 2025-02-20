@@ -8,7 +8,7 @@ WORKDIR "/home"
 
 # Install necessary packages (only pip so far)
 RUN python -m pip install --no-cache-dir -U \
-    pip
+    pip \
     && alias cdh="cd /usr/local/lib/python3.12/site-packages/minosreports"
 
 # Copy minimal files for installation of project dependencies
