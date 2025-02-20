@@ -1,7 +1,7 @@
 import './assets/main.css'
 
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import constants from './constants'
 
 import App from './App.vue'
 import router from './router'
@@ -14,11 +14,25 @@ if (typeof window.ResizeObserver === 'undefined') {
   window.ResizeObserver = ResizeObserver
 }
 
-loadVuetify()
-  .then((vuetify) => {
+// Pinia
+import { createPinia } from 'pinia'
+const pinia = createPinia()
+
+// config
+import loadConfig, { configPlugin } from './config'
+
+Promise.all([loadConfig(), loadVuetify()])
+  .then(([config, vuetify]) => {
     const app = createApp(App)
-    app.use(createPinia())
+    app.use(pinia)
     app.use(vuetify)
+
+    // provide config app-wide
+    app.provide(constants.config, config)
+
+    // inject plugins into store
+    pinia.use(configPlugin)
+
     app.use(router)
     app.mount('#app')
   })

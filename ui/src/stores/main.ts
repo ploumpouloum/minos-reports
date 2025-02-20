@@ -108,7 +108,7 @@ export const useMainStore = defineStore('main', {
       this.errorMessage = ''
       this.errorDetails = ''
 
-      return axios.get('http://127.0.0.1:8000/data').then(
+      return axios.get(this.config.backend_api + '/data').then(
         (response) => {
           this.isLoading = false
           console.log(response.data['stations'])
