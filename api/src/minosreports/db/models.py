@@ -54,6 +54,9 @@ class Volunteer(Base):
     )
     firstname: Mapped[str] = mapped_column(index=True)
     lastname: Mapped[str] = mapped_column(index=True)
+    locality: Mapped[str]
+    minor: Mapped[bool]
+    roles: Mapped[list[str]]
 
     assignments: Mapped[list["Assignment"]] = relationship(
         back_populates="volunteer", cascade="all, delete-orphan", init=False
@@ -94,7 +97,11 @@ class Shift(Base):
 
 
 class Assignment(Base):
-    """An assignment of one volunteer on one station for a given role"""
+    """An assignment on one station shift for a given role
+
+    Assignment might be occupied (have a volunteer assigned) or clear (volunteer still
+    to find)
+    """
 
     __tablename__ = "assignment"
     id: Mapped[UUID] = mapped_column(
