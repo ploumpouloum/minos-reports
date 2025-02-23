@@ -5,8 +5,10 @@ from uuid import UUID
 from sqlalchemy import (
     DateTime,
     ForeignKey,
+    String,
     text,
 )
+from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import (
     DeclarativeBase,
     Mapped,
@@ -54,6 +56,9 @@ class Volunteer(Base):
     )
     firstname: Mapped[str] = mapped_column(index=True)
     lastname: Mapped[str] = mapped_column(index=True)
+    locality: Mapped[str | None]
+    minor: Mapped[bool | None]
+    roles: Mapped[list[str] | None] = mapped_column(ARRAY(String), nullable=True)
 
     assignments: Mapped[list["Assignment"]] = relationship(
         back_populates="volunteer", cascade="all, delete-orphan", init=False
@@ -94,7 +99,11 @@ class Shift(Base):
 
 
 class Assignment(Base):
-    """An assignment of one volunteer on one station for a given role"""
+    """An assignment on one station shift for a given role
+
+    Assignment might be occupied (have a volunteer assigned) or clear (volunteer still
+    to find)
+    """
 
     __tablename__ = "assignment"
     id: Mapped[UUID] = mapped_column(
