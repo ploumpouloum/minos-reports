@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Report1View from '../views/Report1View.vue'
 import Manques1View from '@/views/Manques1View.vue'
+import DataView from '@/views/DataView.vue'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -19,6 +20,11 @@ const router = createRouter({
       path: '/manques1',
       name: 'manques1',
       component: Manques1View
+    },
+    {
+      path: '/data',
+      name: 'data',
+      component: DataView
     }
   ],
   scrollBehavior() {

@@ -9,6 +9,17 @@ import logoImage from '@/assets/logo.jpg'
         <v-img id="logo" :src="logoImage" alt="Logo" class="logo" height="70" />
       </router-link>
     </div>
+    <div class="header-btns">
+      <router-link to="/data" custom v-slot="{ navigate }">
+        <v-btn @click="navigate">Gérer les données</v-btn>
+      </router-link>
+      <router-link to="/report1" custom v-slot="{ navigate }">
+        <v-btn @click="navigate">Rapport 1</v-btn>
+      </router-link>
+      <router-link to="/manques1" custom v-slot="{ navigate }">
+        <v-btn @click="navigate">Manques 1</v-btn>
+      </router-link>
+    </div>
   </div>
 </template>
 
@@ -16,7 +27,18 @@ import logoImage from '@/assets/logo.jpg'
 .header-bar {
   padding: 0.25rem;
   display: flex;
+  flex-direction: column;
+}
+
+.header-btns {
+  padding: 0.25rem;
+  display: flex;
   flex-direction: row;
+  margin: auto;
+}
+
+.header-btns .v-btn {
+  margin: 0 0.25rem;
 }
 
 #logo {

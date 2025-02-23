@@ -159,6 +159,25 @@ export const useMainStore = defineStore('main', {
     },
     setErrorMessage(message: string) {
       this.errorMessage = message
+    },
+    async deleteAllData() {
+      this.isLoading = true
+      this.errorMessage = ''
+      this.errorDetails = ''
+
+      return axios.delete(this.config.backend_api + '/data').then(
+        () => {
+          this.isLoading = false
+          console.log('Data deleted')
+        },
+        (error) => {
+          this.isLoading = false
+          this.errorMessage = 'Failed to load data.'
+          if (error instanceof AxiosError) {
+            this.handleAxiosError(error)
+          }
+        }
+      )
     }
   }
 })
