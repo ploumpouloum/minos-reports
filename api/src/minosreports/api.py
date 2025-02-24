@@ -11,6 +11,7 @@ from minosreports.context import Context
 from minosreports.db import dbsession
 from minosreports.db.models import Assignment, Shift, Station, Volunteer
 from minosreports.parsing.affectations import parse_affectations_csv
+from minosreports.parsing.volontaires import parse_volontaires_csv
 
 context = Context.get(fallback_to_class=True)
 logger = context.logger
@@ -88,6 +89,23 @@ async def create_upload_affectation(
         tfile = tempfile.NamedTemporaryFile(delete=False)
         tfile.write(file.file.read())
         result = parse_affectations_csv(session=session, filename=Path(tfile.name))
+        Path(tfile.name).unlink()
+        return result
+
+    return upload_inner()
+
+
+@app.post("/uploadvolontaires/")
+async def create_upload_volontaires(
+    file: Annotated[
+        UploadFile, File(description="Upload Volontaires CSVs exported from Minos")
+    ],
+):
+    @dbsession
+    def upload_inner(session: so.Session):
+        tfile = tempfile.NamedTemporaryFile(delete=False)
+        tfile.write(file.file.read())
+        result = parse_volontaires_csv(session=session, filename=Path(tfile.name))
         Path(tfile.name).unlink()
         return result
 

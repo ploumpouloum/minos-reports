@@ -56,9 +56,20 @@ class Volunteer(Base):
     )
     firstname: Mapped[str] = mapped_column(index=True)
     lastname: Mapped[str] = mapped_column(index=True)
+    nivol: Mapped[str | None]
+    dt: Mapped[str | None]
     locality: Mapped[str | None]
+    phone_number: Mapped[str | None]
+    email: Mapped[str | None]
     minor: Mapped[bool | None]
     roles: Mapped[list[str] | None] = mapped_column(ARRAY(String), nullable=True)
+    incoming_date_time: Mapped[datetime | None]
+    incoming_transportation_system: Mapped[str | None]
+    incoming_train_station: Mapped[str | None]
+    outgoing_date_time: Mapped[datetime | None]
+    outgoing_transportation_system: Mapped[str | None]
+    outgoing_train_station: Mapped[str | None]
+    crf_transportation_type: Mapped[str | None]
 
     assignments: Mapped[list["Assignment"]] = relationship(
         back_populates="volunteer", cascade="all, delete-orphan", init=False
