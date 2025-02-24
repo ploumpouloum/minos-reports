@@ -108,9 +108,20 @@ def get_volunteer(value: str) -> Volunteer:
     return Volunteer(
         firstname=splits[1] if len(splits) > 1 else "",
         lastname=splits[0],
-        locality="",
-        minor=False,
-        roles=[],
+        nivol=None,
+        dt=None,
+        locality=None,
+        phone_number=None,
+        email=None,
+        minor=None,
+        roles=None,
+        incoming_date_time=None,
+        incoming_transportation_system=None,
+        incoming_train_station=None,
+        outgoing_date_time=None,
+        outgoing_transportation_system=None,
+        outgoing_train_station=None,
+        crf_transportation_type=None,
     )
 
 
