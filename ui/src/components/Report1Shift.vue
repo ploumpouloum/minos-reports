@@ -21,7 +21,7 @@ const station: Ref<Station | null> = ref(
 </script>
 
 <template>
-  <table v-if="shift && station">
+  <table v-if="shift && station" cellspacing="0">
     <thead>
       <tr>
         <th colspan="2">
@@ -54,9 +54,13 @@ const station: Ref<Station | null> = ref(
   <div v-else>Shift or station not found</div>
 </template>
 
-<style lang="css">
+<style lang="css" scoped>
 table {
   margin-bottom: 10px;
   width: 100%;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
 }
 </style>

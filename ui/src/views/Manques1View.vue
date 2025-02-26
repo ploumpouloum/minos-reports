@@ -78,4 +78,9 @@ input {
 tr:nth-child(even) {
   background-color: #f2f2f2;
 }
+
+table {
+  margin-bottom: 10px;
+  width: 100%;
+}
 </style>

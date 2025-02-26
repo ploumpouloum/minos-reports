@@ -13,15 +13,21 @@ const props = defineProps({
   }
 })
 
-const volunteer: Ref<Volunteer | null> = ref(main.getVolunteer(props.assignment.volunteerId))
+const volunteer: Ref<Volunteer | null> = ref(
+  props.assignment.volunteerId ? main.getVolunteer(props.assignment.volunteerId) : null
+)
 </script>
 
 <template>
   <td class="role">{{ props.assignment.role }}</td>
-  <td>{{ volunteer?.firstname }} {{ volunteer?.lastname }}</td>
+  <td>
+    <router-link :to="`/volunteer/${volunteer?.nivol}`">
+      {{ volunteer?.firstname }} {{ volunteer?.lastname }}
+    </router-link>
+  </td>
 </template>
 
-<style lang="css">
+<style lang="css" scoped>
 .role {
   width: 100px;
 }

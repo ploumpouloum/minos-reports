@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import logoImage from '@/assets/logo.jpg'
+import { useMainStore } from '@/stores/main'
+
+const main = useMainStore()
+
+main.fetchData()
 </script>
 
 <template>
