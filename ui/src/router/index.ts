@@ -2,6 +2,8 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import Report1View from '../views/Report1View.vue'
 import Manques1View from '@/views/Manques1View.vue'
 import DataView from '@/views/DataView.vue'
+import VolunteerView from '@/views/VolunteerView.vue'
+import ShiftView from '@/views/ShiftView.vue'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -25,6 +27,16 @@ const router = createRouter({
       path: '/data',
       name: 'data',
       component: DataView
+    },
+    {
+      path: '/volunteer/:nivol',
+      name: 'volunteer',
+      component: VolunteerView
+    },
+    {
+      path: '/shift/:shiftId',
+      name: 'shift',
+      component: ShiftView
     }
   ],
   scrollBehavior() {

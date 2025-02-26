@@ -7,6 +7,7 @@ export type RootState = {
   shifts: Shift[]
   stations: Station[]
   volunteers: Volunteer[]
+  dataLoaded: boolean
   isLoading: boolean
   errorMessage: string
   errorDetails: string
@@ -19,6 +20,7 @@ export const useMainStore = defineStore('main', {
       shifts: [],
       stations: [],
       volunteers: [],
+      dataLoaded: false,
       isLoading: false,
       errorMessage: '',
       errorDetails: ''
@@ -70,6 +72,18 @@ export const useMainStore = defineStore('main', {
         return state.volunteers.filter((volunteer: Volunteer) => volunteer.id == volunteerId)[0]
       }
     },
+    getVolunteerByNivol(state) {
+      return (nivol: string): Volunteer => {
+        return state.volunteers.filter((volunteer: Volunteer) => volunteer.nivol == nivol)[0]
+      }
+    },
+    getVolunteerAssignments(state) {
+      return (volunteerId: string): Assignment[] => {
+        return state.assignments.filter(
+          (assignment: Assignment) => assignment.volunteerId == volunteerId
+        )
+      }
+    },
     getShiftAssignments(state) {
       return (shiftId: string): Assignment[] => {
         return state.assignments.filter((assignment: Assignment) => assignment.shiftId == shiftId)
@@ -111,11 +125,11 @@ export const useMainStore = defineStore('main', {
       return axios.get(this.config.backend_api + '/data').then(
         (response) => {
           this.isLoading = false
-          console.log(response.data['stations'])
           this.volunteers = response.data['volunteers'] as Volunteer[]
           this.shifts = response.data['shifts'] as Shift[]
           this.stations = response.data['stations'] as Station[]
           this.assignments = response.data['assignments'] as Assignment[]
+          this.dataLoaded = true
         },
         (error) => {
           this.isLoading = false
