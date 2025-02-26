@@ -36,8 +36,8 @@ def parse_volontaires_csv(filename: Path, session: so.Session):
             volunteer = get_volunteer(row)
             stmt = sa.select(Volunteer).where(
                 (
-                    Volunteer.firstname == volunteer.firstname
-                    and Volunteer.lastname == volunteer.lastname
+                    sa.func.lower(Volunteer.firstname) == volunteer.firstname.lower()
+                    and sa.func.lower(Volunteer.lastname) == volunteer.lastname.lower()
                 )
                 or Volunteer.nivol == volunteer.nivol
             )
@@ -82,8 +82,8 @@ def parse_volontaires_csv(filename: Path, session: so.Session):
 
 def get_volunteer(row: dict[str, Any]) -> Volunteer:
     return Volunteer(
-        firstname=row["Nom"],
-        lastname=row["Prénom"],
+        firstname=row["Prénom"],
+        lastname=row["Nom"],
         nivol=row["NIVOL"],
         dt=row["DT de rattachement"],
         locality=row["Structure locale"],

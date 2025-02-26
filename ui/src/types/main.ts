@@ -14,6 +14,7 @@ export interface Volunteer {
   id: string
   firstname: string
   lastname: string
+  nivol: string | undefined
 }
 
 export interface Assignment {

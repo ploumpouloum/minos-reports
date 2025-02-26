@@ -22,8 +22,13 @@ def parse_affectations_csv(filename: Path, session: so.Session):
                 volunteer = get_volunteer(row["Volontaire"])
                 stmt = (
                     sa.select(Volunteer)
-                    .where(Volunteer.firstname == volunteer.firstname)
-                    .where(Volunteer.lastname == volunteer.lastname)
+                    .where(
+                        sa.func.lower(Volunteer.firstname)
+                        == volunteer.firstname.lower()
+                    )
+                    .where(
+                        sa.func.lower(Volunteer.lastname) == volunteer.lastname.lower()
+                    )
                 )
                 volunteer_in_db = session.execute(stmt).scalar_one_or_none()
                 if volunteer_in_db is None:

@@ -18,7 +18,11 @@ const volunteer: Ref<Volunteer | null> = ref(main.getVolunteer(props.assignment.
 
 <template>
   <td class="role">{{ props.assignment.role }}</td>
-  <td>{{ volunteer?.firstname }} {{ volunteer?.lastname }}</td>
+  <td>
+    <router-link :to="`/mission/${volunteer?.nivol} `">
+      {{ volunteer?.firstname }} {{ volunteer?.lastname }}
+    </router-link>
+  </td>
 </template>
 
 <style lang="css">
