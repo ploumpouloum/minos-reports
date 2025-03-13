@@ -120,6 +120,8 @@ def get_volunteer(value: str) -> Volunteer:
         email=None,
         minor=None,
         roles=None,
+        mission_restrictions=None,
+        food_restrictions=None,
         incoming_date_time=None,
         incoming_transportation_system=None,
         incoming_train_station=None,

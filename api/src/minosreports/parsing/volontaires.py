@@ -81,6 +81,11 @@ def parse_volontaires_csv(filename: Path, session: so.Session):
 
 
 def get_volunteer(row: dict[str, Any]) -> Volunteer:
+    def parse_restrictions(raw_data: str) -> list[str] | None:
+        if not raw_data.strip():
+            return None
+        return [restriction.strip() for restriction in raw_data.split(",")]
+
     return Volunteer(
         firstname=row["Prénom"],
         lastname=row["Nom"],
@@ -91,6 +96,8 @@ def get_volunteer(row: dict[str, Any]) -> Volunteer:
         email=row["E-MAIL"],
         minor=(row["Etes-vous ?"].lower() == "mineur"),
         roles=row["TOUTES vos qualifications"].split(", "),
+        mission_restrictions=parse_restrictions(row["Ne souhaite pas participer :"]),
+        food_restrictions=parse_restrictions(row["Précision regime particulier"]),
         incoming_date_time=datetime.strptime(  # noqa: DTZ007
             row["Date et heure d'arrivée"], "%d/%m/%Y %H:%M"
         ),

@@ -63,6 +63,12 @@ class Volunteer(Base):
     email: Mapped[str | None]
     minor: Mapped[bool | None]
     roles: Mapped[list[str] | None] = mapped_column(ARRAY(String), nullable=True)
+    mission_restrictions: Mapped[list[str] | None] = mapped_column(
+        ARRAY(String), nullable=True
+    )
+    food_restrictions: Mapped[list[str] | None] = mapped_column(
+        ARRAY(String), nullable=True
+    )
     incoming_date_time: Mapped[datetime | None]
     incoming_transportation_system: Mapped[str | None]
     incoming_train_station: Mapped[str | None]
