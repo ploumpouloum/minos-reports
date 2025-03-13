@@ -6,7 +6,7 @@ import axios from 'axios'
 const main = useMainStore()
 
 const volontairesFileInput = ref()
-const affectationFileInput = ref()
+// const affectationFileInput = ref()
 
 const uploadVolontaires = () => {
   const formData = new FormData()
@@ -14,11 +14,11 @@ const uploadVolontaires = () => {
   axios.post(main.config.backend_api + '/uploadvolontaires/', formData)
 }
 
-const uploadAffectation = () => {
-  const formData = new FormData()
-  formData.append('file', affectationFileInput.value)
-  axios.post(main.config.backend_api + '/uploadaffectation/', formData)
-}
+// const uploadAffectation = () => {
+//   const formData = new FormData()
+//   formData.append('file', affectationFileInput.value)
+//   axios.post(main.config.backend_api + '/uploadaffectation/', formData)
+// }
 </script>
 
 <template>
@@ -36,6 +36,7 @@ const uploadAffectation = () => {
       ></v-file-input>
       <v-btn @click="uploadVolontaires" variant="outlined">Importer</v-btn>
     </v-card>
+    <!--
     <v-card variant="outlined">
       <h3>Importer les affectations</h3>
       <v-file-input
@@ -45,6 +46,7 @@ const uploadAffectation = () => {
       ></v-file-input>
       <v-btn @click="uploadAffectation" variant="outlined">Importer</v-btn>
     </v-card>
+    -->
   </v-sheet>
 </template>
 

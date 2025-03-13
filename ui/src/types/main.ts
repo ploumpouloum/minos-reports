@@ -15,6 +15,9 @@ export interface Volunteer {
   firstname: string
   lastname: string
   nivol: string | undefined
+  minor: boolean | undefined
+  mission_restrictions: string[] | undefined
+  food_restrictions: string[] | undefined
 }
 
 export interface Assignment {

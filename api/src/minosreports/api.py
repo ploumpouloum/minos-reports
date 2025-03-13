@@ -46,6 +46,9 @@ async def data():
                     "firstname": volunteer.firstname,
                     "lastname": volunteer.lastname,
                     "nivol": volunteer.nivol,
+                    "minor": volunteer.minor,
+                    "mission_restrictions": volunteer.mission_restrictions,
+                    "food_restrictions": volunteer.food_restrictions,
                 }
                 for volunteer in session.execute(sa.select(Volunteer)).scalars()
             ],
