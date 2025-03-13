@@ -43,6 +43,11 @@ const router = createRouter({
       path: '/shift/:shiftId',
       name: 'shift',
       component: ShiftView
+    },
+    {
+      path: '/:catchAll(.*)',
+      name: 'catchAll',
+      redirect: { name: 'home' }
     }
   ],
   scrollBehavior() {
