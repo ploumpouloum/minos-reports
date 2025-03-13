@@ -37,7 +37,7 @@ main.fetchData()
             .length == 0
         "
       >
-        Aucune personne
+        Aucune personne avec des restrictions de missions BINOME
       </p>
       <h4>VPS</h4>
       <p
@@ -54,7 +54,7 @@ main.fetchData()
             .length == 0
         "
       >
-        Aucun mineur
+        Aucune personne avec des restrictions de missions VPS
       </p>
       <h4>Montagne</h4>
       <p
@@ -72,7 +72,7 @@ main.fetchData()
           ).length == 0
         "
       >
-        Aucune personne avec des restrictions de missions
+        Aucune personne avec des restrictions de missions MONTAGNE
       </p>
     </v-card>
     <v-card variant="outlined">
