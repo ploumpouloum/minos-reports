@@ -5,13 +5,40 @@ import axios from 'axios'
 
 const main = useMainStore()
 
+const snackbarShown = ref(false)
+const snackbarText = ref('')
+
 const volontairesFileInput = ref()
 // const affectationFileInput = ref()
+
+const deleteAllData = () => {
+  main.deleteAllData().then(
+    () => {
+      snackbarText.value = 'Data deleted'
+      snackbarShown.value = true
+    },
+    (error) => {
+      console.error(error)
+      snackbarText.value = 'Error occured'
+      snackbarShown.value = true
+    }
+  )
+}
 
 const uploadVolontaires = () => {
   const formData = new FormData()
   formData.append('file', volontairesFileInput.value)
-  axios.post(main.config.backend_api + '/uploadvolontaires/', formData)
+  axios.post(main.config.backend_api + '/uploadvolontaires/', formData).then(
+    () => {
+      snackbarText.value = 'Data loaded'
+      snackbarShown.value = true
+    },
+    (error) => {
+      console.error(error)
+      snackbarText.value = 'Error occured'
+      snackbarShown.value = true
+    }
+  )
 }
 
 // const uploadAffectation = () => {
@@ -25,7 +52,7 @@ const uploadVolontaires = () => {
   <v-sheet id="main">
     <v-card variant="outlined">
       <h3>Effacer toutes les données</h3>
-      <v-btn @click="main.deleteAllData()" variant="outlined">Tout effacer</v-btn>
+      <v-btn @click="deleteAllData" variant="outlined">Tout effacer</v-btn>
     </v-card>
     <v-card variant="outlined">
       <h3>Importer les volontaires</h3>
@@ -48,6 +75,9 @@ const uploadVolontaires = () => {
     </v-card>
     -->
   </v-sheet>
+  <v-snackbar v-model="snackbarShown" timeout="1000">
+    {{ snackbarText }}
+  </v-snackbar>
 </template>
 
 <style scoped>
