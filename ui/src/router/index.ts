@@ -5,6 +5,7 @@ import DataView from '@/views/DataView.vue'
 import RestrictionsView from '@/views/RestrictionsView.vue'
 import VolunteerView from '@/views/VolunteerView.vue'
 import ShiftView from '@/views/ShiftView.vue'
+import FreeBuzyView from '@/views/FreeBuzyView.vue'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -30,6 +31,11 @@ const router = createRouter({
       component: DataView
     },
     {
+      path: '/freebuzy',
+      name: 'freebuzy',
+      component: FreeBuzyView
+    },
+    {
       path: '/restrictions',
       name: 'restrictions',
       component: RestrictionsView
@@ -43,6 +49,11 @@ const router = createRouter({
       path: '/shift/:shiftId',
       name: 'shift',
       component: ShiftView
+    },
+    {
+      path: '/:catchAll(.*)',
+      name: 'catchAll',
+      redirect: { name: 'home' }
     }
   ],
   scrollBehavior() {

@@ -9,7 +9,7 @@ const snackbarShown = ref(false)
 const snackbarText = ref('')
 
 const volontairesFileInput = ref()
-// const affectationFileInput = ref()
+const affectationFileInput = ref()
 
 const deleteAllData = () => {
   main.deleteAllData().then(
@@ -41,11 +41,21 @@ const uploadVolontaires = () => {
   )
 }
 
-// const uploadAffectation = () => {
-//   const formData = new FormData()
-//   formData.append('file', affectationFileInput.value)
-//   axios.post(main.config.backend_api + '/uploadaffectation/', formData)
-// }
+const uploadAffectation = () => {
+  const formData = new FormData()
+  formData.append('file', affectationFileInput.value)
+  axios.post(main.config.backend_api + '/uploadaffectation/', formData).then(
+    () => {
+      snackbarText.value = 'Data loaded'
+      snackbarShown.value = true
+    },
+    (error) => {
+      console.error(error)
+      snackbarText.value = 'Error occured'
+      snackbarShown.value = true
+    }
+  )
+}
 </script>
 
 <template>
@@ -63,7 +73,6 @@ const uploadVolontaires = () => {
       ></v-file-input>
       <v-btn @click="uploadVolontaires" variant="outlined">Importer</v-btn>
     </v-card>
-    <!--
     <v-card variant="outlined">
       <h3>Importer les affectations</h3>
       <v-file-input
@@ -73,7 +82,6 @@ const uploadVolontaires = () => {
       ></v-file-input>
       <v-btn @click="uploadAffectation" variant="outlined">Importer</v-btn>
     </v-card>
-    -->
   </v-sheet>
   <v-snackbar v-model="snackbarShown" timeout="1000">
     {{ snackbarText }}

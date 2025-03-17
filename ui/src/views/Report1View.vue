@@ -9,7 +9,7 @@ main.fetchData()
 
 <template>
   <div class="report">
-    <template v-for="startDay in main.startDays" :key="startDay">
+    <template v-for="startDay in main.startDays" :key="startDay.toISOString()">
       <div class="shift" v-for="(shift, index) in main.getShifts(startDay)" :key="shift.id">
         <div class="day" v-if="index == 0">
           {{ new Date(startDay).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long' }) }}

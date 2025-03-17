@@ -18,7 +18,7 @@ const showComplet = ref(true)
       v-for="startDay in main.startDays.filter(
         (startDay) => main.getShiftsWithManques(startDay, showComplet).length > 0
       )"
-      :key="startDay"
+      :key="startDay.toISOString()"
     >
       <div class="day">
         <b>{{

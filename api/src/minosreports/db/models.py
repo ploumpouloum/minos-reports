@@ -103,8 +103,10 @@ class Shift(Base):
     id: Mapped[UUID] = mapped_column(
         init=False, primary_key=True, server_default=text("uuid_generate_v4()")
     )
+    meet_date_time: Mapped[datetime] = mapped_column(index=True)
     start_date_time: Mapped[datetime] = mapped_column(index=True)
     end_date_time: Mapped[datetime] = mapped_column(index=True)
+    return_date_time: Mapped[datetime] = mapped_column(index=True)
     station_id: Mapped[int] = mapped_column(
         ForeignKey("station.id"), init=False, index=True
     )
