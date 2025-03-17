@@ -49,6 +49,8 @@ async def data():
                     "minor": volunteer.minor,
                     "mission_restrictions": volunteer.mission_restrictions,
                     "food_restrictions": volunteer.food_restrictions,
+                    "incoming_date_time": volunteer.incoming_date_time,
+                    "outgoing_date_time": volunteer.outgoing_date_time,
                 }
                 for volunteer in session.execute(sa.select(Volunteer)).scalars()
             ],

@@ -1,5 +1,6 @@
 import csv
 import datetime
+import re
 from pathlib import Path
 
 import sqlalchemy as sa
@@ -11,6 +12,12 @@ from minosreports.db.models import Assignment, Shift, Station, Volunteer
 context = Context.get(fallback_to_class=True)
 logger = context.logger
 
+DPS_RE = re.compile(
+    r"^(?P<day>\d{2})\/(?P<month>\d{2})\/(?P<year>\d{4}) de (?P<meet_hours>\d{2}):"
+    r"(?P<meet_mins>\d{2}) à (?P<end_hours>\d{2}):(?P<end_mins>\d{2}) pour"
+    r"\s*(?P<dps_name>.*?)\s*$"
+)
+
 
 def parse_affectations_csv(filename: Path, session: so.Session):
     count_rows: int = 0
@@ -18,45 +25,26 @@ def parse_affectations_csv(filename: Path, session: so.Session):
         reader = csv.DictReader(csvfile, delimiter=";")
         for row in reader:
             count_rows += 1
-            if row["Volontaire"].strip():
-                volunteer = get_volunteer(row["Volontaire"])
-                stmt = (
-                    sa.select(Volunteer)
-                    .where(
-                        sa.func.lower(Volunteer.firstname)
-                        == volunteer.firstname.lower()
-                    )
-                    .where(
-                        sa.func.lower(Volunteer.lastname) == volunteer.lastname.lower()
-                    )
-                )
-                volunteer_in_db = session.execute(stmt).scalar_one_or_none()
-                if volunteer_in_db is None:
-                    logger.debug(
-                        f"Adding volunteer {volunteer.firstname} "
-                        f"{volunteer.lastname}"
-                    )
-                    session.add(volunteer)
-                    volunteer_in_db = session.execute(stmt).scalar_one()
-            else:
-                volunteer_in_db = None
 
             bad_row = False
             for field in [
-                "Nom DPS",
-                "Date",
+                "DPS",
                 "Début de poste",
-                "Fin de poste",
                 "Qualification",
             ]:
                 if not row[field].strip():
-                    logger.warning(f"Ignoring line without '{field}'")
+                    logger.warning(f"Ignoring row {count_rows}, missing '{field}'")
                     bad_row = True
                     break
             if bad_row:
                 continue
 
-            station = get_station(nom_dps=row["Nom DPS"])
+            dps_match = DPS_RE.match(row["DPS"])
+            if not dps_match:
+                logger.warning(f"Ignoring row {count_rows}, 'DPS' field is incorrect")
+                continue
+
+            station = get_station(dps_match=dps_match)
             stmt = sa.select(Station).where(Station.label == station.label)
             station_in_db = session.execute(stmt).scalar_one_or_none()
             if station_in_db is None:
@@ -66,9 +54,8 @@ def parse_affectations_csv(filename: Path, session: so.Session):
 
             shift = get_shift(
                 station=station_in_db,
-                date=row["Date"],
+                dps_match=dps_match,
                 debut_de_poste=row["Début de poste"],
-                fin_de_poste=row["Fin de poste"],
             )
             stmt = (
                 sa.select(Shift)
@@ -87,6 +74,16 @@ def parse_affectations_csv(filename: Path, session: so.Session):
 
             assignment = Assignment(role=row["Qualification"])
             assignment.shift = shift_in_db
+
+            nivol = row["NIVOL"].strip()
+            if not nivol:
+                volunteer_in_db = None
+            else:
+                stmt = sa.select(Volunteer).where(Volunteer.nivol == nivol)
+                volunteer_in_db = session.execute(stmt).scalar_one_or_none()
+                if volunteer_in_db is None:
+                    logger.warning(f"NIVOL {nivol} is unknown")
+
             assignment.volunteer = volunteer_in_db
             if volunteer := assignment.volunteer:
                 logger.debug(
@@ -132,33 +129,49 @@ def get_volunteer(value: str) -> Volunteer:
     )
 
 
-def get_station(nom_dps: str) -> Station:
-    return Station(label=nom_dps)
+def get_station(dps_match: re.Match[str]) -> Station:
+    return Station(label=dps_match.group("dps_name"))
 
 
-def get_shift(
-    station: Station, date: str, debut_de_poste: str, fin_de_poste: str
-) -> Shift:
-    date_splits = [int(value) for value in date.split("/")]
+def get_shift(station: Station, dps_match: re.Match[str], debut_de_poste: str) -> Shift:
+
     debut_splits = [int(value) for value in debut_de_poste.split(":")]
-    fin_splits = [int(value) for value in fin_de_poste.split(":")]
 
-    start_day = datetime.datetime(  # noqa: DTZ001
-        day=date_splits[0],
-        month=date_splits[1],
-        year=date_splits[2],
+    day = int(dps_match.group("day"))
+    month = int(dps_match.group("month"))
+    year = int(dps_match.group("year"))
+
+    meet = datetime.datetime(  # noqa: DTZ001
+        day=day,
+        month=month,
+        year=year,
+        hour=int(dps_match.group("meet_hours")),
+        minute=int(dps_match.group("meet_mins")),
+    )
+
+    start = datetime.datetime(  # noqa: DTZ001
+        day=day,
+        month=month,
+        year=year,
         hour=debut_splits[0],
         minute=debut_splits[1],
     )
-    end_day = datetime.datetime(  # noqa: DTZ001
-        day=date_splits[0],
-        month=date_splits[1],
-        year=date_splits[2],
-        hour=fin_splits[0],
-        minute=fin_splits[1],
+
+    end = datetime.datetime(  # noqa: DTZ001
+        day=day,
+        month=month,
+        year=year,
+        hour=int(dps_match.group("end_hours")),
+        minute=int(dps_match.group("end_mins")),
     )
-    if end_day < start_day:
-        end_day += datetime.timedelta(days=1)
-    shift = Shift(start_date_time=start_day, end_date_time=end_day)
+
+    if end < start:
+        end += datetime.timedelta(days=1)
+    shift = Shift(
+        meet_date_time=meet,
+        start_date_time=start,
+        end_date_time=end,
+        return_date_time=end,  # TODO: retrieve/compute this property
+    )
     shift.station = station
     return shift

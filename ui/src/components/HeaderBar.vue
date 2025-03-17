@@ -27,12 +27,17 @@ main.fetchData()
           >Restrictions</v-btn
         >
       </router-link>
-      <!-- <router-link to="/report1" custom v-slot="{ navigate }">
-        <v-btn @click="navigate">Rapport 1</v-btn>
+      <router-link to="/freebuzy" custom v-slot="{ navigate }">
+        <v-btn :class="{ active: route.path == '/freebuzy' }" @click="navigate"
+          >Disponibilités</v-btn
+        >
+      </router-link>
+      <router-link to="/report1" custom v-slot="{ navigate }">
+        <v-btn :class="{ active: route.path == '/report1' }" @click="navigate">Rapport 1</v-btn>
       </router-link>
       <router-link to="/manques1" custom v-slot="{ navigate }">
-        <v-btn @click="navigate">Manques 1</v-btn>
-      </router-link> -->
+        <v-btn :class="{ active: route.path == '/manques1' }" @click="navigate">Manques 1</v-btn>
+      </router-link>
     </div>
   </div>
 </template>

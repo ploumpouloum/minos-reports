@@ -1,8 +1,8 @@
 export interface Shift {
   id: string
   stationId: string
-  startDateTime: string
-  endDateTime: string
+  startDateTime: Date
+  endDateTime: Date
 }
 
 export interface Station {
@@ -18,10 +18,18 @@ export interface Volunteer {
   minor: boolean | undefined
   mission_restrictions: string[] | undefined
   food_restrictions: string[] | undefined
+  incoming_date_time: Date
+  outgoing_date_time: Date
 }
 
 export interface Assignment {
   shiftId: string
   volunteerId: string | undefined
   role: string
+}
+
+export enum FreeBusyStatus {
+  Busy,
+  NotAvailable,
+  Free
 }

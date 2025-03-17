@@ -1,6 +1,13 @@
 import { defineStore } from 'pinia'
 import axios, { AxiosError } from 'axios'
 import type { Assignment, Shift, Station, Volunteer } from '@/types/main'
+import { handleDates } from '@/utils'
+import { isEqual, startOfDay } from 'date-fns'
+
+axios.interceptors.response.use((rep) => {
+  handleDates(rep.data)
+  return rep
+})
 
 export type RootState = {
   assignments: Assignment[]
@@ -28,13 +35,23 @@ export const useMainStore = defineStore('main', {
   getters: {
     startDays(state) {
       return Array.from(
-        new Set(state.shifts.map((shift: Shift) => shift.startDateTime.split('T')[0]))
-      )
+        new Set(state.shifts.map((shift: Shift) => startOfDay(shift.startDateTime).getTime()))
+      ).map((timestamp: number) => new Date(timestamp))
+    },
+    volunteersPresent(state) {
+      return (day: Date): Volunteer[] => {
+        return state.volunteers.filter(
+          (volunteer: Volunteer) =>
+            startOfDay(volunteer.incoming_date_time) <= day &&
+            startOfDay(volunteer.outgoing_date_time) >= day &&
+            !isEqual(volunteer.outgoing_date_time, day)
+        )
+      }
     },
     getShifts(state) {
-      return (day: string): Shift[] => {
+      return (day: Date): Shift[] => {
         return state.shifts
-          .filter((shift: Shift) => shift.startDateTime.split('T')[0] == day)
+          .filter((shift: Shift) => isEqual(startOfDay(shift.startDateTime), day))
           .sort(function (shift1: Shift, shift2: Shift) {
             return (
               new Date(shift1.startDateTime).getTime() - new Date(shift2.startDateTime).getTime()
@@ -43,11 +60,11 @@ export const useMainStore = defineStore('main', {
       }
     },
     getShiftsWithManques(state) {
-      return (day: string, showComplet: boolean): Shift[] => {
+      return (day: Date, showComplet: boolean): Shift[] => {
         return state.shifts
           .filter(
             (shift: Shift) =>
-              shift.startDateTime.split('T')[0] == day &&
+              isEqual(startOfDay(shift.startDateTime), day) &&
               (Object.keys(this.getManques(shift.id)).length > 0 || showComplet)
           )
           .sort(function (shift1: Shift, shift2: Shift) {
@@ -102,7 +119,7 @@ export const useMainStore = defineStore('main', {
       }
     },
     getTotalManques(state) {
-      return (day: string, showComplet: boolean): { [dict_key: string]: number } => {
+      return (day: Date, showComplet: boolean): { [dict_key: string]: number } => {
         const shifts = this.getShiftsWithManques(day, showComplet)
         return state.assignments
           .filter(

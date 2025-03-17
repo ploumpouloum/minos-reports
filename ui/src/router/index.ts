@@ -5,6 +5,7 @@ import DataView from '@/views/DataView.vue'
 import RestrictionsView from '@/views/RestrictionsView.vue'
 import VolunteerView from '@/views/VolunteerView.vue'
 import ShiftView from '@/views/ShiftView.vue'
+import FreeBuzyView from '@/views/FreeBuzyView.vue'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -28,6 +29,11 @@ const router = createRouter({
       path: '/data',
       name: 'data',
       component: DataView
+    },
+    {
+      path: '/freebuzy',
+      name: 'freebuzy',
+      component: FreeBuzyView
     },
     {
       path: '/restrictions',
