@@ -3,6 +3,7 @@ import axios, { AxiosError } from 'axios'
 import type { Assignment, Shift, Station, Volunteer } from '@/types/main'
 import { handleDates } from '@/utils'
 import { isEqual, startOfDay } from 'date-fns'
+import { stationsRolesOrder, stationsRolesMaps } from '@/constants'
 
 axios.interceptors.response.use((rep) => {
   handleDates(rep.data)
@@ -18,6 +19,8 @@ export type RootState = {
   isLoading: boolean
   errorMessage: string
   errorDetails: string
+  stationsRoles: string[]
+  volunteersRoles: string[]
 }
 
 export const useMainStore = defineStore('main', {
@@ -30,7 +33,9 @@ export const useMainStore = defineStore('main', {
       dataLoaded: false,
       isLoading: false,
       errorMessage: '',
-      errorDetails: ''
+      errorDetails: '',
+      stationsRoles: [],
+      volunteersRoles: []
     }) as RootState,
   getters: {
     startDays(state) {
@@ -107,10 +112,11 @@ export const useMainStore = defineStore('main', {
       }
     },
     getManques(state) {
-      return (shiftId: string): { [dict_key: string]: number } => {
+      return (shiftId: string, total: boolean = false): { [dict_key: string]: number } => {
         return state.assignments
           .filter(
-            (assignment: Assignment) => assignment.shiftId == shiftId && !assignment.volunteerId
+            (assignment: Assignment) =>
+              assignment.shiftId == shiftId && (total || !assignment.volunteerId)
           )
           .reduce((manques: { [dict_key: string]: number }, assignment) => {
             manques[assignment.role] = (manques[assignment.role] || 0) + 1
@@ -119,12 +125,17 @@ export const useMainStore = defineStore('main', {
       }
     },
     getTotalManques(state) {
-      return (day: Date, showComplet: boolean): { [dict_key: string]: number } => {
+      return (
+        day: Date,
+        showComplet: boolean,
+        total: boolean = false
+      ): { [dict_key: string]: number } => {
         const shifts = this.getShiftsWithManques(day, showComplet)
         return state.assignments
           .filter(
             (assignment: Assignment) =>
-              shifts.some((shift) => assignment.shiftId == shift.id) && !assignment.volunteerId
+              shifts.some((shift) => assignment.shiftId == shift.id) &&
+              (total || !assignment.volunteerId)
           )
           .reduce((manques: { [dict_key: string]: number }, assignment) => {
             manques[assignment.role] = (manques[assignment.role] || 0) + 1
@@ -147,6 +158,17 @@ export const useMainStore = defineStore('main', {
           this.stations = response.data['stations'] as Station[]
           this.assignments = response.data['assignments'] as Assignment[]
           this.dataLoaded = true
+          this.volunteersRoles = Array.from(
+            new Set(...this.volunteers.map((volunteer) => volunteer.roles))
+          )
+          this.stationsRoles = Array.from(
+            new Set(this.assignments.map((assignment) => assignment.role))
+          ).sort(function (a, b) {
+            return (
+              stationsRolesOrder.indexOf(stationsRolesMaps[a]) -
+              stationsRolesOrder.indexOf(stationsRolesMaps[b])
+            )
+          })
         },
         (error) => {
           this.isLoading = false

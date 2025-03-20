@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useMainStore } from '@/stores/main'
-import Manques1Shift from '../components/Manques1Shift.vue'
+import ManquesShift from '@/components/ManquesShift.vue'
 import { ref } from 'vue'
+import ManquesShiftTotal from '@/components/ManquesShiftTotal.vue'
+import AbbreviationSummary from '@/components/AbbreviationSummary.vue'
 
 const main = useMainStore()
 
@@ -11,6 +13,7 @@ const showComplet = ref(true)
 </script>
 
 <template>
+  <AbbreviationSummary />
   <div class="report">
     <input type="checkbox" id="checkbox" v-model="showComplet" />
     <label for="checkbox">Afficher les postes complets</label>
@@ -21,32 +24,25 @@ const showComplet = ref(true)
       :key="startDay.toISOString()"
     >
       <div class="day">
-        <b>{{
-          new Date(startDay).toLocaleDateString('fr-FR', {
-            weekday: 'long',
-            day: '2-digit',
-            month: 'long'
-          })
-        }}</b>
-
-        <div v-if="Object.keys(main.getTotalManques(startDay, showComplet)).length > 0">
-          <b>{{ main.getShifts(startDay).length }}</b> postes, dont
-          <b>{{ main.getShiftsWithManques(startDay, false).length }}</b> non complets ;
-          <span
-            v-for="(count, role, idx) in main.getTotalManques(startDay, showComplet)"
-            :key="role"
-            >{{ idx ? ', ' : 'manque ' }}<b>{{ count }}</b> {{ role }}</span
-          >
-        </div>
-        <div v-else>
-          <div>
-            <b>{{ main.getShifts(startDay).length }}</b> postes, tous complets
-          </div>
-        </div>
+        <b></b>
       </div>
       <table cellspacing="0">
+        <thead>
+          <tr>
+            <th class="noborder">
+              {{
+                startDay.toLocaleDateString('fr-FR', {
+                  weekday: 'long',
+                  day: '2-digit',
+                  month: 'long'
+                })
+              }}
+            </th>
+            <ManquesShiftTotal :day="startDay" :showComplet="showComplet" />
+          </tr>
+        </thead>
         <tbody>
-          <Manques1Shift
+          <ManquesShift
             v-for="shift in main.getShiftsWithManques(startDay, showComplet)"
             :key="shift.id"
             :shiftId="shift.id"
@@ -82,5 +78,15 @@ tr:nth-child(even) {
 table {
   margin-bottom: 10px;
   width: 100%;
+  border-collapse: collapse;
+}
+
+th.noborder {
+  border: none;
+  background-color: transparent;
+  width: auto;
+  color: black;
+  text-align: right;
+  padding: 0 1rem;
 }
 </style>

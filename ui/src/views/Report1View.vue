@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useMainStore } from '@/stores/main'
 import Report1Shift from '../components/Report1Shift.vue'
+import AbbreviationSummary from '@/components/AbbreviationSummary.vue'
 
 const main = useMainStore()
 
@@ -8,6 +9,7 @@ main.fetchData()
 </script>
 
 <template>
+  <AbbreviationSummary />
   <div class="report">
     <template v-for="startDay in main.startDays" :key="startDay.toISOString()">
       <div class="shift" v-for="(shift, index) in main.getShifts(startDay)" :key="shift.id">

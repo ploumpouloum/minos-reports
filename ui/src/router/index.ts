@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Report1View from '../views/Report1View.vue'
-import Manques1View from '@/views/Manques1View.vue'
+import ManquesView from '@/views/ManquesView.vue'
 import DataView from '@/views/DataView.vue'
 import RestrictionsView from '@/views/RestrictionsView.vue'
 import VolunteerView from '@/views/VolunteerView.vue'
@@ -21,9 +21,9 @@ const router = createRouter({
       component: Report1View
     },
     {
-      path: '/manques1',
-      name: 'manques1',
-      component: Manques1View
+      path: '/manques',
+      name: 'manques',
+      component: ManquesView
     },
     {
       path: '/data',
