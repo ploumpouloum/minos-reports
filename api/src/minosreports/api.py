@@ -51,6 +51,7 @@ async def data():
                     "food_restrictions": volunteer.food_restrictions,
                     "incoming_date_time": volunteer.incoming_date_time,
                     "outgoing_date_time": volunteer.outgoing_date_time,
+                    "roles": volunteer.roles,
                 }
                 for volunteer in session.execute(sa.select(Volunteer)).scalars()
             ],

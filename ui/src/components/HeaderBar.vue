@@ -35,8 +35,8 @@ main.fetchData()
       <router-link to="/report1" custom v-slot="{ navigate }">
         <v-btn :class="{ active: route.path == '/report1' }" @click="navigate">Rapport 1</v-btn>
       </router-link>
-      <router-link to="/manques1" custom v-slot="{ navigate }">
-        <v-btn :class="{ active: route.path == '/manques1' }" @click="navigate">Manques 1</v-btn>
+      <router-link to="/manques" custom v-slot="{ navigate }">
+        <v-btn :class="{ active: route.path == '/manques' }" @click="navigate">Manques</v-btn>
       </router-link>
     </div>
   </div>

@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import type { Ref } from 'vue'
 import { useMainStore } from '@/stores/main'
 import type { Station, Shift } from '../types/main.ts'
+import ManquesShiftDetail from '@/components/ManquesShiftDetail.vue'
 
 const main = useMainStore()
 
@@ -24,6 +25,9 @@ const station: Ref<Station | null> = ref(
 const shiftManques = computed(() => {
   return main.getManques(props.shiftId)
 })
+const shiftTotals = computed(() => {
+  return main.getManques(props.shiftId, true)
+})
 </script>
 
 <template>
@@ -44,12 +48,9 @@ const shiftManques = computed(() => {
         })
       }}
     </td>
-    <td class="manques" v-if="Object.keys(shiftManques).length > 0">
-      <span v-for="(count, role, idx) in shiftManques" :key="role"
-        >{{ idx ? ', ' : 'Manque ' }}<b>{{ count }}</b> {{ role }}</span
-      >
+    <td v-for="role in main.stationsRoles" :key="role">
+      <ManquesShiftDetail :total="shiftTotals[role]" :manque="shiftManques[role]" />
     </td>
-    <td class="manques complet" v-else>COMPLET</td>
   </tr>
   <tr v-else>
     Missing data
@@ -57,12 +58,13 @@ const shiftManques = computed(() => {
 </template>
 
 <style scoped lang="css">
-.manques {
-  text-align: end;
-  color: red;
+td {
+  text-align: center;
+  border: 1px solid black;
 }
 
-.complet {
-  color: green;
+td.shift {
+  text-align: left;
+  padding: 0.2rem 0.4rem;
 }
 </style>

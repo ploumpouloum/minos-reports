@@ -20,6 +20,7 @@ export interface Volunteer {
   food_restrictions: string[] | undefined
   incoming_date_time: Date
   outgoing_date_time: Date
+  roles: string[] | undefined
 }
 
 export interface Assignment {
