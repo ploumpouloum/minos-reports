@@ -13,7 +13,12 @@ const showComplet = ref(true)
 </script>
 
 <template>
-  <AbbreviationSummary />
+  <AbbreviationSummary class="abrev" />
+  <p class="help">
+    Chaque case indique le nombre de personnes manquantes vs le nombre total nécessaire. Par exemple
+    2/3 indique qu'il manque encore 2 personnes sur les 3 nécessaires. 0/4 indique qu'il ne manque
+    plus personne sur les 4 nécessaires, et ainsi de suite.
+  </p>
   <div class="report">
     <input type="checkbox" id="checkbox" v-model="showComplet" />
     <label for="checkbox">Afficher les postes complets</label>
@@ -88,5 +93,15 @@ th.noborder {
   color: black;
   text-align: right;
   padding: 0 1rem;
+}
+
+.abrev {
+  margin-top: 1rem;
+}
+
+.help {
+  margin: 0.8rem 3rem;
+  font-size: 0.9rem;
+  line-height: 1rem;
 }
 </style>
