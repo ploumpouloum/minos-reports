@@ -14,7 +14,9 @@ main.fetchData()
     <template v-for="startDay in main.startDays" :key="startDay.toISOString()">
       <div class="shift" v-for="(shift, index) in main.getShifts(startDay)" :key="shift.id">
         <div class="day" v-if="index == 0">
-          {{ new Date(startDay).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long' }) }}
+          {{
+            startDay.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long' })
+          }}
         </div>
         <Report1Shift :shiftId="shift.id" />
       </div>
@@ -24,9 +26,10 @@ main.fetchData()
 
 <style scoped lang="css">
 .report {
+  margin-top: 1rem;
   display: flex;
   flex-flow: column wrap;
-  height: calc(100vh - 80px);
+  height: calc(100vh - 12rem);
 }
 
 .report > * {
@@ -35,7 +38,7 @@ main.fetchData()
 }
 
 .shift {
-  width: 300px;
+  width: 350px;
 }
 
 .break {
@@ -45,6 +48,7 @@ main.fetchData()
 
 .day {
   background-color: #e40613;
+  padding: 0.5rem 0;
   color: white;
   text-align: center;
   margin-bottom: 10px;

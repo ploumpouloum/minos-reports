@@ -3,6 +3,7 @@ export interface Shift {
   stationId: string
   startDateTime: Date
   endDateTime: Date
+  meetDateTime: Date
 }
 
 export interface Station {

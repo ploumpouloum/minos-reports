@@ -68,6 +68,7 @@ async def data():
                     "stationId": shift.station_id,
                     "startDateTime": shift.start_date_time,
                     "endDateTime": shift.end_date_time,
+                    "meetDateTime": shift.meet_date_time,
                 }
                 for shift in session.execute(sa.select(Shift)).scalars()
             ],

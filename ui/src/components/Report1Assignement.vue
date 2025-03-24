@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import type { Ref, PropType } from 'vue'
 import { useMainStore } from '@/stores/main'
 import type { Assignment, Volunteer } from '@/types/main'
+import { stationsRolesMaps } from '@/constants'
 
 const main = useMainStore()
 
@@ -19,8 +20,8 @@ const volunteer: Ref<Volunteer | null> = ref(
 </script>
 
 <template>
-  <td class="role">{{ props.assignment.role }}</td>
-  <td>
+  <td class="role">{{ stationsRolesMaps[props.assignment.role] }}</td>
+  <td colspan="3">
     <router-link :to="`/volunteer/${volunteer?.nivol}`">
       {{ volunteer?.firstname }} {{ volunteer?.lastname }}
     </router-link>
@@ -28,7 +29,7 @@ const volunteer: Ref<Volunteer | null> = ref(
 </template>
 
 <style lang="css" scoped>
-.role {
-  width: 100px;
+td {
+  border: 1px #717171 solid;
 }
 </style>

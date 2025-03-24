@@ -49,7 +49,6 @@ th.noborder {
   font-size: small;
   display: flex;
   flex-wrap: wrap;
-  margin: 1rem 0;
 }
 
 #role-map div {
