@@ -26,3 +26,7 @@ export function handleDates(data: unknown) {
 
   return data
 }
+
+export function addMinutes(date: Date, minutes: number) {
+  return new Date(date.getTime() + minutes * 60000)
+}
