@@ -4,6 +4,7 @@ import type { Ref } from 'vue'
 import { useMainStore } from '@/stores/main'
 import Report1Assignement from './Report1Assignement.vue'
 import type { Station, Shift } from '../types/main.ts'
+import { addMinutes } from '@/utils.ts'
 
 const main = useMainStore()
 
@@ -41,7 +42,7 @@ const localeHour = (date: Date) =>
         </tr>
         <tr>
           <td>{{ localeHour(shift.meetDateTime) }}</td>
-          <td>???</td>
+          <td>{{ localeHour(addMinutes(shift.meetDateTime, 30)) }}</td>
           <td>{{ localeHour(shift.startDateTime) }}</td>
           <td>{{ localeHour(shift.endDateTime) }}</td>
         </tr>
