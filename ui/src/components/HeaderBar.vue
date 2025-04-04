@@ -11,6 +11,9 @@ main.fetchData()
 
 <template>
   <div class="header-bar">
+    <div id="whoami">
+      {{ main.whoami }}
+    </div>
     <div id="logo">
       <router-link to="/">
         <v-img id="logo" :src="logoImage" alt="Logo" class="logo" height="70" />
@@ -43,6 +46,11 @@ main.fetchData()
 </template>
 
 <style scoped>
+#whoami {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
 .header-bar {
   padding: 0.25rem;
   display: flex;

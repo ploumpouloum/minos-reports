@@ -12,6 +12,10 @@ dependencies = [
   "alembic==1.14.1",
   "SQLAlchemy==2.0.37",
   "psycopg[binary,pool]==3.2.4",
+  "pyjwt==2.10.1",
+  "requests==2.32.3",
+  "types-requests==2.32.0.20250328",
+  "cryptography==44.0.2",
 ]
 dynamic = ["version"]
 

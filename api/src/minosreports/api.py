@@ -2,9 +2,10 @@ import tempfile
 from pathlib import Path
 from typing import Annotated
 
+from minosreports.cloudflare_access import InvalidTokenError, verify_token
 import sqlalchemy as sa
 import sqlalchemy.orm as so
-from fastapi import FastAPI, File, UploadFile
+from fastapi import Cookie, Depends, FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from minosreports.context import Context
@@ -29,13 +30,32 @@ app.add_middleware(
 )
 
 
+async def verify_cf_authorization(
+    CF_Authorization: Annotated[str | None, Cookie()] = None,
+):
+    if not CF_Authorization:
+        raise HTTPException(502, "Missing authorization cookie")
+    try:
+        claims = verify_token(CF_Authorization)
+    except InvalidTokenError:
+        raise HTTPException(502, "Invalid authorization cookie")
+    if not claims:
+        raise
+    return claims.get("email")
+
+
 @app.get("/")
-async def root():
-    return {"message": "Hello World"}
+async def root(user_email: str = Depends(verify_cf_authorization)):
+    return {"message": f"Hello {user_email}"}
+
+
+@app.get("/whoami")
+async def whoami(user_email: str = Depends(verify_cf_authorization)):
+    return user_email
 
 
 @app.get("/data")
-async def data():
+async def data(user_email: str = Depends(verify_cf_authorization)):
 
     @dbsession
     def data_inner(session: so.Session):  # pyright: ignore[reportUnknownParameterType]
@@ -91,6 +111,7 @@ async def create_upload_affectation(
     file: Annotated[
         UploadFile, File(description="Upload Affectation CSVs exported from Minos")
     ],
+    _: str = Depends(verify_cf_authorization),
 ):
     @dbsession
     def upload_inner(session: so.Session):
@@ -108,6 +129,7 @@ async def create_upload_volontaires(
     file: Annotated[
         UploadFile, File(description="Upload Volontaires CSVs exported from Minos")
     ],
+    _: str = Depends(verify_cf_authorization),
 ):
     @dbsession
     def upload_inner(session: so.Session):
@@ -121,7 +143,9 @@ async def create_upload_volontaires(
 
 
 @app.delete("/data")
-async def delete_all():
+async def delete_all(
+    _: str = Depends(verify_cf_authorization),
+):
 
     @dbsession
     def delete_all_inner(session: so.Session):
