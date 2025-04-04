@@ -11,6 +11,7 @@ axios.interceptors.response.use((rep) => {
 })
 
 export type RootState = {
+  whoami: string
   assignments: Assignment[]
   shifts: Shift[]
   stations: Station[]
@@ -26,6 +27,7 @@ export type RootState = {
 export const useMainStore = defineStore('main', {
   state: () =>
     ({
+      whoami: '',
       assignments: [],
       shifts: [],
       stations: [],
@@ -150,13 +152,17 @@ export const useMainStore = defineStore('main', {
       this.errorMessage = ''
       this.errorDetails = ''
 
-      return axios.get(this.config.backend_api + '/data').then(
-        (response) => {
+      return Promise.all([
+        axios.get(this.config.backend_api + '/whoami'),
+        axios.get(this.config.backend_api + '/data')
+      ]).then(
+        ([whoami_response, data_response]) => {
+          this.whoami = whoami_response.data
           this.isLoading = false
-          this.volunteers = response.data['volunteers'] as Volunteer[]
-          this.shifts = response.data['shifts'] as Shift[]
-          this.stations = response.data['stations'] as Station[]
-          this.assignments = response.data['assignments'] as Assignment[]
+          this.volunteers = data_response.data['volunteers'] as Volunteer[]
+          this.shifts = data_response.data['shifts'] as Shift[]
+          this.stations = data_response.data['stations'] as Station[]
+          this.assignments = data_response.data['assignments'] as Assignment[]
           this.dataLoaded = true
           this.volunteersRoles = Array.from(
             new Set(...this.volunteers.map((volunteer) => volunteer.roles))
