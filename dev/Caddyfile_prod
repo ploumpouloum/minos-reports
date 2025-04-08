@@ -1,0 +1,9 @@
+:80 {
+    route /api* {
+        reverse_proxy minosreports_api:80
+    }
+
+    route /* {
+        reverse_proxy minosreports_ui_prod:80
+    }
+}
