@@ -15,6 +15,8 @@ from minosreports.db.models import Assignment, Shift, Station, Volunteer
 from minosreports.parsing.affectations import parse_affectations_csv
 from minosreports.parsing.volontaires import parse_volontaires_csv
 
+Context.setup()
+
 context = Context.get(fallback_to_class=True)
 logger = context.logger
 
@@ -67,12 +69,51 @@ async def whoami(user_email: str = Depends(verify_cf_authorization)):
 @app.get("/data")
 async def data(user_email: str = Depends(verify_cf_authorization)):
 
-    if user_email not in context.supervisor_mails + context.dlus_mails:
-        raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED)
-
     @dbsession
     def data_inner(session: so.Session):  # pyright: ignore[reportUnknownParameterType]
+
+        is_supervisor = user_email in context.supervisor_mails
+        is_dlus = (
+            session.execute(
+                sa.select(Volunteer).where(Volunteer.dlus_email == user_email)
+            ).first()
+            is not None
+        )
+
+        if is_supervisor:
+            volunteers_stmt = sa.select(Volunteer)
+            assignements_stmt = sa.select(Assignment)
+            shifts_stmt = sa.select(Shift)
+            stations_stmt = sa.select(Station)
+        else:
+            volunteers_stmt = sa.select(Volunteer).where(
+                sa.or_(
+                    Volunteer.dlus_email == user_email, Volunteer.email == user_email
+                )
+            )
+            volunteers_subquery = sa.select(Volunteer.id).where(
+                sa.or_(
+                    Volunteer.dlus_email == user_email, Volunteer.email == user_email
+                )
+            )
+            assignements_stmt = sa.select(Assignment).where(
+                Assignment.volunteer_id.in_(volunteers_subquery)
+            )
+            shifts_subquery = sa.select(Assignment.shift_id).where(
+                Assignment.volunteer_id.in_(volunteers_subquery)
+            )
+            shifts_stmt = sa.select(Shift).where(Shift.id.in_(shifts_subquery))
+            stations_subquery = sa.select(Shift.station_id).where(
+                Shift.id.in_(shifts_subquery)
+            )
+            stations_stmt = sa.select(Station).where(Station.id.in_(stations_subquery))
+
         return {  # pyright: ignore[reportUnknownVariableType]
+            "isSupervisor": is_supervisor,
+            "isDlus": is_dlus,
+            "myVolunteerId": session.execute(
+                sa.select(Volunteer.id).where(Volunteer.email == user_email)
+            ).scalar_one_or_none(),
             "volunteers": [
                 {
                     "id": volunteer.id,
@@ -84,16 +125,17 @@ async def data(user_email: str = Depends(verify_cf_authorization)):
                     "food_restrictions": volunteer.food_restrictions,
                     "incoming_date_time": volunteer.incoming_date_time,
                     "outgoing_date_time": volunteer.outgoing_date_time,
+                    "department": volunteer.department,
                     "roles": volunteer.roles,
                 }
-                for volunteer in session.execute(sa.select(Volunteer)).scalars()
+                for volunteer in session.execute(volunteers_stmt).scalars()
             ],
             "stations": [
                 {
                     "id": station.id,
                     "label": station.label,
                 }
-                for station in session.execute(sa.select(Station)).scalars()
+                for station in session.execute(stations_stmt).scalars()
             ],
             "shifts": [
                 {
@@ -103,7 +145,7 @@ async def data(user_email: str = Depends(verify_cf_authorization)):
                     "endDateTime": shift.end_date_time,
                     "meetDateTime": shift.meet_date_time,
                 }
-                for shift in session.execute(sa.select(Shift)).scalars()
+                for shift in session.execute(shifts_stmt).scalars()
             ],
             "assignments": [
                 {
@@ -112,7 +154,7 @@ async def data(user_email: str = Depends(verify_cf_authorization)):
                     "volunteerId": assignment.volunteer_id,
                     "role": assignment.role,
                 }
-                for assignment in session.execute(sa.select(Assignment)).scalars()
+                for assignment in session.execute(assignements_stmt).scalars()
             ],
         }
 

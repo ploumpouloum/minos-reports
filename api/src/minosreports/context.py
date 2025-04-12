@@ -63,17 +63,12 @@ class Context:
     if not database_url:
         raise Exception("POSTGRES_URI environment variable is mandatory")
 
-    supervisor_mails: list[str] = os.getenv(  # noqa: RUF009
-        "SUPERVISOR_MAILS", ""
-    ).split(",")
+    supervisor_mails: list[str] = dataclasses.field(
+        default_factory=lambda: os.getenv("SUPERVISOR_MAILS", "").split(",")
+    )
 
     if not supervisor_mails:
         raise Exception("SUPERVISOR_MAILS environment variable is mandatory")
-
-    dlus_mails: list[str] = os.getenv("DLUS_MAILS", "").split(",")  # noqa: RUF009
-
-    if not dlus_mails:
-        raise Exception("DLUS_MAILS environment variable is mandatory")
 
     api_root_path: str = os.getenv("API_ROOT_PATH", "")  # noqa: RUF009
 

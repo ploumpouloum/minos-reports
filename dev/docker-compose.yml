@@ -31,10 +31,9 @@ services:
       - 127.0.0.1:8000:80
     environment:
       - POSTGRES_URI=postgresql+psycopg://minos:minospass@postgresdb:5432/minos
-      - CF_POLICY_AUD=xxxxx
-      - CF_TEAM_DOMAIN=https://xxxx.cloudflareaccess.com
-      - SUPERVISOR_MAILS=xxxx1@acme.com
-      - DLUS_MAILS=xxxx2@acme.com
+      - CF_POLICY_AUD=f9f2674787abccf2ecfbae2d24cf9a24c167f3e06892de558d282b794689938e
+      - CF_TEAM_DOMAIN=https://oviles.cloudflareaccess.com
+      - SUPERVISOR_MAILS=benoit.beraud@croix-rouge.fr
       - API_ROOT_PATH=/api
     depends_on:
       - postgresdb

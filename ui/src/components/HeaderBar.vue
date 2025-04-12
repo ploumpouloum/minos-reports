@@ -11,36 +11,41 @@ main.fetchData()
 
 <template>
   <div class="header-bar">
-    <div id="whoami">
-      {{ main.whoami }}
-    </div>
+    <div id="whoami">{{ main.whoami }}</div>
     <div id="logo">
       <router-link to="/">
         <v-img id="logo" :src="logoImage" alt="Logo" class="logo" height="70" />
       </router-link>
     </div>
     <div class="header-btns">
-      <router-link to="/data" custom v-slot="{ navigate }">
-        <v-btn :class="{ active: route.path == '/data' }" @click="navigate"
-          >Gérer les données</v-btn
-        >
-      </router-link>
-      <router-link to="/restrictions" custom v-slot="{ navigate }">
-        <v-btn :class="{ active: route.path == '/restrictions' }" @click="navigate"
-          >Restrictions</v-btn
-        >
-      </router-link>
-      <router-link to="/freebuzy" custom v-slot="{ navigate }">
-        <v-btn :class="{ active: route.path == '/freebuzy' }" @click="navigate"
-          >Disponibilités</v-btn
-        >
-      </router-link>
-      <router-link to="/report1" custom v-slot="{ navigate }">
-        <v-btn :class="{ active: route.path == '/report1' }" @click="navigate">Rapport 1</v-btn>
-      </router-link>
-      <router-link to="/manques" custom v-slot="{ navigate }">
-        <v-btn :class="{ active: route.path == '/manques' }" @click="navigate">Manques</v-btn>
-      </router-link>
+      <template v-if="main.isSupervisor">
+        <router-link to="/data" custom v-slot="{ navigate }">
+          <v-btn :class="{ active: route.path == '/data' }" @click="navigate"
+            >Gérer les données</v-btn
+          >
+        </router-link>
+        <router-link to="/volunteers" custom v-slot="{ navigate }">
+          <v-btn :class="{ active: route.path == '/volunteers' }" @click="navigate"
+            >Volontaires</v-btn
+          >
+        </router-link>
+        <router-link to="/restrictions" custom v-slot="{ navigate }">
+          <v-btn :class="{ active: route.path == '/restrictions' }" @click="navigate"
+            >Restrictions</v-btn
+          >
+        </router-link>
+        <router-link to="/freebuzy" custom v-slot="{ navigate }">
+          <v-btn :class="{ active: route.path == '/freebuzy' }" @click="navigate"
+            >Disponibilités</v-btn
+          >
+        </router-link>
+        <router-link to="/report1" custom v-slot="{ navigate }">
+          <v-btn :class="{ active: route.path == '/report1' }" @click="navigate">Rapport 1</v-btn>
+        </router-link>
+        <router-link to="/manques" custom v-slot="{ navigate }">
+          <v-btn :class="{ active: route.path == '/manques' }" @click="navigate">Manques</v-btn>
+        </router-link>
+      </template>
     </div>
   </div>
 </template>

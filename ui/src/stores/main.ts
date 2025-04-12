@@ -16,6 +16,9 @@ export type RootState = {
   shifts: Shift[]
   stations: Station[]
   volunteers: Volunteer[]
+  isSupervisor: boolean
+  isDlus: boolean
+  myVolunteerId: string | null
   dataLoaded: boolean
   isLoading: boolean
   errorMessage: string
@@ -32,6 +35,9 @@ export const useMainStore = defineStore('main', {
       shifts: [],
       stations: [],
       volunteers: [],
+      isSupervisor: false,
+      isDlus: false,
+      myVolunteerId: null,
       dataLoaded: false,
       isLoading: false,
       errorMessage: '',
@@ -163,6 +169,9 @@ export const useMainStore = defineStore('main', {
           this.shifts = data_response.data['shifts'] as Shift[]
           this.stations = data_response.data['stations'] as Station[]
           this.assignments = data_response.data['assignments'] as Assignment[]
+          this.isSupervisor = data_response.data['isSupervisor']
+          this.isDlus = data_response.data['isDlus']
+          this.myVolunteerId = data_response.data['myVolunteerId']
           this.dataLoaded = true
           this.volunteersRoles = Array.from(
             new Set(...this.volunteers.map((volunteer) => volunteer.roles))
@@ -182,6 +191,9 @@ export const useMainStore = defineStore('main', {
           this.shifts = []
           this.stations = []
           this.assignments = []
+          this.isSupervisor = false
+          this.isDlus = false
+          this.myVolunteerId = null
           this.errorMessage = 'Failed to load data.'
           if (error instanceof AxiosError) {
             this.handleAxiosError(error)
