@@ -2,8 +2,10 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import Report1View from '../views/Report1View.vue'
 import ManquesView from '@/views/ManquesView.vue'
 import DataView from '@/views/DataView.vue'
+import HomeView from '@/views/HomeView.vue'
 import RestrictionsView from '@/views/RestrictionsView.vue'
 import VolunteerView from '@/views/VolunteerView.vue'
+import VolunteersView from '@/views/VolunteersView.vue'
 import ShiftView from '@/views/ShiftView.vue'
 import FreeBuzyView from '@/views/FreeBuzyView.vue'
 
@@ -13,7 +15,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      redirect: { name: 'restrictions' }
+      component: HomeView
     },
     {
       path: '/report1',
@@ -39,6 +41,11 @@ const router = createRouter({
       path: '/restrictions',
       name: 'restrictions',
       component: RestrictionsView
+    },
+    {
+      path: '/volunteers',
+      name: 'volunteers',
+      component: VolunteersView
     },
     {
       path: '/volunteer/:nivol',

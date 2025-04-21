@@ -53,7 +53,6 @@ def parse_volontaires_csv(filename: Path, session: so.Session):
                 volunteer_in_db.firstname = volunteer.firstname
                 volunteer_in_db.lastname = volunteer.lastname
                 volunteer_in_db.nivol = volunteer.nivol
-                volunteer_in_db.dt = volunteer.dt
                 volunteer_in_db.locality = volunteer.locality
                 volunteer_in_db.phone_number = volunteer.phone_number
                 volunteer_in_db.email = volunteer.email
@@ -76,6 +75,8 @@ def parse_volontaires_csv(filename: Path, session: so.Session):
                 volunteer_in_db.crf_transportation_type = (
                     volunteer.crf_transportation_type
                 )
+                volunteer_in_db.dlus_email = volunteer.dlus_email
+                volunteer_in_db.department = volunteer.department
 
     return {"countRows": count_rows}
 
@@ -90,7 +91,6 @@ def get_volunteer(row: dict[str, Any]) -> Volunteer:
         firstname=row["Prénom"],
         lastname=row["Nom"],
         nivol=row["NIVOL"],
-        dt=row["DT de rattachement"],
         locality=row["Structure locale"],
         phone_number=row["N° TEL"],
         email=row["E-MAIL"],
@@ -109,4 +109,6 @@ def get_volunteer(row: dict[str, Any]) -> Volunteer:
         outgoing_transportation_system=row["Moyen de transport retour"],
         outgoing_train_station=row["Gare de retour"],
         crf_transportation_type=row["Si moyen CRF, Type :"],
+        dlus_email=str(row["Mail NOMINATIF CRf du DLUS/RUS"]).strip().lower(),
+        department=row["DT de rattachement"],
     )

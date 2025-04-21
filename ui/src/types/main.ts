@@ -22,6 +22,7 @@ export interface Volunteer {
   incoming_date_time: Date
   outgoing_date_time: Date
   roles: string[] | undefined
+  department: string
 }
 
 export interface Assignment {

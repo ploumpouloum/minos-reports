@@ -57,7 +57,6 @@ class Volunteer(Base):
     firstname: Mapped[str] = mapped_column(index=True)
     lastname: Mapped[str] = mapped_column(index=True)
     nivol: Mapped[str | None]
-    dt: Mapped[str | None]
     locality: Mapped[str | None]
     phone_number: Mapped[str | None]
     email: Mapped[str | None]
@@ -76,6 +75,8 @@ class Volunteer(Base):
     outgoing_transportation_system: Mapped[str | None]
     outgoing_train_station: Mapped[str | None]
     crf_transportation_type: Mapped[str | None]
+    dlus_email: Mapped[str | None]
+    department: Mapped[str | None]
 
     assignments: Mapped[list["Assignment"]] = relationship(
         back_populates="volunteer", cascade="all, delete-orphan", init=False

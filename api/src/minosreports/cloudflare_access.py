@@ -58,7 +58,7 @@ def verify_token(cf_authorization: str):
     _get_public_keys()
     # Loop through the keys since we can't pass the key set to the decoder
     valid_token = False
-    for key in PublicKeyData.public_keys:
+    for key in PUBLIC_KEY_DATA.public_keys:
         try:
             # decode returns the claims that has the email when needed
             return jwt.decode(
