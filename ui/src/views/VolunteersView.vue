@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { useMainStore } from '@/stores/main'
+import { useRouter } from 'vue-router'
 
 const main = useMainStore()
+
+const router = useRouter()
 </script>
 
 <template>
@@ -11,8 +14,14 @@ const main = useMainStore()
       variant="outlined"
       v-for="volunteer in main.volunteers.sort((a, b) => a.lastname.localeCompare(b.lastname))"
       :key="volunteer.id"
+      @click="
+        router.push({
+          name: 'volunteer',
+          params: { nivol: volunteer.nivol }
+        })
+      "
     >
-      {{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }})
+      <p>{{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }})</p>
     </v-card>
   </v-sheet>
   <v-sheet v-else id="main">Waiting for data ...</v-sheet>

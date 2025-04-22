@@ -5,6 +5,7 @@ import DataView from '@/views/DataView.vue'
 import HomeView from '@/views/HomeView.vue'
 import RestrictionsView from '@/views/RestrictionsView.vue'
 import VolunteerView from '@/views/VolunteerView.vue'
+import VolunteersDlusView from '@/views/VolunteersDlusView.vue'
 import VolunteersView from '@/views/VolunteersView.vue'
 import ShiftView from '@/views/ShiftView.vue'
 import FreeBuzyView from '@/views/FreeBuzyView.vue'
@@ -46,6 +47,11 @@ const router = createRouter({
       path: '/volunteers',
       name: 'volunteers',
       component: VolunteersView
+    },
+    {
+      path: '/volunteers-dlus',
+      name: 'volunteers-dlus',
+      component: VolunteersDlusView
     },
     {
       path: '/volunteer/:nivol',

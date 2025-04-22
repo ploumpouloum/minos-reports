@@ -33,14 +33,23 @@ watch(
 <template>
   <v-sheet v-if="main.dataLoaded && volunteer" id="main">
     <h2>{{ $route.params.nivol }} - {{ volunteer.firstname }} {{ volunteer.lastname }}</h2>
-    <v-card
-      variant="outlined"
-      v-for="assignment in main.getVolunteerAssignments(volunteer.id)"
-      :key="assignment.shiftId"
-      @click="router.push({ name: 'shift', params: { shiftId: assignment.shiftId } })"
-    >
-      <VolunteerShift :role="assignment.role" :shift-id="assignment.shiftId" />
-    </v-card>
+    <div v-if="!main.isDlus && !main.isSupervisor">
+      Vous ne pouvez voir le détail des affectations de ce volontaire.
+    </div>
+    <div v-else>
+      <v-card
+        variant="outlined"
+        v-for="assignment in main.getVolunteerAssignments(volunteer.id)"
+        :key="assignment.shiftId"
+        @click="router.push({ name: 'shift', params: { shiftId: assignment.shiftId } })"
+      >
+        <VolunteerShift
+          :role="assignment.role"
+          :shift-id="assignment.shiftId"
+          :volunteer-id="volunteer.id"
+        />
+      </v-card>
+    </div>
   </v-sheet>
   <v-sheet v-else id="main">Waiting for data ...</v-sheet>
 </template>

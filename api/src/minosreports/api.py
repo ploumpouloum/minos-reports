@@ -86,27 +86,39 @@ async def data(user_email: str = Depends(verify_cf_authorization)):
             shifts_stmt = sa.select(Shift)
             stations_stmt = sa.select(Station)
         else:
-            volunteers_stmt = sa.select(Volunteer).where(
-                sa.or_(
-                    Volunteer.dlus_email == user_email, Volunteer.email == user_email
-                )
-            )
             volunteers_subquery = sa.select(Volunteer.id).where(
                 sa.or_(
                     Volunteer.dlus_email == user_email, Volunteer.email == user_email
                 )
             )
-            assignements_stmt = sa.select(Assignment).where(
+            assignements_subquery = sa.select(Assignment.id).where(
                 Assignment.volunteer_id.in_(volunteers_subquery)
             )
             shifts_subquery = sa.select(Assignment.shift_id).where(
                 Assignment.volunteer_id.in_(volunteers_subquery)
+            )
+            assignements_stmt = sa.select(Assignment).where(
+                sa.or_(
+                    Assignment.volunteer_id.in_(volunteers_subquery),
+                    Assignment.shift_id.in_(shifts_subquery),
+                )
             )
             shifts_stmt = sa.select(Shift).where(Shift.id.in_(shifts_subquery))
             stations_subquery = sa.select(Shift.station_id).where(
                 Shift.id.in_(shifts_subquery)
             )
             stations_stmt = sa.select(Station).where(Station.id.in_(stations_subquery))
+            volunteers_stmt = sa.select(Volunteer).where(
+                sa.or_(
+                    Volunteer.dlus_email == user_email,
+                    Volunteer.email == user_email,
+                    Volunteer.id.in_(
+                        sa.select(Assignment.volunteer_id).where(
+                            Assignment.id.in_(assignements_subquery)
+                        )
+                    ),
+                )
+            )
 
         return {  # pyright: ignore[reportUnknownVariableType]
             "isSupervisor": is_supervisor,
@@ -137,25 +149,29 @@ async def data(user_email: str = Depends(verify_cf_authorization)):
                 }
                 for station in session.execute(stations_stmt).scalars()
             ],
-            "shifts": [
-                {
-                    "id": shift.id,
-                    "stationId": shift.station_id,
-                    "startDateTime": shift.start_date_time,
-                    "endDateTime": shift.end_date_time,
-                    "meetDateTime": shift.meet_date_time,
-                }
-                for shift in session.execute(shifts_stmt).scalars()
-            ],
-            "assignments": [
-                {
-                    "id": assignment.id,
-                    "shiftId": assignment.shift_id,
-                    "volunteerId": assignment.volunteer_id,
-                    "role": assignment.role,
-                }
-                for assignment in session.execute(assignements_stmt).scalars()
-            ],
+            "shifts": (
+                [
+                    {
+                        "id": shift.id,
+                        "stationId": shift.station_id,
+                        "startDateTime": shift.start_date_time,
+                        "endDateTime": shift.end_date_time,
+                        "meetDateTime": shift.meet_date_time,
+                    }
+                    for shift in session.execute(shifts_stmt).scalars()
+                ]
+            ),
+            "assignments": (
+                [
+                    {
+                        "id": assignment.id,
+                        "shiftId": assignment.shift_id,
+                        "volunteerId": assignment.volunteer_id,
+                        "role": assignment.role,
+                    }
+                    for assignment in session.execute(assignements_stmt).scalars()
+                ]
+            ),
         }
 
     return data_inner()
