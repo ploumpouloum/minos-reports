@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import type { Ref } from 'vue'
 import { useMainStore } from '@/stores/main'
 import type { Station, Shift } from '../types/main.ts'
+import VolunteerShiftMate from '@/components/VolunteerShiftMate.vue'
 
 const main = useMainStore()
 
@@ -12,6 +13,10 @@ const props = defineProps({
     required: true
   },
   shiftId: {
+    type: String,
+    required: true
+  },
+  volunteerId: {
     type: String,
     required: true
   }
@@ -25,10 +30,11 @@ const station: Ref<Station | null> = ref(
 
 <template>
   <div v-if="shift && station">
-    De
     {{
       new Date(shift.startDateTime).toLocaleTimeString('fr-FR', {
         weekday: 'long',
+        day: 'numeric',
+        month: 'short',
         hour: '2-digit',
         minute: '2-digit'
       })
@@ -36,21 +42,30 @@ const station: Ref<Station | null> = ref(
     à
     {{
       new Date(shift.endDateTime).toLocaleTimeString('fr-FR', {
-        weekday: 'long',
         hour: '2-digit',
         minute: '2-digit'
       })
     }}
     :
-    {{ role }}
-    à
-    {{ station.label }}
+    <ul id="activities">
+      <li>{{ role }} à {{ station.label }}</li>
+      <li>
+        avec
+        <VolunteerShiftMate
+          v-for="assignment in main.getShiftAssignments(shift.id)"
+          :key="assignment.id"
+          :volunteer-id="assignment.volunteerId"
+          :role="assignment.role"
+          :skip-volunteer-id="volunteerId"
+        />
+      </li>
+    </ul>
   </div>
   <div v-else>Shift or station not found</div>
 </template>
 
 <style lang="css" scoped>
-div {
-  margin: 10px 0;
+#activities {
+  margin-left: 1rem;
 }
 </style>

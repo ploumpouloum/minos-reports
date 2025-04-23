@@ -52,7 +52,7 @@ const localeHour = (date: Date) =>
         <tr
           class="assignements"
           v-for="assignment in main.getShiftAssignments(shift.id)"
-          :key="assignment.volunteerId + assignment.shiftId"
+          :key="assignment.id"
         >
           <Report1Assignement :assignment="assignment" />
         </tr>

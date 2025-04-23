@@ -26,6 +26,7 @@ export interface Volunteer {
 }
 
 export interface Assignment {
+  id: string
   shiftId: string
   volunteerId: string | undefined
   role: string

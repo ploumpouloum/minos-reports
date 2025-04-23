@@ -17,6 +17,7 @@ main.fetchData()
         <v-img id="logo" :src="logoImage" alt="Logo" class="logo" height="70" />
       </router-link>
     </div>
+    <div id="title">Maxi-Race 2025</div>
     <div class="header-btns">
       <template v-if="main.isSupervisor">
         <router-link to="/data" custom v-slot="{ navigate }">
@@ -55,6 +56,11 @@ main.fetchData()
   position: absolute;
   top: 10px;
   right: 10px;
+}
+#title {
+  position: absolute;
+  top: 10px;
+  left: 10px;
 }
 .header-bar {
   padding: 0.25rem;
