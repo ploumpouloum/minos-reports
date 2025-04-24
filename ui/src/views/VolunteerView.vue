@@ -32,7 +32,11 @@ watch(
 
 <template>
   <v-sheet v-if="main.dataLoaded && volunteer" id="main">
-    <h2>{{ $route.params.nivol }} - {{ volunteer.firstname }} {{ volunteer.lastname }}</h2>
+    <h2>
+      {{ $route.params.nivol }} - {{ volunteer.firstname }} {{ volunteer.lastname }} ({{
+        volunteer.department
+      }})
+    </h2>
     <div v-if="!main.isDlus && !main.isSupervisor">
       Vous ne pouvez voir le détail des affectations de ce volontaire.
     </div>

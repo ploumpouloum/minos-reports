@@ -22,9 +22,10 @@ const volunteer: Ref<Volunteer | null> = ref(
 <template>
   <td class="role">{{ stationsRolesMaps[props.assignment.role] }}</td>
   <td colspan="3">
-    <router-link :to="`/volunteer/${volunteer?.nivol}`">
-      {{ volunteer?.firstname }} {{ volunteer?.lastname }}
+    <router-link v-if="volunteer" :to="`/volunteer/${volunteer.nivol}`">
+      {{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }})
     </router-link>
+    <template v-else>Non affecté</template>
   </td>
 </template>
 

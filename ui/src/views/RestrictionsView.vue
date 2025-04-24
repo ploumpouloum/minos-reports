@@ -16,7 +16,7 @@ main.fetchData()
           .sort((a, b) => (a.lastname < b.lastname ? -1 : a.lastname == b.lastname ? 0 : 1))"
         :key="volunteer.id"
       >
-        {{ volunteer.firstname }} {{ volunteer.lastname }}
+        {{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }})
       </p>
       <p v-if="main.volunteers.filter((volunteer) => volunteer.minor).length == 0">Aucun mineur</p>
     </v-card>
@@ -29,7 +29,7 @@ main.fetchData()
           .sort((a, b) => (a.lastname < b.lastname ? -1 : a.lastname == b.lastname ? 0 : 1))"
         :key="volunteer.id"
       >
-        {{ volunteer.firstname }} {{ volunteer.lastname }}
+        {{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }})
       </p>
       <p
         v-if="
@@ -46,7 +46,7 @@ main.fetchData()
           .sort((a, b) => (a.lastname < b.lastname ? -1 : a.lastname == b.lastname ? 0 : 1))"
         :key="volunteer.id"
       >
-        {{ volunteer.firstname }} {{ volunteer.lastname }}
+        {{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }})
       </p>
       <p
         v-if="
@@ -63,7 +63,7 @@ main.fetchData()
           .sort((a, b) => (a.lastname < b.lastname ? -1 : a.lastname == b.lastname ? 0 : 1))"
         :key="volunteer.id"
       >
-        {{ volunteer.firstname }} {{ volunteer.lastname }}
+        {{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }})
       </p>
       <p
         v-if="
@@ -83,7 +83,7 @@ main.fetchData()
           .sort((a, b) => (a.lastname < b.lastname ? -1 : a.lastname == b.lastname ? 0 : 1))"
         :key="volunteer.id"
       >
-        {{ volunteer.firstname }} {{ volunteer.lastname }} :
+        {{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }}):
         {{ volunteer.food_restrictions?.join(', ') }}
       </p>
       <p v-if="main.volunteers.filter((volunteer) => volunteer.food_restrictions).length == 0">

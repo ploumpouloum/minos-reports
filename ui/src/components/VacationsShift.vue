@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import type { Ref } from 'vue'
 import { useMainStore } from '@/stores/main'
-import Report1Assignement from './Report1Assignement.vue'
+import VacationsAssignement from './VacationsAssignement.vue'
 import type { Station, Shift } from '../types/main.ts'
 import { addMinutes } from '@/utils.ts'
 
@@ -54,7 +54,7 @@ const localeHour = (date: Date) =>
           v-for="assignment in main.getShiftAssignments(shift.id)"
           :key="assignment.id"
         >
-          <Report1Assignement :assignment="assignment" />
+          <VacationsAssignement :assignment="assignment" />
         </tr>
       </tbody>
     </table>
