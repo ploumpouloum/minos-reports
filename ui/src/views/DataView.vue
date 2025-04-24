@@ -11,76 +11,61 @@ const snackbarText = ref('')
 const volontairesFileInput = ref()
 const affectationFileInput = ref()
 
-const deleteAllData = () => {
-  main.deleteAllData().then(
-    () => {
-      snackbarText.value = 'Data deleted'
-      snackbarShown.value = true
-    },
-    (error) => {
-      console.error(error)
-      snackbarText.value = 'Error occured'
-      snackbarShown.value = true
-    }
-  )
-}
-
-const uploadVolontaires = () => {
-  const formData = new FormData()
-  formData.append('file', volontairesFileInput.value)
-  axios.post(main.config.backend_api + '/uploadvolontaires/', formData).then(
-    () => {
-      snackbarText.value = 'Data loaded'
-      snackbarShown.value = true
-    },
-    (error) => {
-      console.error(error)
-      snackbarText.value = 'Error occured'
-      snackbarShown.value = true
-    }
-  )
-}
-
-const uploadAffectation = () => {
-  const formData = new FormData()
-  formData.append('file', affectationFileInput.value)
-  axios.post(main.config.backend_api + '/uploadaffectation/', formData).then(
-    () => {
-      snackbarText.value = 'Data loaded'
-      snackbarShown.value = true
-    },
-    (error) => {
-      console.error(error)
-      snackbarText.value = 'Error occured'
-      snackbarShown.value = true
-    }
-  )
+const updateData = () => {
+  if (!volontairesFileInput.value) {
+    snackbarText.value = 'Le fichier des volontaires est obligatoire'
+    snackbarShown.value = true
+    return
+  }
+  if (!affectationFileInput.value) {
+    snackbarText.value = 'Le fichier des affectations est obligatoire'
+    snackbarShown.value = true
+    return
+  }
+  snackbarText.value = 'Import en cours'
+  snackbarShown.value = true
+  axios
+    .delete(main.config.backend_api + '/data')
+    .then(() => {
+      const formData = new FormData()
+      formData.append('file', volontairesFileInput.value)
+      return axios.post(main.config.backend_api + '/uploadvolontaires/', formData)
+    })
+    .then(() => {
+      const formData = new FormData()
+      formData.append('file', affectationFileInput.value)
+      return axios.post(main.config.backend_api + '/uploadaffectation/', formData)
+    })
+    .then(
+      () => {
+        snackbarText.value = 'Import terminé'
+        snackbarShown.value = true
+      },
+      (error) => {
+        console.error(error)
+        snackbarText.value = 'Une erreur est survenue'
+        snackbarShown.value = true
+      }
+    )
 }
 </script>
 
 <template>
   <v-sheet id="main">
     <v-card variant="outlined">
-      <h3>Effacer toutes les données</h3>
-      <v-btn @click="deleteAllData" variant="outlined">Tout effacer</v-btn>
-    </v-card>
-    <v-card variant="outlined">
-      <h3>Importer les volontaires</h3>
+      <h3>Fichier MINOS des volontaires</h3>
       <v-file-input
         label="File input"
         variant="outlined"
         v-model="volontairesFileInput"
       ></v-file-input>
-      <v-btn @click="uploadVolontaires" variant="outlined">Importer</v-btn>
-    </v-card>
-    <v-card variant="outlined">
-      <h3>Importer les affectations</h3>
+      <h3>Fichier MINOS des affectations</h3>
       <v-file-input
         label="File input"
         variant="outlined"
         v-model="affectationFileInput"
       ></v-file-input>
-      <v-btn @click="uploadAffectation" variant="outlined">Importer</v-btn>
+      <v-btn @click="updateData" variant="outlined">Importer</v-btn>
     </v-card>
   </v-sheet>
   <v-snackbar v-model="snackbarShown" timeout="1000">
