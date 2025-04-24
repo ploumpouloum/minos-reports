@@ -75,7 +75,7 @@ const getFreeBusyClass = function (status: FreeBusyStatus) {
       </thead>
       <tbody>
         <tr v-for="volunteer in main.volunteersPresent(props.day)" :key="volunteer.id">
-          <td>{{ volunteer.firstname }} {{ volunteer.lastname }}</td>
+          <td>{{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }})</td>
           <template v-for="hour in Array.from({ length: 24 }, (v, k) => k)" :key="hour">
             <td class="fb-cell" :class="[getFreeBusyClass(getFreeBusyStatus(volunteer, hour, 0))]">
               &nbsp;

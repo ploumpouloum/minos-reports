@@ -24,7 +24,7 @@ const volunteer: Ref<Volunteer | null> = ref(
 
 <template>
   <div v-if="main.dataLoaded && volunteer">
-    {{ props.role }} {{ volunteer.firstname }} {{ volunteer.lastname }}
+    {{ props.role }} {{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }})
   </div>
   <div v-else>Volunteer not found</div>
 </template>

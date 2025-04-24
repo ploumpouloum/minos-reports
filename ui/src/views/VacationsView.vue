@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useMainStore } from '@/stores/main'
-import Report1Shift from '../components/Report1Shift.vue'
+import VacationsShift from '../components/VacationsShift.vue'
 import AbbreviationSummary from '@/components/AbbreviationSummary.vue'
 
 const main = useMainStore()
@@ -18,7 +18,7 @@ main.fetchData()
             startDay.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long' })
           }}
         </div>
-        <Report1Shift :shiftId="shift.id" />
+        <VacationsShift :shiftId="shift.id" />
       </div>
     </template>
   </div>
