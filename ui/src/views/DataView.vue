@@ -34,6 +34,7 @@ const updateData = () => {
       formData.append('file', affectationFileInput.value)
       return axios.post(main.config.backend_api + '/uploadaffectation/', formData)
     })
+    .then(() => main.fetchData(true))
     .then(
       () => {
         main.snackbarText = 'Import terminé'

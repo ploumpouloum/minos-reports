@@ -4,6 +4,8 @@ import { useRouter } from 'vue-router'
 
 const main = useMainStore()
 
+main.fetchData()
+
 const router = useRouter()
 </script>
 
