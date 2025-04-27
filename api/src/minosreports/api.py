@@ -7,11 +7,12 @@ import sqlalchemy as sa
 import sqlalchemy.orm as so
 from fastapi import Cookie, Depends, FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 from minosreports.cloudflare_access import InvalidTokenError, verify_token
 from minosreports.context import Context
 from minosreports.db import dbsession
-from minosreports.db.models import Assignment, Shift, Station, Volunteer
+from minosreports.db.models import Assignment, Shift, Station, StationKind, Volunteer
 from minosreports.parsing.affectations import parse_affectations_csv
 from minosreports.parsing.volontaires import parse_volontaires_csv
 
@@ -84,7 +85,9 @@ async def data(user_email: str = Depends(verify_cf_authorization)):
             volunteers_stmt = sa.select(Volunteer)
             assignements_stmt = sa.select(Assignment)
             shifts_stmt = sa.select(Shift)
-            stations_stmt = sa.select(Station)
+            stations_stmt = sa.select(Station, StationKind.kind).join(
+                StationKind, onclause=StationKind.label == Station.label, isouter=True
+            )
         else:
             volunteers_subquery = sa.select(Volunteer.id).where(
                 sa.or_(
@@ -107,7 +110,15 @@ async def data(user_email: str = Depends(verify_cf_authorization)):
             stations_subquery = sa.select(Shift.station_id).where(
                 Shift.id.in_(shifts_subquery)
             )
-            stations_stmt = sa.select(Station).where(Station.id.in_(stations_subquery))
+            stations_stmt = (
+                sa.select(Station, StationKind.kind)
+                .join(
+                    StationKind,
+                    onclause=StationKind.label == Station.label,
+                    isouter=True,
+                )
+                .where(Station.id.in_(stations_subquery))
+            )
             volunteers_stmt = sa.select(Volunteer).where(
                 sa.or_(
                     Volunteer.dlus_email == user_email,
@@ -146,8 +157,9 @@ async def data(user_email: str = Depends(verify_cf_authorization)):
                 {
                     "id": station.id,
                     "label": station.label,
+                    "kind": kind,
                 }
-                for station in session.execute(stations_stmt).scalars()
+                for station, kind in session.execute(stations_stmt)
             ],
             "shifts": (
                 [
@@ -211,6 +223,28 @@ async def create_upload_volontaires(
         return result
 
     return upload_inner()
+
+
+class StationKindDTO(BaseModel):
+    label: str
+    kind: str | None = None
+
+
+@app.post("/station_kind/")
+async def set_station_kind(
+    station_kind: StationKindDTO,
+    _: str = Depends(verify_cf_authorization),
+):
+    @dbsession
+    def set_station_kind_inner(session: so.Session):
+        station_kind_in_db = session.execute(
+            sa.select(StationKind).where(StationKind.label == station_kind.label)
+        ).scalar_one_or_none()
+        if not station_kind_in_db:
+            raise HTTPException(HTTPStatus.BAD_REQUEST, detail="Unknown station label")
+        station_kind_in_db.kind = station_kind.kind
+
+    return set_station_kind_inner()
 
 
 @app.delete("/data")

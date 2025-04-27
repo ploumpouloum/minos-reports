@@ -97,6 +97,14 @@ class Station(Base):
     )
 
 
+class StationKind(Base):
+    """The kind of a given station, used to persist data across reloads"""
+
+    __tablename__ = "station_kind"
+    label: Mapped[str] = mapped_column(primary_key=True)
+    kind: Mapped[str | None]
+
+
 class Shift(Base):
     """A shift, i.e. a station time slots where volunteers needs to be affected"""
 

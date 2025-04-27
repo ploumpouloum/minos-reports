@@ -11,6 +11,8 @@ axios.interceptors.response.use((rep) => {
 })
 
 export type RootState = {
+  snackbarShown: boolean
+  snackbarText: string
   whoami: string
   assignments: Assignment[]
   shifts: Shift[]
@@ -30,6 +32,8 @@ export type RootState = {
 export const useMainStore = defineStore('main', {
   state: () =>
     ({
+      snackbarShown: false,
+      snackbarText: '',
       whoami: '',
       assignments: [],
       shifts: [],
@@ -153,10 +157,14 @@ export const useMainStore = defineStore('main', {
     }
   },
   actions: {
-    async fetchData() {
+    async fetchData(force: boolean = false) {
       this.isLoading = true
       this.errorMessage = ''
       this.errorDetails = ''
+
+      if (!force && this.dataLoaded) {
+        return
+      }
 
       return Promise.all([
         axios.get(this.config.backend_api + '/whoami'),

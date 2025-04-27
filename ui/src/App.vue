@@ -17,5 +17,8 @@ const main = useMainStore()
         <router-view />
       </div>
     </v-main>
+    <v-snackbar v-model="main.snackbarShown" timeout="1000">
+      {{ main.snackbarText }}
+    </v-snackbar>
   </v-app>
 </template>

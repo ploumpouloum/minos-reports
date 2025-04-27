@@ -9,6 +9,7 @@ export interface Shift {
 export interface Station {
   id: string
   label: string
+  kind?: string
 }
 
 export interface Volunteer {
