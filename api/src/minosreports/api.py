@@ -150,6 +150,7 @@ async def data(user_email: str = Depends(verify_cf_authorization)):
                     "outgoing_date_time": volunteer.outgoing_date_time,
                     "department": volunteer.department,
                     "roles": volunteer.roles,
+                    "dlus_email": volunteer.dlus_email,
                 }
                 for volunteer in session.execute(volunteers_stmt).scalars()
             ],

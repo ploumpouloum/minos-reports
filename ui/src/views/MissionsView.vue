@@ -1,44 +1,26 @@
 <script setup lang="ts">
 import { useMainStore } from '@/stores/main'
+import type { Volunteer } from '@/types/main'
+import { type ComputedRef, computed } from 'vue'
 import VolunteerShift from '@/components/VolunteerShift.vue'
-import { computed, ref } from 'vue'
 
 const main = useMainStore()
 
 main.fetchData()
 
-const selectedDlus = ref()
-
-const existingDlus = computed(() => [
-  ...new Set(
-    main.volunteers.map((volunteer) => volunteer.dlus_email).sort((a, b) => a.localeCompare(b))
-  )
-])
+const volunteer: ComputedRef<Volunteer | undefined> = computed(() =>
+  main.myVolunteerId ? main.getVolunteer(main.myVolunteerId) : undefined
+)
 </script>
 
 <template>
-  <v-sheet v-if="main.dataLoaded" id="main">
-    <div v-if="!main.isDlus && !main.isSupervisor">Cet écran est réservé aux DLUS</div>
-    <div v-else>
-      <template v-if="main.isSupervisor">
-        Cet écran est normalement réservé aux DLUS
-        <v-combobox
-          :items="existingDlus"
-          v-model="selectedDlus"
-          density="comfortable"
-          clearable
-          label="Voir la vue en tant que"
-        />
-      </template>
-      <h2>Liste des inscrits rattachés à toi en tant que DLUS</h2>
-      <v-card
-        variant="outlined"
-        v-for="volunteer in main.volunteers
-          .filter((volunteer) => main.isDlus || volunteer.dlus_email == selectedDlus)
-          .sort((a, b) => a.lastname.localeCompare(b.lastname))"
-        :key="volunteer.id"
-      >
-        <p>{{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }})</p>
+  <v-sheet id="main">
+    <v-card variant="outlined">
+      <p>Bienvenue à la MaxiRace 2025 à Annecy !</p>
+      <p v-if="!main.dataLoaded">Loading data ...</p>
+      <p v-else-if="!volunteer">Il semble que tu n'es pas (encore ?) inscrit.e à la MaxiRace.</p>
+      <div v-else>
+        <h3>Ton planning actuel:</h3>
         <ul id="activities">
           <li>
             Arrive
@@ -75,24 +57,25 @@ const existingDlus = computed(() => [
             }}
           </li>
         </ul>
-      </v-card>
-    </div>
+      </div>
+    </v-card>
   </v-sheet>
-  <v-sheet v-else id="main">Waiting for data ...</v-sheet>
 </template>
 
-<style scoped>
+<style scoped lang="css">
 #main {
   max-width: 800px;
   padding: 15px;
   margin: auto;
 }
-
 .v-card {
+  min-height: 200px;
   padding: 10px;
   margin: 10px 0;
 }
-
+p {
+  padding: 1rem 0 2rem;
+}
 #activities li {
   margin-left: 2rem;
 }

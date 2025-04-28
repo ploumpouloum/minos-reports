@@ -24,6 +24,7 @@ export interface Volunteer {
   outgoing_date_time: Date
   roles: string[] | undefined
   department: string
+  dlus_email: string
 }
 
 export interface Assignment {

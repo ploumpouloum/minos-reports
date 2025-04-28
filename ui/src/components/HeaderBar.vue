@@ -18,18 +18,8 @@ main.fetchData()
       </router-link>
     </div>
     <div id="title">Maxi-Race 2025</div>
-    <div class="header-btns">
-      <template v-if="main.isSupervisor">
-        <router-link to="/data" custom v-slot="{ navigate }">
-          <v-btn :class="{ active: route.path == '/data' }" @click="navigate"
-            >Gérer les données</v-btn
-          >
-        </router-link>
-        <router-link to="/volunteers" custom v-slot="{ navigate }">
-          <v-btn :class="{ active: route.path == '/volunteers' }" @click="navigate"
-            >Volontaires</v-btn
-          >
-        </router-link>
+    <template v-if="main.isSupervisor">
+      <div class="header-btns">
         <router-link to="/restrictions" custom v-slot="{ navigate }">
           <v-btn :class="{ active: route.path == '/restrictions' }" @click="navigate"
             >Restrictions</v-btn
@@ -46,8 +36,42 @@ main.fetchData()
         <router-link to="/manques" custom v-slot="{ navigate }">
           <v-btn :class="{ active: route.path == '/manques' }" @click="navigate">Manques</v-btn>
         </router-link>
-      </template>
-    </div>
+        <router-link to="/volunteers" custom v-slot="{ navigate }">
+          <v-btn :class="{ active: route.path == '/volunteers' }" @click="navigate"
+            >Volontaires</v-btn
+          >
+        </router-link>
+        <router-link to="/data" custom v-slot="{ navigate }">
+          <v-btn :class="{ active: route.path == '/data' }" @click="navigate"
+            >Gérer les données</v-btn
+          >
+        </router-link>
+        <router-link to="/volunteers-dlus" custom v-slot="{ navigate }">
+          <v-btn :class="{ active: route.path == '/volunteers-dlus' }" @click="navigate"
+            >Vue DLUS</v-btn
+          >
+        </router-link>
+        <router-link to="/missions" custom v-slot="{ navigate }">
+          <v-btn :class="{ active: route.path == '/missions' }" @click="navigate"
+            >Vue Volontaire</v-btn
+          >
+        </router-link>
+      </div>
+    </template>
+    <template v-if="main.isDlus">
+      <div class="header-btns">
+        <router-link to="/volunteers-dlus" custom v-slot="{ navigate }">
+          <v-btn :class="{ active: route.path == '/volunteers-dlus' }" @click="navigate"
+            >Vue DLUS</v-btn
+          >
+        </router-link>
+        <router-link to="/missions" custom v-slot="{ navigate }">
+          <v-btn :class="{ active: route.path == '/missions' }" @click="navigate"
+            >Vue Volontaire</v-btn
+          >
+        </router-link>
+      </div>
+    </template>
   </div>
 </template>
 
