@@ -1,100 +1,24 @@
 <script setup lang="ts">
 import { useMainStore } from '@/stores/main'
-import type { Volunteer } from '@/types/main'
-import { ref, type Ref } from 'vue'
 import { useRouter } from 'vue-router'
-import VolunteerShift from '@/components/VolunteerShift.vue'
 
 const router = useRouter()
 
 const main = useMainStore()
-
-const volunteer: Ref<Volunteer | null> = ref(null)
 
 main.fetchData().then(() => {
   if (main.isSupervisor) {
     router.push({
       name: 'restrictions'
     })
-  }
-  if (main.isDlus) {
+  } else if (main.isDlus) {
     router.push({
       name: 'volunteers-dlus'
     })
-  }
-  if (main.myVolunteerId) {
-    volunteer.value = main.getVolunteer(main.myVolunteerId)
+  } else {
+    router.push({
+      name: 'missions'
+    })
   }
 })
 </script>
-
-<template>
-  <v-sheet id="main">
-    <v-card variant="outlined">
-      <p>Bienvenue à la MaxiRace 2025 à Annecy !</p>
-      <p v-if="main.isLoading">Loading data ...</p>
-      <p v-else-if="!volunteer">
-        Il semble que tu n'es pas (encore ?) inscrit.e à la MaxiRace, et/ou si tu es DLUS, personne
-        de ton UL ne s'est encore inscrit avec ton mail comme validateur.
-      </p>
-      <div v-else>
-        <h3>Ton planning actuel:</h3>
-        <ul id="activities">
-          <li>
-            Arrive
-            {{
-              new Date(volunteer.incoming_date_time).toLocaleTimeString('fr-FR', {
-                weekday: 'long',
-                day: '2-digit',
-                month: 'short',
-                hour: '2-digit',
-                minute: '2-digit'
-              })
-            }}
-          </li>
-          <li
-            v-for="assignment in main.getVolunteerAssignments(volunteer.id)"
-            :key="assignment.shiftId"
-          >
-            <VolunteerShift
-              :role="assignment.role"
-              :shift-id="assignment.shiftId"
-              :volunteer-id="volunteer.id"
-            />
-          </li>
-          <li>
-            Repart
-            {{
-              new Date(volunteer.outgoing_date_time).toLocaleTimeString('fr-FR', {
-                weekday: 'long',
-                day: '2-digit',
-                month: 'short',
-                hour: '2-digit',
-                minute: '2-digit'
-              })
-            }}
-          </li>
-        </ul>
-      </div>
-    </v-card>
-  </v-sheet>
-</template>
-
-<style scoped lang="css">
-#main {
-  max-width: 800px;
-  padding: 15px;
-  margin: auto;
-}
-.v-card {
-  min-height: 200px;
-  padding: 10px;
-  margin: 10px 0;
-}
-p {
-  padding: 1rem 0 2rem;
-}
-#activities li {
-  margin-left: 2rem;
-}
-</style>

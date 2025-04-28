@@ -9,6 +9,7 @@ import VolunteersDlusView from '@/views/VolunteersDlusView.vue'
 import VolunteersView from '@/views/VolunteersView.vue'
 import ShiftView from '@/views/ShiftView.vue'
 import FreeBuzyView from '@/views/FreeBuzyView.vue'
+import MissionsView from '@/views/MissionsView.vue'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -62,6 +63,11 @@ const router = createRouter({
       path: '/shift/:shiftId',
       name: 'shift',
       component: ShiftView
+    },
+    {
+      path: '/missions',
+      name: 'missions',
+      component: MissionsView
     },
     {
       path: '/:catchAll(.*)',
