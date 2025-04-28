@@ -31,7 +31,14 @@ const localeHour = (date: Date) =>
   <div v-if="shift && station">
     <table cellspacing="0">
       <tbody>
-        <tr class="station">
+        <tr
+          class="station"
+          :class="{
+            'vps-station': station.kind == 'VPS',
+            'poste-fixe-station': station.kind == 'Poste Fixe',
+            'logistique-station': station.kind == 'Logistique'
+          }"
+        >
           <td colspan="4">{{ station.label }}</td>
         </tr>
         <tr class="hours-titles">
@@ -71,9 +78,21 @@ table {
 }
 
 .station {
-  background-color: #990000;
+  background-color: #aaaaaa;
   color: white;
   font-weight: bold;
+}
+
+.station.logistique-station {
+  background-color: #990000;
+}
+
+.station.vps-station {
+  background-color: #1565c0;
+}
+
+.station.poste-fixe-station {
+  background-color: #2e7d32;
 }
 
 .station td {

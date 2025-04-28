@@ -3,6 +3,8 @@ import { useMainStore } from '@/stores/main'
 import VolunteerShift from '@/components/VolunteerShift.vue'
 
 const main = useMainStore()
+
+main.fetchData()
 </script>
 
 <template>

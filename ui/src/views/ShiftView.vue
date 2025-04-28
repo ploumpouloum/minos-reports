@@ -15,6 +15,8 @@ const main = useMainStore()
 const shift: Ref<Shift | undefined> = ref()
 const station: Ref<Station | undefined> = ref()
 
+main.fetchData()
+
 const refreshData = () => {
   if (!main.dataLoaded) {
     return

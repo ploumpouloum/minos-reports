@@ -11,9 +11,14 @@ const router = useRouter()
 
 const main = useMainStore()
 
+main.fetchData()
+
 const volunteer: Ref<Volunteer | undefined> = ref()
 
 const refreshData = () => {
+  if (!main.dataLoaded) {
+    return
+  }
   volunteer.value = main.getVolunteerByNivol(getRouteParam(route.params.nivol))
 }
 

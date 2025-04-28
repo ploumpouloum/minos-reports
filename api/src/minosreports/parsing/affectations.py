@@ -7,7 +7,7 @@ import sqlalchemy as sa
 import sqlalchemy.orm as so
 
 from minosreports.context import Context
-from minosreports.db.models import Assignment, Shift, Station, Volunteer
+from minosreports.db.models import Assignment, Shift, Station, StationKind, Volunteer
 
 context = Context.get(fallback_to_class=True)
 logger = context.logger
@@ -51,6 +51,12 @@ def parse_affectations_csv(filename: Path, session: so.Session):
                 logger.debug(f"Adding station {station.label}")
                 session.add(station)
                 station_in_db = session.execute(stmt).scalar_one()
+
+                stmt = sa.select(StationKind).where(StationKind.label == station.label)
+                station_kind_in_db = session.execute(stmt).scalar_one_or_none()
+                if station_kind_in_db is None:
+                    logger.debug(f"Adding station kind {station.label}")
+                    session.add(StationKind(label=station.label, kind=None))
 
             shift = get_shift(
                 station=station_in_db,

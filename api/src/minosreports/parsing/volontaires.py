@@ -98,13 +98,21 @@ def get_volunteer(row: dict[str, Any]) -> Volunteer:
         roles=row["TOUTES vos qualifications"].split(", "),
         mission_restrictions=parse_restrictions(row["Ne souhaite pas participer :"]),
         food_restrictions=parse_restrictions(row["Précision regime particulier"]),
-        incoming_date_time=datetime.strptime(  # noqa: DTZ007
-            row["Date et heure d'arrivée"], "%d/%m/%Y %H:%M"
+        incoming_date_time=(
+            datetime.strptime(  # noqa: DTZ007
+                row["Date et heure d'arrivée"], "%d/%m/%Y %H:%M"
+            )
+            if row["Date et heure d'arrivée"]
+            else None
         ),
         incoming_transportation_system=row["Moyen de transport"],
         incoming_train_station=row["Gare SNCF arrivée"],
-        outgoing_date_time=datetime.strptime(  # noqa: DTZ007
-            row["Date et heure de départ"], "%d/%m/%Y %H:%M"
+        outgoing_date_time=(
+            datetime.strptime(  # noqa: DTZ007
+                row["Date et heure de départ"], "%d/%m/%Y %H:%M"
+            )
+            if row["Date et heure de départ"]
+            else None
         ),
         outgoing_transportation_system=row["Moyen de transport retour"],
         outgoing_train_station=row["Gare de retour"],
