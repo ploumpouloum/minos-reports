@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useMainStore } from '@/stores/main'
-import VolunteerShift from '@/components/VolunteerShift.vue'
 import { computed, ref } from 'vue'
 
 const main = useMainStore()
@@ -14,13 +13,19 @@ const existingDlus = computed(() => [
     main.volunteers.map((volunteer) => volunteer.dlus_email).sort((a, b) => a.localeCompare(b))
   )
 ])
+
+const selectedVolunteers = computed(() =>
+  main.volunteers
+    .filter((volunteer) => main.isDlus || volunteer.dlus_email == selectedDlus.value)
+    .sort((a, b) => a.lastname.localeCompare(b.lastname))
+)
 </script>
 
 <template>
   <v-sheet v-if="main.dataLoaded" id="main">
     <div v-if="!main.isDlus && !main.isSupervisor">Cet écran est réservé aux DLUS</div>
     <div v-else>
-      <template v-if="main.isSupervisor">
+      <div v-if="main.isSupervisor" id="dlus-select">
         Cet écran est normalement réservé aux DLUS
         <v-combobox
           :items="existingDlus"
@@ -29,53 +34,42 @@ const existingDlus = computed(() => [
           clearable
           label="Voir la vue en tant que"
         />
+      </div>
+      <template v-if="selectedVolunteers.length">
+        <h2>Liste des inscrits rattachés à toi en tant que DLUS</h2>
+        <table id="volunteers-roles">
+          <tr>
+            <th>Bénévole</th>
+            <th>Role</th>
+            <th>Arrivée</th>
+            <th>Départ</th>
+          </tr>
+          <tr class="data" v-for="volunteer in selectedVolunteers" :key="volunteer.id">
+            <td>{{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }})</td>
+            <td class="roles">{{ volunteer.roles?.join(', ') }}</td>
+            <td class="arrives">
+              {{
+                new Date(volunteer.incoming_date_time).toLocaleTimeString('fr-FR', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })
+              }}
+            </td>
+            <td class="departs">
+              {{
+                new Date(volunteer.outgoing_date_time).toLocaleTimeString('fr-FR', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })
+              }}
+            </td>
+          </tr>
+        </table>
       </template>
-      <h2>Liste des inscrits rattachés à toi en tant que DLUS</h2>
-      <v-card
-        variant="outlined"
-        v-for="volunteer in main.volunteers
-          .filter((volunteer) => main.isDlus || volunteer.dlus_email == selectedDlus)
-          .sort((a, b) => a.lastname.localeCompare(b.lastname))"
-        :key="volunteer.id"
-      >
-        <p>{{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }})</p>
-        <ul id="activities">
-          <li>
-            Arrive
-            {{
-              new Date(volunteer.incoming_date_time).toLocaleTimeString('fr-FR', {
-                weekday: 'long',
-                day: '2-digit',
-                month: 'short',
-                hour: '2-digit',
-                minute: '2-digit'
-              })
-            }}
-          </li>
-          <li
-            v-for="assignment in main.getVolunteerAssignments(volunteer.id)"
-            :key="assignment.shiftId"
-          >
-            <VolunteerShift
-              :role="assignment.role"
-              :shift-id="assignment.shiftId"
-              :volunteer-id="volunteer.id"
-            />
-          </li>
-          <li>
-            Repart
-            {{
-              new Date(volunteer.outgoing_date_time).toLocaleTimeString('fr-FR', {
-                weekday: 'long',
-                day: '2-digit',
-                month: 'short',
-                hour: '2-digit',
-                minute: '2-digit'
-              })
-            }}
-          </li>
-        </ul>
-      </v-card>
     </div>
   </v-sheet>
   <v-sheet v-else id="main">Waiting for data ...</v-sheet>
@@ -83,17 +77,33 @@ const existingDlus = computed(() => [
 
 <style scoped>
 #main {
-  max-width: 800px;
   padding: 15px;
   margin: auto;
 }
 
-.v-card {
-  padding: 10px;
-  margin: 10px 0;
+h2 {
+  text-align: center;
 }
 
-#activities li {
-  margin-left: 2rem;
+#dlus-select {
+  max-width: 400px;
+  margin: auto;
+  text-align: center;
+}
+
+table {
+  margin: 1.5rem auto;
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+td {
+  padding: 0.2rem 0.5rem;
+  border: 1px solid black;
+  max-width: 300px;
+}
+
+tr.data:nth-child(odd) {
+  background-color: #f2f2f2;
 }
 </style>
