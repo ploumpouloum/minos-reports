@@ -49,76 +49,117 @@ const getFreeBusyClass = function (status: FreeBusyStatus) {
 </script>
 
 <template>
-  <div id="main">
-    <h2>
-      {{
-        props.day.toLocaleDateString('fr-FR', {
-          weekday: 'long',
-          day: '2-digit',
-          month: 'long'
-        })
-      }}
-    </h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Volontaire</th>
-          <th
+  <div class="container">
+    <div class="header">
+      <h2>
+        {{
+          props.day.toLocaleDateString('fr-FR', {
+            weekday: 'long',
+            day: '2-digit',
+            month: 'long'
+          })
+        }}
+      </h2>
+      <div class="table">
+        <div class="full-header">Volontaire</div>
+        <div
+          class="column-header"
+          v-for="hour in Array.from({ length: 24 }, (v, k) => k)"
+          :key="hour"
+        >
+          {{ hour }}
+        </div>
+      </div>
+    </div>
+    <div class="table">
+      <template v-for="volunteer in main.volunteersPresent(props.day)" :key="volunteer.id">
+        <div class="row-header">
+          {{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }})
+        </div>
+        <template v-for="hour in Array.from({ length: 24 }, (v, k) => k)" :key="hour">
+          <div
             class="fb-cell"
-            colspan="2"
-            v-for="hour in Array.from({ length: 24 }, (v, k) => k)"
-            :key="hour"
-          >
-            {{ hour }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="volunteer in main.volunteersPresent(props.day)" :key="volunteer.id">
-          <td>{{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }})</td>
-          <template v-for="hour in Array.from({ length: 24 }, (v, k) => k)" :key="hour">
-            <td class="fb-cell" :class="[getFreeBusyClass(getFreeBusyStatus(volunteer, hour, 0))]">
-              &nbsp;
-            </td>
-            <td class="fb-cell" :class="[getFreeBusyClass(getFreeBusyStatus(volunteer, hour, 30))]">
-              &nbsp;
-            </td>
-          </template>
-        </tr>
-      </tbody>
-    </table>
+            :class="[getFreeBusyClass(getFreeBusyStatus(volunteer, hour, 0))]"
+          ></div>
+          <div
+            class="fb-cell"
+            :class="[getFreeBusyClass(getFreeBusyStatus(volunteer, hour, 30))]"
+          ></div>
+        </template>
+      </template>
+    </div>
   </div>
 </template>
 
 <style scoped>
-#main {
-  overflow: scroll;
+.container {
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 0 25px;
+  margin: 10px 5px;
 }
 h2 {
-  text-align: center;
   padding-bottom: 10px;
 }
-table {
-  table-layout: fixed;
-  width: 1350px;
-  border-spacing: 0;
-  margin: 0 auto;
+.header {
+  text-align: center;
+  position: sticky;
+  z-index: 1;
+  background-color: white;
+  top: 0;
 }
-th.fb-cell {
-  width: 48px;
-  text-align: left;
+.fb-cell {
+  outline: 1px solid black;
 }
-td.fb-cell {
-  width: 24px;
-  border: 1px solid black;
-}
-td.fb-cell.free {
+.fb-cell.free {
   background-color: green;
 }
-td.fb-cell.busy {
+.fb-cell.busy {
   background-color: red;
 }
-td.fb-cell.na {
+.fb-cell.na {
   background-color: gray;
+}
+
+.table {
+  display: grid;
+  gap: 1px;
+  grid-template-columns: 10rem repeat(48, minmax(0, 1fr));
+  width: 100%;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.row-header {
+  justify-content: right;
+  text-align: right;
+  padding-right: 1rem;
+  min-width: 10rem;
+  font-size: 0.8rem;
+  min-height: 1.4rem;
+  align-items: center;
+  display: flex;
+}
+
+.full-header {
+  text-align: right;
+  padding-right: 1rem;
+  font-weight: bold;
+}
+
+.column-header {
+  grid-column: span 2;
+  font-weight: bold;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+@media print {
+  #main {
+    max-height: none;
+    overflow: visible;
+  }
 }
 </style>

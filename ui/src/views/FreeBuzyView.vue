@@ -19,11 +19,10 @@ main.fetchData()
 #main {
   display: flex;
   flex-direction: column;
-  margin: 15px;
+  margin: 0 15px;
 }
 
 .v-card {
-  padding: 15px;
   margin-bottom: 15px;
 }
 </style>
