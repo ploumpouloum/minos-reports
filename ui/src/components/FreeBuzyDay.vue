@@ -72,7 +72,12 @@ const getFreeBusyClass = function (status: FreeBusyStatus) {
       </div>
     </div>
     <div class="table">
-      <template v-for="volunteer in main.volunteersPresent(props.day)" :key="volunteer.id">
+      <template
+        v-for="volunteer in main
+          .volunteersPresent(props.day)
+          .sort((a, b) => a.lastname.localeCompare(b.lastname))"
+        :key="volunteer.id"
+      >
         <div class="row-header">
           {{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})
         </div>

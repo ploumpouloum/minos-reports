@@ -13,7 +13,7 @@ main.fetchData()
       <p
         v-for="volunteer in main.volunteers
           .filter((volunteer) => volunteer.minor)
-          .sort((a, b) => (a.lastname < b.lastname ? -1 : a.lastname == b.lastname ? 0 : 1))"
+          .sort((a, b) => a.lastname.localeCompare(b.lastname))"
         :key="volunteer.id"
       >
         {{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})
@@ -26,7 +26,7 @@ main.fetchData()
       <p
         v-for="volunteer in main.volunteers
           .filter((volunteer) => volunteer.mission_restrictions?.includes('BINOME'))
-          .sort((a, b) => (a.lastname < b.lastname ? -1 : a.lastname == b.lastname ? 0 : 1))"
+          .sort((a, b) => a.lastname.localeCompare(b.lastname))"
         :key="volunteer.id"
       >
         {{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})
@@ -43,7 +43,7 @@ main.fetchData()
       <p
         v-for="volunteer in main.volunteers
           .filter((volunteer) => volunteer.mission_restrictions?.includes('VPS'))
-          .sort((a, b) => (a.lastname < b.lastname ? -1 : a.lastname == b.lastname ? 0 : 1))"
+          .sort((a, b) => a.lastname.localeCompare(b.lastname))"
         :key="volunteer.id"
       >
         {{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})
@@ -60,7 +60,7 @@ main.fetchData()
       <p
         v-for="volunteer in main.volunteers
           .filter((volunteer) => volunteer.mission_restrictions?.includes('MONTAGNE'))
-          .sort((a, b) => (a.lastname < b.lastname ? -1 : a.lastname == b.lastname ? 0 : 1))"
+          .sort((a, b) => a.lastname.localeCompare(b.lastname))"
         :key="volunteer.id"
       >
         {{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})
@@ -80,7 +80,7 @@ main.fetchData()
       <p
         v-for="volunteer in main.volunteers
           .filter((volunteer) => volunteer.food_restrictions)
-          .sort((a, b) => (a.lastname < b.lastname ? -1 : a.lastname == b.lastname ? 0 : 1))"
+          .sort((a, b) => a.lastname.localeCompare(b.lastname))"
         :key="volunteer.id"
       >
         {{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }}):
