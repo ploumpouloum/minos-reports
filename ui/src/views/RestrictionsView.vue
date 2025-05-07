@@ -8,28 +8,28 @@ main.fetchData()
 
 <template>
   <v-sheet v-if="main.dataLoaded" id="main">
-    <v-card variant="outlined">
+    <v-card variant="outlined" class="card">
       <h3>Mineurs</h3>
       <p
         v-for="volunteer in main.volunteers
           .filter((volunteer) => volunteer.minor)
-          .sort((a, b) => (a.lastname < b.lastname ? -1 : a.lastname == b.lastname ? 0 : 1))"
+          .sort((a, b) => a.lastname.localeCompare(b.lastname))"
         :key="volunteer.id"
       >
-        {{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }})
+        {{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})
       </p>
       <p v-if="main.volunteers.filter((volunteer) => volunteer.minor).length == 0">Aucun mineur</p>
     </v-card>
-    <v-card variant="outlined">
+    <v-card variant="outlined" class="card">
       <h3>Attention ne veut pas</h3>
       <h4>Binome</h4>
       <p
         v-for="volunteer in main.volunteers
           .filter((volunteer) => volunteer.mission_restrictions?.includes('BINOME'))
-          .sort((a, b) => (a.lastname < b.lastname ? -1 : a.lastname == b.lastname ? 0 : 1))"
+          .sort((a, b) => a.lastname.localeCompare(b.lastname))"
         :key="volunteer.id"
       >
-        {{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }})
+        {{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})
       </p>
       <p
         v-if="
@@ -43,10 +43,10 @@ main.fetchData()
       <p
         v-for="volunteer in main.volunteers
           .filter((volunteer) => volunteer.mission_restrictions?.includes('VPS'))
-          .sort((a, b) => (a.lastname < b.lastname ? -1 : a.lastname == b.lastname ? 0 : 1))"
+          .sort((a, b) => a.lastname.localeCompare(b.lastname))"
         :key="volunteer.id"
       >
-        {{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }})
+        {{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})
       </p>
       <p
         v-if="
@@ -60,10 +60,10 @@ main.fetchData()
       <p
         v-for="volunteer in main.volunteers
           .filter((volunteer) => volunteer.mission_restrictions?.includes('MONTAGNE'))
-          .sort((a, b) => (a.lastname < b.lastname ? -1 : a.lastname == b.lastname ? 0 : 1))"
+          .sort((a, b) => a.lastname.localeCompare(b.lastname))"
         :key="volunteer.id"
       >
-        {{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }})
+        {{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})
       </p>
       <p
         v-if="
@@ -75,15 +75,15 @@ main.fetchData()
         Aucune personne avec des restrictions de missions MONTAGNE
       </p>
     </v-card>
-    <v-card variant="outlined">
+    <v-card variant="outlined" class="card">
       <h3>Restrictions alimentaires</h3>
       <p
         v-for="volunteer in main.volunteers
           .filter((volunteer) => volunteer.food_restrictions)
-          .sort((a, b) => (a.lastname < b.lastname ? -1 : a.lastname == b.lastname ? 0 : 1))"
+          .sort((a, b) => a.lastname.localeCompare(b.lastname))"
         :key="volunteer.id"
       >
-        {{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }}):
+        {{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }}):
         {{ volunteer.food_restrictions?.join(', ') }}
       </p>
       <p v-if="main.volunteers.filter((volunteer) => volunteer.food_restrictions).length == 0">
@@ -96,20 +96,26 @@ main.fetchData()
 
 <style scoped>
 #main {
-  max-width: 800px;
   padding: 15px;
   margin: auto;
+  display: flex;
 }
 
 h3 {
   margin-bottom: 15px;
 }
-.v-card {
+
+.card {
   padding: 10px;
-  margin: 10px 0;
+  margin: 0 10px;
+  flex-grow: 1;
 }
 
 h4 {
   margin-top: 10px;
+}
+
+p {
+  font-size: 0.9rem;
 }
 </style>

@@ -21,15 +21,14 @@ export const stationsRolesOrder = [
   'CS',
   'CDPE',
   'CI',
-  'OP PC',
-  'CI',
   'CH VPSP',
   'PSE2',
   'PSE1',
-  'LOG',
   'LAT',
-  'PART',
-  'CH VL'
+  'OP PC',
+  'CH VL',
+  'LOG',
+  'PART'
 ]
 
 export default {

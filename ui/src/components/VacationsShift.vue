@@ -5,6 +5,7 @@ import { useMainStore } from '@/stores/main'
 import VacationsAssignement from './VacationsAssignement.vue'
 import type { Station, Shift } from '../types/main.ts'
 import { addMinutes } from '@/utils.ts'
+import { stationsRolesOrder, stationsRolesMaps } from '@/constants'
 
 const main = useMainStore()
 
@@ -58,7 +59,12 @@ const localeHour = (date: Date) =>
         </tr>
         <tr
           class="assignements"
-          v-for="assignment in main.getShiftAssignments(shift.id)"
+          v-for="assignment in main.getShiftAssignments(shift.id).sort(function (a, b) {
+            return (
+              stationsRolesOrder.indexOf(stationsRolesMaps[a.role]) -
+              stationsRolesOrder.indexOf(stationsRolesMaps[b.role])
+            )
+          })"
           :key="assignment.id"
         >
           <VacationsAssignement :assignment="assignment" />
@@ -71,7 +77,6 @@ const localeHour = (date: Date) =>
 
 <style lang="css" scoped>
 table {
-  margin-bottom: 2rem;
   width: 100%;
   border-collapse: collapse;
   text-align: center;
