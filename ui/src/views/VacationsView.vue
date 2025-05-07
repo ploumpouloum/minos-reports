@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useMainStore } from '@/stores/main'
 import VacationsShift from '../components/VacationsShift.vue'
-import AbbreviationSummary from '@/components/AbbreviationSummary.vue'
 
 const main = useMainStore()
 
@@ -9,36 +8,42 @@ main.fetchData()
 </script>
 
 <template>
-  <AbbreviationSummary />
-  <div class="report">
-    <template v-for="startDay in main.startDays" :key="startDay.toISOString()">
-      <div class="shift" v-for="(shift, index) in main.getShifts(startDay)" :key="shift.id">
-        <div class="day" v-if="index == 0">
-          {{
-            startDay.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long' })
-          }}
-        </div>
+  <div class="day-block" v-for="startDay in main.startDays" :key="startDay.toISOString()">
+    <div class="day">
+      {{ startDay.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long' }) }}
+    </div>
+    <div class="shifts">
+      <div class="shift" v-for="shift in main.getShifts(startDay)" :key="shift.id">
         <VacationsShift :shiftId="shift.id" />
       </div>
-    </template>
+    </div>
   </div>
 </template>
 
 <style scoped lang="css">
-.report {
-  margin-top: 1rem;
-  display: flex;
-  flex-flow: column wrap;
-  height: calc(100vh - 12rem);
+.shifts {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1rem;
 }
 
-.report > * {
-  margin-left: 30px;
-  margin-right: 30px;
+@media (min-width: 640px) {
+  .shifts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
-.shift {
-  width: 350px;
+@media (min-width: 1024px) {
+  .shifts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1440px) {
+  .shifts {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 
 .break {

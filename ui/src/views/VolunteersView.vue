@@ -23,7 +23,7 @@ const router = useRouter()
         })
       "
     >
-      <p>{{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }})</p>
+      <p>{{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})</p>
     </v-card>
   </v-sheet>
   <v-sheet v-else id="main">Waiting for data ...</v-sheet>

@@ -3,25 +3,16 @@ import { useMainStore } from '@/stores/main'
 import ManquesShift from '@/components/ManquesShift.vue'
 import { ref } from 'vue'
 import ManquesShiftTotal from '@/components/ManquesShiftTotal.vue'
-import AbbreviationSummary from '@/components/AbbreviationSummary.vue'
 
 const main = useMainStore()
 
 main.fetchData()
 
-const showComplet = ref(true)
+const showComplet = ref(false)
 </script>
 
 <template>
-  <AbbreviationSummary class="abrev" />
-  <p class="help">
-    Chaque case indique le nombre de personnes manquantes vs le nombre total nécessaire. Par exemple
-    2/3 indique qu'il manque encore 2 personnes sur les 3 nécessaires. 0/4 indique qu'il ne manque
-    plus personne sur les 4 nécessaires, et ainsi de suite.
-  </p>
   <div class="report">
-    <input type="checkbox" id="checkbox" v-model="showComplet" />
-    <label for="checkbox">Afficher les postes complets</label>
     <div
       v-for="startDay in main.startDays.filter(
         (startDay) => main.getShiftsWithManques(startDay, showComplet).length > 0
@@ -93,10 +84,6 @@ th.noborder {
   color: black;
   text-align: right;
   padding: 0 1rem;
-}
-
-.abrev {
-  margin-top: 1rem;
 }
 
 .help {

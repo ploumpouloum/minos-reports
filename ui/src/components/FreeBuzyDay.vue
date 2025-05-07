@@ -74,7 +74,7 @@ const getFreeBusyClass = function (status: FreeBusyStatus) {
     <div class="table">
       <template v-for="volunteer in main.volunteersPresent(props.day)" :key="volunteer.id">
         <div class="row-header">
-          {{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }})
+          {{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})
         </div>
         <template v-for="hour in Array.from({ length: 24 }, (v, k) => k)" :key="hour">
           <div

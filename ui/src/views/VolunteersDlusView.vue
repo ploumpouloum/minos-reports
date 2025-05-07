@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useMainStore } from '@/stores/main'
 import { computed, ref } from 'vue'
+import { stationsRolesOrder, stationsRolesMaps } from '@/constants'
 
 const main = useMainStore()
 
@@ -45,8 +46,17 @@ const selectedVolunteers = computed(() =>
             <th>Départ</th>
           </tr>
           <tr class="data" v-for="volunteer in selectedVolunteers" :key="volunteer.id">
-            <td>{{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }})</td>
-            <td class="roles">{{ volunteer.roles?.join(', ') }}</td>
+            <td>{{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})</td>
+            <td class="roles">
+              {{
+                volunteer.roles
+                  ?.map((role) => stationsRolesMaps[role])
+                  .sort(function (a, b) {
+                    return stationsRolesOrder.indexOf(a) - stationsRolesOrder.indexOf(b)
+                  })
+                  .join(', ')
+              }}
+            </td>
             <td class="arrives">
               {{
                 new Date(volunteer.incoming_date_time).toLocaleTimeString('fr-FR', {

@@ -29,7 +29,7 @@ const volunteer: Ref<Volunteer | null> = ref(
 <template>
   <template v-if="!volunteerId || volunteerId != skipVolunteerId">
     <span v-if="volunteer"
-      >{{ volunteer.firstname }} {{ volunteer.lastname }} ({{ volunteer.department }},
+      >{{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }},
       {{ props.role }})</span
     >
     <span v-else>{{ props.role }}</span>

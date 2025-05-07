@@ -38,7 +38,7 @@ watch(
 <template>
   <v-sheet v-if="main.dataLoaded && volunteer" id="main">
     <h2>
-      {{ $route.params.nivol }} - {{ volunteer.firstname }} {{ volunteer.lastname }} ({{
+      {{ $route.params.nivol }} - {{ volunteer.lastname }} {{ volunteer.firstname }} ({{
         volunteer.department
       }})
     </h2>
