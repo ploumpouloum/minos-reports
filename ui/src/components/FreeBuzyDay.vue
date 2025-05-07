@@ -28,7 +28,7 @@ const getFreeBusyStatus = function (
   for (const assignement of main.getVolunteerAssignments(volunteer.id)) {
     const shift = main.shifts.filter((shift) => shift.id == assignement.shiftId)[0]
 
-    if (shift.meetDateTime <= currentDate && shift.endDateTime >= currentDate) {
+    if (shift.meetDateTime <= addMinutes(currentDate, 30) && shift.endDateTime >= currentDate) {
       return FreeBusyStatus.Busy
     }
   }
