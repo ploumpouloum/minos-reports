@@ -7,7 +7,7 @@ import sqlalchemy as sa
 import sqlalchemy.orm as so
 
 from minosreports.context import Context
-from minosreports.db.models import Volunteer
+from minosreports.db.models import Volunteer, VolunteerStatus
 
 context = Context.get(fallback_to_class=True)
 logger = context.logger
@@ -77,6 +77,15 @@ def parse_volontaires_csv(filename: Path, session: so.Session):
                 )
                 volunteer_in_db.dlus_email = volunteer.dlus_email
                 volunteer_in_db.department = volunteer.department
+
+            if volunteer.nivol:
+                stmt = sa.select(VolunteerStatus).where(
+                    VolunteerStatus.nivol == volunteer.nivol
+                )
+                volunteer_status = session.execute(stmt).scalar_one_or_none()
+                if volunteer_status is None:
+                    logger.debug(f"Adding volunteer status for {volunteer.nivol}")
+                    session.add(VolunteerStatus(nivol=volunteer.nivol, arrived=None))
 
     return {"countRows": count_rows}
 

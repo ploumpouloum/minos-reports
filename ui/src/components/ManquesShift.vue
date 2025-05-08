@@ -49,7 +49,7 @@ const shiftTotals = computed(() => {
       }}
     </td>
     <td v-for="role in main.stationsRoles" :key="role">
-      <ManquesShiftDetail :total="shiftTotals[role]" :manque="shiftManques[role]" />
+      <ManquesShiftDetail :total="shiftTotals[role] || NaN" :manque="shiftManques[role] || NaN" />
     </td>
   </tr>
   <tr v-else>
