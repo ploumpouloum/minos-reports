@@ -53,7 +53,9 @@ export const useMainStore = defineStore('main', {
     startDays(state) {
       return Array.from(
         new Set(state.shifts.map((shift: Shift) => startOfDay(shift.startDateTime).getTime()))
-      ).map((timestamp: number) => new Date(timestamp))
+      )
+        .sort()
+        .map((timestamp: number) => new Date(timestamp))
     },
     volunteersPresent(state) {
       return (day: Date): Volunteer[] => {
