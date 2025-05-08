@@ -29,7 +29,7 @@ const manquesTotals = computed(() => {
   <th v-for="role in main.stationsRoles" :key="role">
     {{ stationsRolesMaps[role] }}
     <br />
-    <ManquesShiftDetail :total="manquesTotals[role]" :manque="manques[role]" />
+    <ManquesShiftDetail :total="manquesTotals[role] || NaN" :manque="manques[role] || NaN" />
   </th>
 </template>
 

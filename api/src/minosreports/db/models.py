@@ -83,6 +83,14 @@ class Volunteer(Base):
     )
 
 
+class VolunteerStatus(Base):
+    """The status of a given volunteer, used to persist data across reloads"""
+
+    __tablename__ = "volunteer_status"
+    nivol: Mapped[str] = mapped_column(primary_key=True)
+    arrived: Mapped[bool | None]
+
+
 class Station(Base):
     """A station, i.e. somewhere where volunteer needs to be affected"""
 

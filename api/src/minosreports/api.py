@@ -12,7 +12,14 @@ from pydantic import BaseModel
 from minosreports.cloudflare_access import InvalidTokenError, verify_token
 from minosreports.context import Context
 from minosreports.db import dbsession
-from minosreports.db.models import Assignment, Shift, Station, StationKind, Volunteer
+from minosreports.db.models import (
+    Assignment,
+    Shift,
+    Station,
+    StationKind,
+    Volunteer,
+    VolunteerStatus,
+)
 from minosreports.parsing.affectations import parse_affectations_csv
 from minosreports.parsing.volontaires import parse_volontaires_csv
 
@@ -82,7 +89,11 @@ async def data(user_email: str = Depends(verify_cf_authorization)):
         )
 
         if is_supervisor:
-            volunteers_stmt = sa.select(Volunteer)
+            volunteers_stmt = sa.select(Volunteer, VolunteerStatus.arrived).join(
+                VolunteerStatus,
+                onclause=VolunteerStatus.nivol == Volunteer.nivol,
+                isouter=True,
+            )
             assignements_stmt = sa.select(Assignment)
             shifts_stmt = sa.select(Shift)
             stations_stmt = sa.select(Station, StationKind.kind).join(
@@ -119,15 +130,23 @@ async def data(user_email: str = Depends(verify_cf_authorization)):
                 )
                 .where(Station.id.in_(stations_subquery))
             )
-            volunteers_stmt = sa.select(Volunteer).where(
-                sa.or_(
-                    Volunteer.dlus_email == user_email,
-                    Volunteer.email == user_email,
-                    Volunteer.id.in_(
-                        sa.select(Assignment.volunteer_id).where(
-                            Assignment.id.in_(assignements_subquery)
-                        )
-                    ),
+            volunteers_stmt = (
+                sa.select(Volunteer, VolunteerStatus.arrived)
+                .join(
+                    VolunteerStatus,
+                    onclause=VolunteerStatus.nivol == Volunteer.nivol,
+                    isouter=True,
+                )
+                .where(
+                    sa.or_(
+                        Volunteer.dlus_email == user_email,
+                        Volunteer.email == user_email,
+                        Volunteer.id.in_(
+                            sa.select(Assignment.volunteer_id).where(
+                                Assignment.id.in_(assignements_subquery)
+                            )
+                        ),
+                    )
                 )
             )
 
@@ -151,8 +170,9 @@ async def data(user_email: str = Depends(verify_cf_authorization)):
                     "department": volunteer.department,
                     "roles": volunteer.roles,
                     "dlus_email": volunteer.dlus_email,
+                    "arrived": arrived,
                 }
-                for volunteer in session.execute(volunteers_stmt).scalars()
+                for volunteer, arrived in session.execute(volunteers_stmt)
             ],
             "stations": [
                 {
@@ -224,6 +244,32 @@ async def create_upload_volontaires(
         return result
 
     return upload_inner()
+
+
+class VolunteerStatusDTO(BaseModel):
+    nivol: str
+    arrived: bool | None = None
+
+
+@app.post("/volunteer_status/")
+async def set_volunteer_status(
+    volunteer_status: VolunteerStatusDTO,
+    _: str = Depends(verify_cf_authorization),
+):
+    @dbsession
+    def set_volunteer_status_inner(session: so.Session):
+        volunteer_status_in_db = session.execute(
+            sa.select(VolunteerStatus).where(
+                VolunteerStatus.nivol == volunteer_status.nivol
+            )
+        ).scalar_one_or_none()
+        if not volunteer_status_in_db:
+            raise HTTPException(
+                HTTPStatus.BAD_REQUEST, detail="Unknown volunteer nivol"
+            )
+        volunteer_status_in_db.arrived = volunteer_status.arrived
+
+    return set_volunteer_status_inner()
 
 
 class StationKindDTO(BaseModel):

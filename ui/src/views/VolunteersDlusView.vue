@@ -37,8 +37,8 @@ const selectedVolunteers = computed(() =>
         />
       </div>
       <template v-if="selectedVolunteers.length">
-        <h2>Liste des inscrits rattachés à toi en tant que DLUS</h2>
-        <table id="volunteers-roles">
+        <h2>Liste des volontaires rattachés à toi en tant que DLUS</h2>
+        <table>
           <tr>
             <th>Bénévole</th>
             <th>Role</th>

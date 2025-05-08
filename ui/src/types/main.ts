@@ -25,6 +25,7 @@ export interface Volunteer {
   roles: string[] | undefined
   department: string
   dlus_email: string
+  arrived: boolean
 }
 
 export interface Assignment {
