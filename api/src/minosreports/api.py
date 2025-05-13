@@ -215,10 +215,12 @@ async def create_upload_affectation(
     file: Annotated[
         UploadFile, File(description="Upload Affectation CSVs exported from Minos")
     ],
-    _: str = Depends(verify_cf_authorization),
+    user_email: str = Depends(verify_cf_authorization),
 ):
     @dbsession
     def upload_inner(session: so.Session):
+        if user_email not in context.supervisor_mails:
+            raise HTTPException(HTTPStatus.UNAUTHORIZED, "You are not a supervisor")
         tfile = tempfile.NamedTemporaryFile(delete=False)
         tfile.write(file.file.read())
         result = parse_affectations_csv(session=session, filename=Path(tfile.name))
@@ -233,10 +235,12 @@ async def create_upload_volontaires(
     file: Annotated[
         UploadFile, File(description="Upload Volontaires CSVs exported from Minos")
     ],
-    _: str = Depends(verify_cf_authorization),
+    user_email: str = Depends(verify_cf_authorization),
 ):
     @dbsession
     def upload_inner(session: so.Session):
+        if user_email not in context.supervisor_mails:
+            raise HTTPException(HTTPStatus.UNAUTHORIZED, "You are not a supervisor")
         tfile = tempfile.NamedTemporaryFile(delete=False)
         tfile.write(file.file.read())
         result = parse_volontaires_csv(session=session, filename=Path(tfile.name))
@@ -254,10 +258,12 @@ class VolunteerStatusDTO(BaseModel):
 @app.post("/volunteer_status/")
 async def set_volunteer_status(
     volunteer_status: VolunteerStatusDTO,
-    _: str = Depends(verify_cf_authorization),
+    user_email: str = Depends(verify_cf_authorization),
 ):
     @dbsession
     def set_volunteer_status_inner(session: so.Session):
+        if user_email not in context.supervisor_mails:
+            raise HTTPException(HTTPStatus.UNAUTHORIZED, "You are not a supervisor")
         volunteer_status_in_db = session.execute(
             sa.select(VolunteerStatus).where(
                 VolunteerStatus.nivol == volunteer_status.nivol
@@ -280,10 +286,12 @@ class StationKindDTO(BaseModel):
 @app.post("/station_kind/")
 async def set_station_kind(
     station_kind: StationKindDTO,
-    _: str = Depends(verify_cf_authorization),
+    user_email: str = Depends(verify_cf_authorization),
 ):
     @dbsession
     def set_station_kind_inner(session: so.Session):
+        if user_email not in context.supervisor_mails:
+            raise HTTPException(HTTPStatus.UNAUTHORIZED, "You are not a supervisor")
         station_kind_in_db = session.execute(
             sa.select(StationKind).where(StationKind.label == station_kind.label)
         ).scalar_one_or_none()
@@ -296,11 +304,13 @@ async def set_station_kind(
 
 @app.delete("/data")
 async def delete_all(
-    _: str = Depends(verify_cf_authorization),
+    user_email: str = Depends(verify_cf_authorization),
 ):
 
     @dbsession
     def delete_all_inner(session: so.Session):
+        if user_email not in context.supervisor_mails:
+            raise HTTPException(HTTPStatus.UNAUTHORIZED, "You are not a supervisor")
         session.execute(sa.delete(Assignment))
         session.execute(sa.delete(Shift))
         session.execute(sa.delete(Station))
