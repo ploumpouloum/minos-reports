@@ -11,6 +11,14 @@ const props = defineProps({
   assignment: {
     type: Object as PropType<Assignment>,
     required: true
+  },
+  volunteerClickable: {
+    type: Boolean,
+    required: false
+  },
+  currentVolunteer: {
+    type: Object as PropType<Volunteer>,
+    required: false
   }
 })
 
@@ -21,10 +29,13 @@ const volunteer: Ref<Volunteer | null> = ref(
 
 <template>
   <td class="role">{{ stationsRolesMaps[props.assignment.role] }}</td>
-  <td colspan="3">
-    <router-link v-if="volunteer" :to="`/volunteer/${volunteer.nivol}`">
+  <td colspan="3" :class="{ current: currentVolunteer && currentVolunteer == volunteer }">
+    <router-link v-if="volunteer && volunteerClickable" :to="`/volunteer/${volunteer.nivol}`">
       {{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})
     </router-link>
+    <span v-else-if="volunteer && !volunteerClickable"
+      >{{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})</span
+    >
     <template v-else>Non affecté</template>
   </td>
 </template>
@@ -32,5 +43,9 @@ const volunteer: Ref<Volunteer | null> = ref(
 <style lang="css" scoped>
 td {
   border: 1px #717171 solid;
+}
+
+.current {
+  font-weight: bold;
 }
 </style>
