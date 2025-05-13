@@ -14,7 +14,7 @@ main.fetchData()
     </div>
     <div class="shifts">
       <div class="shift" v-for="shift in main.getShifts(startDay)" :key="shift.id">
-        <VacationsShift :shiftId="shift.id" />
+        <VacationsShift :volunteersClickable="true" :shiftId="shift.id" />
       </div>
     </div>
   </div>

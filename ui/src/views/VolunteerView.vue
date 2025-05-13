@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { useMainStore } from '@/stores/main'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { ref, watch, type Ref } from 'vue'
 import { getRouteParam } from '@/utils'
-import VolunteerShift from '@/components/VolunteerShift.vue'
+import VolunteerMissions from '../components/VolunteerMissions.vue'
 import type { Volunteer } from '@/types/main'
 
 const route = useRoute()
-const router = useRouter()
 
 const main = useMainStore()
 
@@ -37,27 +36,12 @@ watch(
 
 <template>
   <v-sheet v-if="main.dataLoaded && volunteer" id="main">
-    <h2>
-      {{ $route.params.nivol }} - {{ volunteer.lastname }} {{ volunteer.firstname }} ({{
-        volunteer.department
-      }})
-    </h2>
+    <h2>{{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})</h2>
     <div v-if="!main.isDlus && !main.isSupervisor">
       Vous ne pouvez voir le détail des affectations de ce volontaire.
     </div>
     <div v-else>
-      <v-card
-        variant="outlined"
-        v-for="assignment in main.getVolunteerAssignments(volunteer.id)"
-        :key="assignment.shiftId"
-        @click="router.push({ name: 'shift', params: { shiftId: assignment.shiftId } })"
-      >
-        <VolunteerShift
-          :role="assignment.role"
-          :shift-id="assignment.shiftId"
-          :volunteer-id="volunteer.id"
-        />
-      </v-card>
+      <VolunteerMissions :volunteer="volunteer" :volunteersClickable="true" />
     </div>
   </v-sheet>
   <v-sheet v-else id="main">Waiting for data ...</v-sheet>

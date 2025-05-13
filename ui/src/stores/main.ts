@@ -113,11 +113,45 @@ export const useMainStore = defineStore('main', {
         return state.volunteers.filter((volunteer: Volunteer) => volunteer.nivol == nivol)[0]
       }
     },
+    getVolunteerAssignmentsDays(state) {
+      return (volunteerId: string): Date[] => {
+        return Array.from(
+          new Set(
+            state.assignments
+              .filter((assignment: Assignment) => assignment.volunteerId == volunteerId)
+              .map((assignment: Assignment) =>
+                startOfDay(this.getShift(assignment.shiftId).startDateTime).getTime()
+              )
+          )
+        )
+          .sort()
+          .map((timestamp: number) => new Date(timestamp))
+      }
+    },
+    getVolunteerAssignmentsByDay(state) {
+      return (volunteerId: string, day: Date): Assignment[] => {
+        return state.assignments
+          .filter(
+            (assignment: Assignment) =>
+              assignment.volunteerId == volunteerId &&
+              isEqual(startOfDay(this.getShift(assignment.shiftId).startDateTime), day)
+          )
+          .sort(
+            (a, b) =>
+              this.getShift(a.shiftId).startDateTime.getTime() -
+              this.getShift(b.shiftId).startDateTime.getTime()
+          )
+      }
+    },
     getVolunteerAssignments(state) {
       return (volunteerId: string): Assignment[] => {
-        return state.assignments.filter(
-          (assignment: Assignment) => assignment.volunteerId == volunteerId
-        )
+        return state.assignments
+          .filter((assignment: Assignment) => assignment.volunteerId == volunteerId)
+          .sort(
+            (a, b) =>
+              this.getShift(a.shiftId).startDateTime.getTime() -
+              this.getShift(b.shiftId).startDateTime.getTime()
+          )
       }
     },
     getShiftAssignments(state) {

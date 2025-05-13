@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { Ref } from 'vue'
+import type { PropType, Ref } from 'vue'
 import { useMainStore } from '@/stores/main'
 import VacationsAssignement from './VacationsAssignement.vue'
-import type { Station, Shift } from '../types/main.ts'
+import type { Station, Shift, Volunteer } from '../types/main.ts'
 import { addMinutes } from '@/utils.ts'
 import { stationsRolesOrder, stationsRolesMaps } from '@/constants'
 
@@ -13,6 +13,14 @@ const props = defineProps({
   shiftId: {
     type: String,
     required: true
+  },
+  volunteersClickable: {
+    type: Boolean,
+    required: false
+  },
+  currentVolunteer: {
+    type: Object as PropType<Volunteer>,
+    required: false
   }
 })
 
@@ -67,7 +75,11 @@ const localeHour = (date: Date) =>
           })"
           :key="assignment.id"
         >
-          <VacationsAssignement :assignment="assignment" />
+          <VacationsAssignement
+            :assignment="assignment"
+            :volunteer-clickable="props.volunteersClickable"
+            :current-volunteer="props.currentVolunteer"
+          />
         </tr>
       </tbody>
     </table>
