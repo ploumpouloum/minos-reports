@@ -2,6 +2,7 @@
 import { useMainStore } from '@/stores/main'
 import { computed, ref } from 'vue'
 import { stationsRolesOrder, stationsRolesMaps } from '@/constants'
+import VolunteerDlus from '../components/VolunteerDlus.vue'
 
 const main = useMainStore()
 
@@ -79,6 +80,10 @@ const selectedVolunteers = computed(() =>
             </td>
           </tr>
         </table>
+
+        <template v-for="volunteer in selectedVolunteers" :key="volunteer.id">
+          <VolunteerDlus :volunteer="volunteer" />
+        </template>
       </template>
     </div>
   </v-sheet>
