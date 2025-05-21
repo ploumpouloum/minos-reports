@@ -34,10 +34,10 @@ const localeTime = (date: Date) =>
 
 <template>
   <template v-if="shift && station">
-    <td>{{ stationsRolesMaps[role] }}</td>
+    <td class="role">{{ stationsRolesMaps[role] }}</td>
     <td>{{ station.label }}</td>
-    <td>{{ localeTime(shift.meetDateTime) }}</td>
-    <td>{{ localeTime(shift.endDateTime) }}</td>
+    <td class="date">{{ localeTime(shift.meetDateTime) }}</td>
+    <td class="date">{{ localeTime(shift.endDateTime) }}</td>
   </template>
 
   <template v-else><td colspan="4">Shift or station not found</td> </template>
@@ -47,5 +47,13 @@ const localeTime = (date: Date) =>
 td {
   padding: 0.2rem 0.5rem;
   border: 1px solid black;
+}
+
+td.role {
+  width: 6rem;
+}
+
+td.date {
+  width: 7rem;
 }
 </style>
