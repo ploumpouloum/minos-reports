@@ -38,6 +38,7 @@ table {
   margin: 0.5rem auto 1.5rem auto;
   border-spacing: 0;
   border-collapse: collapse;
+  width: 100%;
 }
 
 tr:nth-child(even) {

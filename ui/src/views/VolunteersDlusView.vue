@@ -10,6 +10,12 @@ main.fetchData()
 
 const selectedDlus = ref()
 
+const displayDetails = ref(false)
+
+const toggleDisplayDetails = function () {
+  displayDetails.value = !displayDetails.value
+}
+
 const existingDlus = computed(() => [
   ...new Set(
     main.volunteers.map((volunteer) => volunteer.dlus_email).sort((a, b) => a.localeCompare(b))
@@ -38,8 +44,8 @@ const selectedVolunteers = computed(() =>
         />
       </div>
       <template v-if="selectedVolunteers.length">
-        <h2>Liste des volontaires rattachés à toi en tant que DLUS</h2>
-        <table>
+        <h2>Liste des volontaires inscrits et validés par la Maxi-Race</h2>
+        <table v-if="!displayDetails">
           <tr>
             <th>Bénévole</th>
             <th>Role</th>
@@ -81,9 +87,17 @@ const selectedVolunteers = computed(() =>
           </tr>
         </table>
 
-        <template v-for="volunteer in selectedVolunteers" :key="volunteer.id">
-          <VolunteerDlus :volunteer="volunteer" />
+        <template v-if="displayDetails">
+          <template v-for="volunteer in selectedVolunteers" :key="volunteer.id">
+            <VolunteerDlus :volunteer="volunteer" />
+          </template>
         </template>
+
+        <div id="zoom">
+          <v-btn @click="toggleDisplayDetails"
+            >Voir {{ displayDetails ? 'résumé' : 'détails' }}
+          </v-btn>
+        </div>
       </template>
     </div>
   </v-sheet>
@@ -92,8 +106,9 @@ const selectedVolunteers = computed(() =>
 
 <style scoped>
 #main {
-  padding: 15px;
+  padding: 15px 0;
   margin: auto;
+  width: min(800px, calc(100vw - 30px));
 }
 
 h2 {
@@ -110,15 +125,30 @@ table {
   margin: 1.5rem auto;
   border-spacing: 0;
   border-collapse: collapse;
+  width: 100%;
 }
 
 td {
   padding: 0.2rem 0.5rem;
   border: 1px solid black;
-  max-width: 300px;
 }
 
 tr.data:nth-child(odd) {
   background-color: #f2f2f2;
+}
+
+td.arrives,
+td.departs {
+  width: 7rem;
+}
+
+#zoom .v-btn {
+  margin: 2rem auto;
+}
+
+@media print {
+  #zoom {
+    display: none;
+  }
 }
 </style>
