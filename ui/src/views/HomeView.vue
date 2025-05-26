@@ -22,3 +22,19 @@ main.fetchData().then(() => {
   }
 })
 </script>
+
+<template>
+  <div id="main">
+    <div v-if="main.isLoading">Loading data ...</div>
+    <div v-else-if="!main.dataLoaded">Error loading data</div>
+    <div v-else>Data loaded. Please wait few secs for UI to refresh.</div>
+  </div>
+</template>
+
+<style lang="css" scoped>
+#main {
+  max-width: 800px;
+  padding: 15px;
+  margin: auto;
+}
+</style>
