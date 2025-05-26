@@ -83,7 +83,27 @@ def parse_affectations_csv(filename: Path, session: so.Session):
 
             nivol = row["NIVOL"].strip()
             if not nivol:
-                volunteer_in_db = None
+                volunteer_in_file = row["Volontaire"].strip()
+                if not volunteer_in_file:
+                    volunteer_in_db = None
+                else:
+                    logger.warning(
+                        f"Missing NIVOL for row {count_rows}, assigning by "
+                        "firstname/lastname/department"
+                    )
+                    stmt = sa.select(Volunteer).where(
+                        sa.func.concat(
+                            Volunteer.lastname,
+                            " ",
+                            Volunteer.firstname,
+                            " ",
+                            Volunteer.department,
+                        )
+                        == volunteer_in_file
+                    )
+                    volunteer_in_db = session.execute(stmt).scalar_one_or_none()
+                    if volunteer_in_db is None:
+                        logger.warning(f"Volunteer '{volunteer_in_file}' is unknown")
             else:
                 stmt = sa.select(Volunteer).where(Volunteer.nivol == nivol)
                 volunteer_in_db = session.execute(stmt).scalar_one_or_none()
@@ -109,31 +129,6 @@ def parse_affectations_csv(filename: Path, session: so.Session):
             session.add(assignment)
 
     return {"countRows": count_rows}
-
-
-def get_volunteer(value: str) -> Volunteer:
-    splits = value.split(" ")
-    return Volunteer(
-        firstname=splits[1] if len(splits) > 1 else "",
-        lastname=splits[0],
-        nivol=None,
-        locality=None,
-        phone_number=None,
-        email=None,
-        minor=None,
-        roles=None,
-        mission_restrictions=None,
-        food_restrictions=None,
-        incoming_date_time=None,
-        incoming_transportation_system=None,
-        incoming_train_station=None,
-        outgoing_date_time=None,
-        outgoing_transportation_system=None,
-        outgoing_train_station=None,
-        crf_transportation_type=None,
-        dlus_email=None,
-        department=None,
-    )
 
 
 def get_station(dps_match: re.Match[str]) -> Station:
