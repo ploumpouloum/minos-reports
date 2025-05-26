@@ -11,13 +11,13 @@ main.fetchData()
 
 <template>
   <div class="header-bar">
-    <div id="whoami">{{ main.whoami }}</div>
     <div id="logo">
       <router-link to="/">
         <v-img id="logo" :src="logoImage" alt="Logo" class="logo" height="70" />
       </router-link>
     </div>
     <div id="title">Maxi-Race 2025</div>
+    <div id="whoami">{{ main.whoami }}</div>
     <template v-if="main.isSupervisor">
       <div class="header-btns">
         <router-link to="/restrictions" custom v-slot="{ navigate }">
@@ -76,20 +76,29 @@ main.fetchData()
 </template>
 
 <style scoped>
-#whoami {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
-#title {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-}
 .header-bar {
   padding: 0.25rem;
   display: flex;
   flex-direction: column;
+}
+
+#whoami,
+#title {
+  text-align: center;
+}
+
+@media (min-width: 800px) {
+  #whoami {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+
+  #title {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+  }
 }
 
 .header-btns {
