@@ -6,8 +6,6 @@ import VolunteerDlus from '../components/VolunteerDlus.vue'
 
 const main = useMainStore()
 
-main.fetchData()
-
 const selectedDlus = ref()
 
 const displayDetails = ref(false)

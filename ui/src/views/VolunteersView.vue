@@ -38,8 +38,6 @@ const isNewHalf = function (index: number) {
   return currentHalf != previousHalf
 }
 
-main.fetchData()
-
 const router = useRouter()
 </script>
 

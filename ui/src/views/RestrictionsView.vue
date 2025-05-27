@@ -2,8 +2,6 @@
 import { useMainStore } from '@/stores/main'
 
 const main = useMainStore()
-
-main.fetchData()
 </script>
 
 <template>

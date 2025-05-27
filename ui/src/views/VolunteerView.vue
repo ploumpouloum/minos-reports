@@ -10,8 +10,6 @@ const route = useRoute()
 
 const main = useMainStore()
 
-main.fetchData()
-
 const volunteer: Ref<Volunteer | undefined> = ref()
 
 const refreshData = () => {

@@ -3,8 +3,6 @@ import { useMainStore } from '@/stores/main'
 import VacationsShift from '../components/VacationsShift.vue'
 
 const main = useMainStore()
-
-main.fetchData()
 </script>
 
 <template>

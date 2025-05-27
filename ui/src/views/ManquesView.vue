@@ -6,8 +6,6 @@ import ManquesShiftTotal from '@/components/ManquesShiftTotal.vue'
 
 const main = useMainStore()
 
-main.fetchData()
-
 const showComplet = ref(false)
 </script>
 

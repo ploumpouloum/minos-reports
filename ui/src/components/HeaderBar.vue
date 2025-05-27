@@ -5,6 +5,8 @@ import { useRoute } from 'vue-router'
 
 const main = useMainStore()
 
+main.fetchData()
+
 const route = useRoute()
 </script>
 

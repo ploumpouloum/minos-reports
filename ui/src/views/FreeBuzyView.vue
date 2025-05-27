@@ -3,8 +3,6 @@ import FreeBuzyDay from '@/components/FreeBuzyDay.vue'
 import { useMainStore } from '@/stores/main'
 
 const main = useMainStore()
-
-main.fetchData()
 </script>
 
 <template>

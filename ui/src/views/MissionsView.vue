@@ -6,8 +6,6 @@ import VolunteerMissions from '../components/VolunteerMissions.vue'
 
 const main = useMainStore()
 
-main.fetchData()
-
 const volunteer: Ref<Volunteer | undefined> = ref()
 
 const refreshData = () => {
