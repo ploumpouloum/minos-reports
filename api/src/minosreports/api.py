@@ -41,9 +41,13 @@ app.add_middleware(
 )
 
 
-async def verify_cf_authorization(
+async def verify_authorization(
+    X_Forwarded_Email: Annotated[str | None, Cookie()] = None,  # noqa: N803
     CF_Authorization: Annotated[str | None, Cookie()] = None,  # noqa: N803
 ):
+    if X_Forwarded_Email:
+        return X_Forwarded_Email
+    logger.warning("X_Forwarded_Email header is not set")
     if not CF_Authorization:
         raise HTTPException(HTTPStatus.UNAUTHORIZED, "Missing authorization cookie")
     try:
@@ -65,17 +69,17 @@ async def verify_cf_authorization(
 
 
 @app.get("/")
-async def root(user_email: str = Depends(verify_cf_authorization)):
+async def root(user_email: str = Depends(verify_authorization)):
     return {"message": f"Hello {user_email}"}
 
 
 @app.get("/whoami")
-async def whoami(user_email: str = Depends(verify_cf_authorization)):
+async def whoami(user_email: str = Depends(verify_authorization)):
     return user_email
 
 
 @app.get("/data")
-async def data(user_email: str = Depends(verify_cf_authorization)):
+async def data(user_email: str = Depends(verify_authorization)):
 
     @dbsession
     def data_inner(session: so.Session):  # pyright: ignore[reportUnknownParameterType]
@@ -215,7 +219,7 @@ async def create_upload_affectation(
     file: Annotated[
         UploadFile, File(description="Upload Affectation CSVs exported from Minos")
     ],
-    user_email: str = Depends(verify_cf_authorization),
+    user_email: str = Depends(verify_authorization),
 ):
     @dbsession
     def upload_inner(session: so.Session):
@@ -235,7 +239,7 @@ async def create_upload_volontaires(
     file: Annotated[
         UploadFile, File(description="Upload Volontaires CSVs exported from Minos")
     ],
-    user_email: str = Depends(verify_cf_authorization),
+    user_email: str = Depends(verify_authorization),
 ):
     @dbsession
     def upload_inner(session: so.Session):
@@ -258,7 +262,7 @@ class VolunteerStatusDTO(BaseModel):
 @app.post("/volunteer_status/")
 async def set_volunteer_status(
     volunteer_status: VolunteerStatusDTO,
-    user_email: str = Depends(verify_cf_authorization),
+    user_email: str = Depends(verify_authorization),
 ):
     @dbsession
     def set_volunteer_status_inner(session: so.Session):
@@ -286,7 +290,7 @@ class StationKindDTO(BaseModel):
 @app.post("/station_kind/")
 async def set_station_kind(
     station_kind: StationKindDTO,
-    user_email: str = Depends(verify_cf_authorization),
+    user_email: str = Depends(verify_authorization),
 ):
     @dbsession
     def set_station_kind_inner(session: so.Session):
@@ -304,7 +308,7 @@ async def set_station_kind(
 
 @app.delete("/data")
 async def delete_all(
-    user_email: str = Depends(verify_cf_authorization),
+    user_email: str = Depends(verify_authorization),
 ):
 
     @dbsession
