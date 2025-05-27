@@ -3,8 +3,6 @@ import FreeBuzyDay from '@/components/FreeBuzyDay.vue'
 import { useMainStore } from '@/stores/main'
 
 const main = useMainStore()
-
-main.fetchData()
 </script>
 
 <template>
@@ -14,6 +12,7 @@ main.fetchData()
       <v-progress-circular color="primary" indeterminate></v-progress-circular>
     </p>
   </v-sheet>
+  <v-sheet v-else-if="!main.isSupervisor" id="main">Cet écran est réservé aux superviseurs</v-sheet>
   <v-sheet v-else id="main">
     <v-card variant="outlined" v-for="day in main.startDays" :key="day.toISOString()">
       <FreeBuzyDay :day="day" />

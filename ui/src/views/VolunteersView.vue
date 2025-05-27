@@ -20,7 +20,23 @@ const sortedVolunteers = computed(() => {
   return main.volunteers.slice().sort((a, b) => sortFn(a).localeCompare(sortFn(b)))
 })
 
-main.fetchData()
+const getHalfDayKey = function (date: Date) {
+  if (!date) {
+    return ''
+  }
+  const day = date.toDateString()
+  const half = date.getHours() < 12 ? 'AM' : 'PM'
+  return `${day}-${half}`
+}
+
+const isNewHalf = function (index: number) {
+  if (index == 0) {
+    return false
+  }
+  const currentHalf = getHalfDayKey(sortedVolunteers.value[index].incoming_date_time)
+  const previousHalf = getHalfDayKey(sortedVolunteers.value[index - 1].incoming_date_time)
+  return currentHalf != previousHalf
+}
 
 const router = useRouter()
 </script>
@@ -32,8 +48,15 @@ const router = useRouter()
       <v-progress-circular color="primary" indeterminate></v-progress-circular>
     </p>
   </v-sheet>
+  <v-sheet v-else-if="!main.isSupervisor" id="main">Cet écran est réservé aux superviseurs</v-sheet>
   <v-sheet v-else id="main">
-    <h2>Liste des volontaires{{ main.isDlus ? ' de votre UL' : '' }}</h2>
+    <h2>
+      Liste des {{ sortedVolunteers.length }} volontaires{{ main.isDlus ? ' de votre UL' : '' }}
+    </h2>
+    <p class="screen">
+      {{ sortedVolunteers.filter((volunteer) => volunteer.arrived).length }} volontaires déjà
+      arrivés sur site
+    </p>
     <div class="screen">
       Tri par:
       <v-btn-toggle
@@ -56,7 +79,12 @@ const router = useRouter()
         <th style="width: 10rem">Emargement</th>
         <th class="screen" style="width: 7rem">Affectations</th>
       </tr>
-      <tr class="data" v-for="volunteer in sortedVolunteers" :key="volunteer.id">
+      <tr
+        :class="{ nexthalf: sortCriteria == 'incoming_date' && isNewHalf(index) }"
+        class="data"
+        v-for="(volunteer, index) in sortedVolunteers"
+        :key="volunteer.id"
+      >
         <td>{{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})</td>
         <td class="arrives">
           {{
@@ -142,5 +170,9 @@ tr.data:nth-child(odd) {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.nexthalf {
+  border-top: double 5px;
 }
 </style>

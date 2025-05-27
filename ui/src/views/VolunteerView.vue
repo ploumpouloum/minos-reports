@@ -10,8 +10,6 @@ const route = useRoute()
 
 const main = useMainStore()
 
-main.fetchData()
-
 const volunteer: Ref<Volunteer | undefined> = ref()
 
 const refreshData = () => {
@@ -41,12 +39,10 @@ watch(
       <v-progress-circular color="primary" indeterminate></v-progress-circular>
     </p>
   </v-sheet>
+  <v-sheet v-else-if="!main.isSupervisor" id="main">Cet écran est réservé aux superviseurs</v-sheet>
   <v-sheet v-else-if="main.dataLoaded && volunteer" id="main">
     <h2>{{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})</h2>
-    <div v-if="!main.isDlus && !main.isSupervisor">
-      Vous ne pouvez voir le détail des affectations de ce volontaire.
-    </div>
-    <div v-else>
+    <div>
       <VolunteerMissions :volunteer="volunteer" :volunteersClickable="true" />
     </div>
   </v-sheet>

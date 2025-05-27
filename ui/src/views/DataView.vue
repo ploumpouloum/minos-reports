@@ -53,12 +53,13 @@ const updateData = () => {
 </script>
 
 <template>
-  <v-sheet v-if="main.isLoading" id="main">
+  <v-sheet v-if="!main.dataLoaded" id="main">
     <p>
       Loading data ...
       <v-progress-circular color="primary" indeterminate></v-progress-circular>
     </p>
   </v-sheet>
+  <v-sheet v-else-if="!main.isSupervisor" id="main">Cet écran est réservé aux superviseurs</v-sheet>
   <v-sheet v-else id="main">
     <v-card variant="outlined">
       <h3>Fichier MINOS des volontaires</h3>

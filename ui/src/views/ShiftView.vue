@@ -15,8 +15,6 @@ const main = useMainStore()
 const shift: Ref<Shift | undefined> = ref()
 const station: Ref<Station | undefined> = ref()
 
-main.fetchData()
-
 const refreshData = () => {
   if (!main.dataLoaded) {
     return
@@ -45,6 +43,7 @@ watch(
       <v-progress-circular color="primary" indeterminate></v-progress-circular>
     </p>
   </v-sheet>
+  <v-sheet v-else-if="!main.isSupervisor" id="main">Cet écran est réservé aux superviseurs</v-sheet>
   <v-sheet v-else-if="main.dataLoaded && shift && station" id="main">
     <h2>{{ station.label }}</h2>
     <h3>

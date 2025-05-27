@@ -109,11 +109,14 @@ async def data(user_email: str = Depends(verify_authorization)):
                     Volunteer.dlus_email == user_email, Volunteer.email == user_email
                 )
             )
-            assignements_subquery = sa.select(Assignment.id).where(
-                Assignment.volunteer_id.in_(volunteers_subquery)
-            )
             shifts_subquery = sa.select(Assignment.shift_id).where(
                 Assignment.volunteer_id.in_(volunteers_subquery)
+            )
+            assignements_subquery = sa.select(Assignment.id).where(
+                sa.or_(
+                    Assignment.volunteer_id.in_(volunteers_subquery),
+                    Assignment.shift_id.in_(shifts_subquery),
+                )
             )
             assignements_stmt = sa.select(Assignment).where(
                 sa.or_(

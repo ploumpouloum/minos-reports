@@ -3,8 +3,6 @@ import { useMainStore } from '@/stores/main'
 import VacationsShift from '../components/VacationsShift.vue'
 
 const main = useMainStore()
-
-main.fetchData()
 </script>
 
 <template>
@@ -14,6 +12,7 @@ main.fetchData()
       <v-progress-circular color="primary" indeterminate></v-progress-circular>
     </p>
   </div>
+  <v-sheet v-else-if="!main.isSupervisor" id="main">Cet écran est réservé aux superviseurs</v-sheet>
   <div v-else>
     <div class="day-block" v-for="startDay in main.startDays" :key="startDay.toISOString()">
       <div class="day">
