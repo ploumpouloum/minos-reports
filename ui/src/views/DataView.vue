@@ -53,7 +53,7 @@ const updateData = () => {
 </script>
 
 <template>
-  <v-sheet v-if="main.isLoading" id="main">
+  <v-sheet v-if="!main.dataLoaded" id="main">
     <p>
       Loading data ...
       <v-progress-circular color="primary" indeterminate></v-progress-circular>
