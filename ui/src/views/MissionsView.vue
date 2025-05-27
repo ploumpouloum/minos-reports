@@ -35,7 +35,10 @@ watch(
     <v-card variant="outlined">
       <p>Bienvenue à la MaxiRace 2025 à Annecy !</p>
     </v-card>
-    <p v-if="!main.dataLoaded">Loading data ...</p>
+    <p v-if="!main.dataLoaded">
+      Loading data ...
+      <v-progress-circular color="primary" indeterminate></v-progress-circular>
+    </p>
     <p v-else-if="!volunteer">Il semble que tu n'es pas (encore ?) inscrit.e à la MaxiRace.</p>
     <div class="planning" v-else>
       <h3>Ton planning actuel</h3>

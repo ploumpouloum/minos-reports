@@ -8,13 +8,23 @@ main.fetchData()
 </script>
 
 <template>
-  <div class="day-block" v-for="startDay in main.startDays" :key="startDay.toISOString()">
-    <div class="day">
-      {{ startDay.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long' }) }}
-    </div>
-    <div class="shifts">
-      <div class="shift" v-for="shift in main.getShifts(startDay)" :key="shift.id">
-        <VacationsShift :volunteersClickable="true" :shiftId="shift.id" />
+  <div v-if="!main.dataLoaded" id="main">
+    <p>
+      Loading data ...
+      <v-progress-circular color="primary" indeterminate></v-progress-circular>
+    </p>
+  </div>
+  <div v-else>
+    <div class="day-block" v-for="startDay in main.startDays" :key="startDay.toISOString()">
+      <div class="day">
+        {{
+          startDay.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long' })
+        }}
+      </div>
+      <div class="shifts">
+        <div class="shift" v-for="shift in main.getShifts(startDay)" :key="shift.id">
+          <VacationsShift :volunteersClickable="true" :shiftId="shift.id" />
+        </div>
       </div>
     </div>
   </div>

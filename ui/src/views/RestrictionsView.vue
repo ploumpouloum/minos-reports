@@ -7,7 +7,13 @@ main.fetchData()
 </script>
 
 <template>
-  <v-sheet v-if="main.dataLoaded" id="main">
+  <v-sheet v-if="!main.dataLoaded" id="main">
+    <p>
+      Loading data ...
+      <v-progress-circular color="primary" indeterminate></v-progress-circular>
+    </p>
+  </v-sheet>
+  <v-sheet v-else id="main">
     <v-card variant="outlined" class="card">
       <h3>Mineurs</h3>
       <p
@@ -91,7 +97,6 @@ main.fetchData()
       </p>
     </v-card>
   </v-sheet>
-  <v-sheet v-else id="main">Waiting for data ...</v-sheet>
 </template>
 
 <style scoped>

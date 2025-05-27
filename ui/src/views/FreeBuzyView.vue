@@ -8,7 +8,13 @@ main.fetchData()
 </script>
 
 <template>
-  <v-sheet id="main">
+  <v-sheet v-if="!main.dataLoaded" id="main">
+    <p>
+      Loading data ...
+      <v-progress-circular color="primary" indeterminate></v-progress-circular>
+    </p>
+  </v-sheet>
+  <v-sheet v-else id="main">
     <v-card variant="outlined" v-for="day in main.startDays" :key="day.toISOString()">
       <FreeBuzyDay :day="day" />
     </v-card>

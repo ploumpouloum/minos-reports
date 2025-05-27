@@ -30,7 +30,13 @@ const selectedVolunteers = computed(() =>
 </script>
 
 <template>
-  <v-sheet v-if="main.dataLoaded" id="main">
+  <v-sheet v-if="!main.dataLoaded" id="main">
+    <p>
+      Loading data ...
+      <v-progress-circular color="primary" indeterminate></v-progress-circular>
+    </p>
+  </v-sheet>
+  <v-sheet v-else id="main">
     <div v-if="!main.isDlus && !main.isSupervisor">Cet écran est réservé aux DLUS</div>
     <div v-else>
       <div v-if="main.isSupervisor" id="dlus-select">
@@ -101,7 +107,6 @@ const selectedVolunteers = computed(() =>
       </template>
     </div>
   </v-sheet>
-  <v-sheet v-else id="main">Waiting for data ...</v-sheet>
 </template>
 
 <style scoped>

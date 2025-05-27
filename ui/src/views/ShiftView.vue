@@ -39,7 +39,13 @@ watch(
 </script>
 
 <template>
-  <v-sheet v-if="main.dataLoaded && shift && station" id="main">
+  <v-sheet v-if="!main.dataLoaded" id="main">
+    <p>
+      Loading data ...
+      <v-progress-circular color="primary" indeterminate></v-progress-circular>
+    </p>
+  </v-sheet>
+  <v-sheet v-else-if="main.dataLoaded && shift && station" id="main">
     <h2>{{ station.label }}</h2>
     <h3>
       De
@@ -83,7 +89,7 @@ watch(
       <ShiftEmptyAssignment v-else :role="assignment.role" />
     </v-card>
   </v-sheet>
-  <v-sheet v-else id="main">Waiting for data ...</v-sheet>
+  <v-sheet v-else id="main">Insufficient data found</v-sheet>
 </template>
 
 <style scoped>

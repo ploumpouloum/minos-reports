@@ -12,7 +12,13 @@ const showComplet = ref(false)
 </script>
 
 <template>
-  <div class="report">
+  <div v-if="!main.dataLoaded" class="report">
+    <p>
+      Loading data ...
+      <v-progress-circular color="primary" indeterminate></v-progress-circular>
+    </p>
+  </div>
+  <div v-else class="report">
     <div
       v-for="startDay in main.startDays.filter(
         (startDay) => main.getShiftsWithManques(startDay, showComplet).length > 0

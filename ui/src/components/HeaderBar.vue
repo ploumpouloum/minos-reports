@@ -6,10 +6,12 @@ import { useRoute } from 'vue-router'
 const main = useMainStore()
 
 const route = useRoute()
-main.fetchData()
 </script>
 
 <template>
+  <div id="update-spinner" v-if="main.isUpdating">
+    <v-progress-circular color="primary" indeterminate></v-progress-circular>
+  </div>
   <div class="header-bar">
     <div id="logo">
       <router-link to="/">
@@ -85,6 +87,12 @@ main.fetchData()
 #whoami,
 #title {
   text-align: center;
+}
+
+#update-spinner {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
 }
 
 @media (min-width: 800px) {
