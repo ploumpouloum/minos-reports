@@ -5,7 +5,7 @@ from typing import Annotated
 
 import sqlalchemy as sa
 import sqlalchemy.orm as so
-from fastapi import Cookie, Depends, FastAPI, File, HTTPException, UploadFile
+from fastapi import Cookie, Depends, FastAPI, File, Header, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -42,12 +42,12 @@ app.add_middleware(
 
 
 async def verify_authorization(
-    X_Forwarded_Email: Annotated[str | None, Cookie()] = None,  # noqa: N803
+    X_Forwarded_Email: Annotated[str | None, Header()] = None,  # noqa: N803
     CF_Authorization: Annotated[str | None, Cookie()] = None,  # noqa: N803
 ):
     if X_Forwarded_Email:
         return X_Forwarded_Email
-    logger.warning("X_Forwarded_Email header is not set")
+    logger.warning("X-Forwarded-Email header is not set")
     if not CF_Authorization:
         raise HTTPException(HTTPStatus.UNAUTHORIZED, "Missing authorization cookie")
     try:
