@@ -82,33 +82,41 @@ def parse_affectations_csv(filename: Path, session: so.Session):
             assignment.shift = shift_in_db
 
             nivol = row["NIVOL"].strip()
-            if not nivol:
-                volunteer_in_file = row["Volontaire"].strip()
-                if not volunteer_in_file:
-                    volunteer_in_db = None
-                else:
-                    logger.warning(
-                        f"Missing NIVOL for row {count_rows}, assigning by "
-                        "firstname/lastname/department"
-                    )
-                    stmt = sa.select(Volunteer).where(
-                        sa.func.concat(
-                            Volunteer.lastname,
-                            " ",
-                            Volunteer.firstname,
-                            " ",
-                            Volunteer.department,
-                        )
-                        == volunteer_in_file
-                    )
-                    volunteer_in_db = session.execute(stmt).scalar_one_or_none()
-                    if volunteer_in_db is None:
-                        logger.warning(f"Volunteer '{volunteer_in_file}' is unknown")
+            volunteer_in_file = row["Volontaire"].strip()
+            if not volunteer_in_file:
+                volunteer_in_db = None
             else:
-                stmt = sa.select(Volunteer).where(Volunteer.nivol == nivol)
-                volunteer_in_db = session.execute(stmt).scalar_one_or_none()
-                if volunteer_in_db is None:
-                    logger.warning(f"NIVOL {nivol} is unknown")
+                stmt = sa.select(Volunteer).where(
+                    sa.func.concat(
+                        Volunteer.lastname,
+                        " ",
+                        Volunteer.firstname,
+                        " ",
+                        Volunteer.department,
+                    )
+                    == volunteer_in_file
+                )
+                volunteers_in_db = session.execute(stmt).scalars().all()
+                if len(volunteers_in_db) == 0:
+                    logger.warning(
+                        f"Volunteer '{volunteer_in_file}' is unknown, ignoring"
+                    )
+                    volunteer_in_db = None
+                elif len(volunteers_in_db) > 1:
+                    volunteers_in_db = list(
+                        filter(
+                            lambda volunteer: volunteer.nivol == nivol, volunteers_in_db
+                        )
+                    )
+                    if len(volunteers_in_db) == 1:
+                        volunteer_in_db = volunteers_in_db[0]
+                    else:
+                        raise Exception(
+                            f"Error finding volunteer {volunteer_in_file} with {nivol}:"
+                            f" {len(volunteers_in_db)} found"
+                        )
+                else:
+                    volunteer_in_db = volunteers_in_db[0]
 
             assignment.volunteer = volunteer_in_db
             if volunteer := assignment.volunteer:
