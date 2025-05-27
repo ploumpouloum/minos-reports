@@ -54,6 +54,10 @@ const router = useRouter()
     <h2>
       Liste des {{ sortedVolunteers.length }} volontaires{{ main.isDlus ? ' de votre UL' : '' }}
     </h2>
+    <p class="screen">
+      {{ sortedVolunteers.filter((volunteer) => volunteer.arrived).length }} volontaires déjà
+      arrivés sur site
+    </p>
     <div class="screen">
       Tri par:
       <v-btn-toggle
