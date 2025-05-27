@@ -25,7 +25,10 @@ main.fetchData().then(() => {
 
 <template>
   <div id="main">
-    <div v-if="main.isLoading">Loading data ...</div>
+    <div v-if="main.isLoading">
+      Loading data ...
+      <v-progress-circular color="primary" indeterminate></v-progress-circular>
+    </div>
     <div v-else-if="!main.dataLoaded">Error loading data</div>
     <div v-else>Data loaded. Please wait few secs for UI to refresh.</div>
   </div>

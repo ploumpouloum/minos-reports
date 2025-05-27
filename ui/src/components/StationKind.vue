@@ -24,7 +24,24 @@ watch(
 )
 
 const setStationKind = function () {
-  axios.post(main.config.backend_api + '/station_kind/', { label: props.label, kind: kind.value })
+  main.isUpdating = true
+  main.snackbarText = 'Modification en cours'
+  main.snackbarShown = true
+  axios
+    .post(main.config.backend_api + '/station_kind/', { label: props.label, kind: kind.value })
+    .then(
+      () => {
+        main.isUpdating = false
+        main.snackbarText = 'Modification enregistrée'
+        main.snackbarShown = true
+      },
+      (error) => {
+        main.isUpdating = false
+        console.error(error)
+        main.snackbarText = 'Une erreur est survenue'
+        main.snackbarShown = true
+      }
+    )
 }
 </script>
 

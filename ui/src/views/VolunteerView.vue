@@ -35,7 +35,13 @@ watch(
 </script>
 
 <template>
-  <v-sheet v-if="main.dataLoaded && volunteer" id="main">
+  <v-sheet v-if="!main.dataLoaded" id="main">
+    <p>
+      Loading data ...
+      <v-progress-circular color="primary" indeterminate></v-progress-circular>
+    </p>
+  </v-sheet>
+  <v-sheet v-else-if="main.dataLoaded && volunteer" id="main">
     <h2>{{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})</h2>
     <div v-if="!main.isDlus && !main.isSupervisor">
       Vous ne pouvez voir le détail des affectations de ce volontaire.
@@ -44,7 +50,7 @@ watch(
       <VolunteerMissions :volunteer="volunteer" :volunteersClickable="true" />
     </div>
   </v-sheet>
-  <v-sheet v-else id="main">Waiting for data ...</v-sheet>
+  <v-sheet v-else id="main">Insufficient data found</v-sheet>
 </template>
 
 <style scoped>

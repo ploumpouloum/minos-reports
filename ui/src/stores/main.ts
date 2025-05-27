@@ -23,6 +23,7 @@ export type RootState = {
   myVolunteerId: string | null
   dataLoaded: boolean
   isLoading: boolean
+  isUpdating: boolean
   errorMessage: string
   errorDetails: string
   stationsRoles: string[]
@@ -44,6 +45,7 @@ export const useMainStore = defineStore('main', {
       myVolunteerId: null,
       dataLoaded: false,
       isLoading: false,
+      isUpdating: false,
       errorMessage: '',
       errorDetails: '',
       stationsRoles: [],

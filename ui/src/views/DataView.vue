@@ -22,6 +22,7 @@ const updateData = () => {
   }
   main.snackbarText = 'Import en cours'
   main.snackbarShown = true
+  main.isUpdating = true
   axios
     .delete(main.config.backend_api + '/data')
     .then(() => {
@@ -37,10 +38,12 @@ const updateData = () => {
     .then(() => main.fetchData(true))
     .then(
       () => {
+        main.isUpdating = false
         main.snackbarText = 'Import terminé'
         main.snackbarShown = true
       },
       (error) => {
+        main.isUpdating = false
         console.error(error)
         main.snackbarText = 'Une erreur est survenue'
         main.snackbarShown = true
@@ -50,7 +53,13 @@ const updateData = () => {
 </script>
 
 <template>
-  <v-sheet id="main">
+  <v-sheet v-if="main.isLoading" id="main">
+    <p>
+      Loading data ...
+      <v-progress-circular color="primary" indeterminate></v-progress-circular>
+    </p>
+  </v-sheet>
+  <v-sheet v-else id="main">
     <v-card variant="outlined">
       <h3>Fichier MINOS des volontaires</h3>
       <v-file-input
@@ -64,7 +73,7 @@ const updateData = () => {
         variant="outlined"
         v-model="affectationFileInput"
       ></v-file-input>
-      <v-btn @click="updateData" variant="outlined">Importer</v-btn>
+      <v-btn :disabled="main.isUpdating" @click="updateData" variant="outlined">Importer</v-btn>
     </v-card>
     <v-card variant="outlined">
       <h3>Types des postes</h3>

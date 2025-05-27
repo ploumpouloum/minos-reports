@@ -26,7 +26,13 @@ const router = useRouter()
 </script>
 
 <template>
-  <v-sheet v-if="main.dataLoaded" id="main">
+  <v-sheet v-if="!main.dataLoaded" id="main">
+    <p>
+      Loading data ...
+      <v-progress-circular color="primary" indeterminate></v-progress-circular>
+    </p>
+  </v-sheet>
+  <v-sheet v-else id="main">
     <h2>Liste des volontaires{{ main.isDlus ? ' de votre UL' : '' }}</h2>
     <div class="screen">
       Tri par:
@@ -93,7 +99,6 @@ const router = useRouter()
       </tr>
     </table>
   </v-sheet>
-  <v-sheet v-else id="main">Waiting for data ...</v-sheet>
 </template>
 
 <style scoped>
