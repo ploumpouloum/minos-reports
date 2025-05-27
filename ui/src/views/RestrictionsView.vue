@@ -11,6 +11,7 @@ const main = useMainStore()
       <v-progress-circular color="primary" indeterminate></v-progress-circular>
     </p>
   </v-sheet>
+  <v-sheet v-else-if="!main.isSupervisor" id="main">Cet écran est réservé aux superviseurs</v-sheet>
   <v-sheet v-else id="main">
     <v-card variant="outlined" class="card">
       <h3>Mineurs</h3>

@@ -16,6 +16,7 @@ const showComplet = ref(false)
       <v-progress-circular color="primary" indeterminate></v-progress-circular>
     </p>
   </div>
+  <v-sheet v-else-if="!main.isSupervisor" id="main">Cet écran est réservé aux superviseurs</v-sheet>
   <div v-else class="report">
     <div
       v-for="startDay in main.startDays.filter(

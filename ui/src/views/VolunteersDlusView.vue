@@ -22,7 +22,11 @@ const existingDlus = computed(() => [
 
 const selectedVolunteers = computed(() =>
   main.volunteers
-    .filter((volunteer) => main.isDlus || volunteer.dlus_email == selectedDlus.value)
+    .filter(
+      (volunteer) =>
+        (main.isDlus && volunteer.dlus_email == main.whoami) ||
+        volunteer.dlus_email == selectedDlus.value
+    )
     .sort((a, b) => a.lastname.localeCompare(b.lastname))
 )
 </script>
@@ -34,11 +38,13 @@ const selectedVolunteers = computed(() =>
       <v-progress-circular color="primary" indeterminate></v-progress-circular>
     </p>
   </v-sheet>
+  <v-sheet v-else-if="!main.isSupervisor && !main.isDlus" id="main"
+    >Cet écran est réservé aux superviseurs et DLUS/DTUS</v-sheet
+  >
   <v-sheet v-else id="main">
-    <div v-if="!main.isDlus && !main.isSupervisor">Cet écran est réservé aux DLUS</div>
-    <div v-else>
+    <div>
       <div v-if="main.isSupervisor" id="dlus-select">
-        Cet écran est normalement réservé aux DLUS
+        Cet écran est normalement réservé aux DLUS/DTUS
         <v-combobox
           :items="existingDlus"
           v-model="selectedDlus"

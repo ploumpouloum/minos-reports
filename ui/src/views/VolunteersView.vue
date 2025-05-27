@@ -48,6 +48,7 @@ const router = useRouter()
       <v-progress-circular color="primary" indeterminate></v-progress-circular>
     </p>
   </v-sheet>
+  <v-sheet v-else-if="!main.isSupervisor" id="main">Cet écran est réservé aux superviseurs</v-sheet>
   <v-sheet v-else id="main">
     <h2>
       Liste des {{ sortedVolunteers.length }} volontaires{{ main.isDlus ? ' de votre UL' : '' }}
