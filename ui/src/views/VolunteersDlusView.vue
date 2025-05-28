@@ -3,6 +3,7 @@ import { useMainStore } from '@/stores/main'
 import { computed, ref } from 'vue'
 import { stationsRolesOrder, stationsRolesMaps } from '@/constants'
 import VolunteerDlus from '../components/VolunteerDlus.vue'
+import VolunteerLabel from '../components/VolunteerLabel.vue'
 
 const main = useMainStore()
 
@@ -63,7 +64,7 @@ const selectedVolunteers = computed(() =>
             <th>Départ</th>
           </tr>
           <tr class="data" v-for="volunteer in selectedVolunteers" :key="volunteer.id">
-            <td>{{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})</td>
+            <td><VolunteerLabel :volunteer="volunteer" /></td>
             <td class="roles">
               {{
                 volunteer.roles

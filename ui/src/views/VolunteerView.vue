@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import { ref, watch, type Ref } from 'vue'
 import { getRouteParam } from '@/utils'
 import VolunteerMissions from '../components/VolunteerMissions.vue'
+import VolunteerLabel from '../components/VolunteerLabel.vue'
 import type { Volunteer } from '@/types/main'
 
 const route = useRoute()
@@ -41,7 +42,7 @@ watch(
   </v-sheet>
   <v-sheet v-else-if="!main.isSupervisor" id="main">Cet écran est réservé aux superviseurs</v-sheet>
   <v-sheet v-else-if="main.dataLoaded && volunteer" id="main">
-    <h2>{{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})</h2>
+    <h2><VolunteerLabel :volunteer="volunteer" /></h2>
     <div>
       <VolunteerMissions :volunteer="volunteer" :volunteersClickable="true" />
     </div>
