@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import type { Ref } from 'vue'
 import { useMainStore } from '@/stores/main'
 import type { Volunteer } from '../types/main.ts'
+import VolunteerLabel from './VolunteerLabel.vue'
 
 const main = useMainStore()
 
@@ -24,7 +25,7 @@ const volunteer: Ref<Volunteer | null> = ref(
 
 <template>
   <div v-if="main.dataLoaded && volunteer">
-    {{ props.role }} {{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})
+    {{ props.role }} <VolunteerLabel :volunteer="volunteer" />
   </div>
   <div v-else>Volunteer not found</div>
 </template>

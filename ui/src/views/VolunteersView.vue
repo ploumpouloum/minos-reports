@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import type { Volunteer } from '@/types/main'
 import { computed, ref } from 'vue'
 import VolunteerArrived from '@/components/VolunteerArrived.vue'
+import VolunteerLabel from '../components/VolunteerLabel.vue'
 
 const main = useMainStore()
 
@@ -85,7 +86,7 @@ const router = useRouter()
         v-for="(volunteer, index) in sortedVolunteers"
         :key="volunteer.id"
       >
-        <td>{{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})</td>
+        <td><VolunteerLabel :volunteer="volunteer" /></td>
         <td class="arrives">
           {{
             new Date(volunteer.incoming_date_time).toLocaleTimeString('fr-FR', {

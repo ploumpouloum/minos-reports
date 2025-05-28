@@ -83,6 +83,8 @@ def parse_affectations_csv(filename: Path, session: so.Session):
 
             nivol = row["NIVOL"].strip()
             volunteer_in_file = row["Volontaire"].strip()
+            if volunteer_in_file.endswith(" (M)"):  # drop minor attribute, not needed
+                volunteer_in_file = volunteer_in_file[:-4]
             if not volunteer_in_file:
                 volunteer_in_db = None
             else:

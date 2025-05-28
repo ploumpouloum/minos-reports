@@ -3,6 +3,7 @@ import { useMainStore } from '@/stores/main'
 import type { Volunteer } from '@/types/main'
 import { type PropType } from 'vue'
 import VolunteerDlusVacation from '../components/VolunteerDlusVacation.vue'
+import VolunteerLabel from './VolunteerLabel.vue'
 
 const main = useMainStore()
 
@@ -18,7 +19,7 @@ defineProps({
   <div v-if="!volunteer">No volunteer set</div>
   <div v-else>
     <div class="volunteer">
-      {{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})
+      <VolunteerLabel :volunteer="volunteer" />
     </div>
     <table>
       <tr v-for="assignment in main.getVolunteerAssignments(volunteer.id)" :key="assignment.id">

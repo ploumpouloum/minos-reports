@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useMainStore } from '@/stores/main'
+import VolunteerLabel from '../components/VolunteerLabel.vue'
 
 const main = useMainStore()
 </script>
@@ -21,7 +22,7 @@ const main = useMainStore()
           .sort((a, b) => a.lastname.localeCompare(b.lastname))"
         :key="volunteer.id"
       >
-        {{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})
+        <VolunteerLabel :volunteer="volunteer" />
       </p>
       <p v-if="main.volunteers.filter((volunteer) => volunteer.minor).length == 0">Aucun mineur</p>
     </v-card>
@@ -34,7 +35,7 @@ const main = useMainStore()
           .sort((a, b) => a.lastname.localeCompare(b.lastname))"
         :key="volunteer.id"
       >
-        {{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})
+        <VolunteerLabel :volunteer="volunteer" />
       </p>
       <p
         v-if="
@@ -51,7 +52,7 @@ const main = useMainStore()
           .sort((a, b) => a.lastname.localeCompare(b.lastname))"
         :key="volunteer.id"
       >
-        {{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})
+        <VolunteerLabel :volunteer="volunteer" />
       </p>
       <p
         v-if="
@@ -68,7 +69,7 @@ const main = useMainStore()
           .sort((a, b) => a.lastname.localeCompare(b.lastname))"
         :key="volunteer.id"
       >
-        {{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})
+        <VolunteerLabel :volunteer="volunteer" />
       </p>
       <p
         v-if="
@@ -88,7 +89,7 @@ const main = useMainStore()
           .sort((a, b) => a.lastname.localeCompare(b.lastname))"
         :key="volunteer.id"
       >
-        {{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }}):
+        <VolunteerLabel :volunteer="volunteer" />:
         {{ volunteer.food_restrictions?.join(', ') }}
       </p>
       <p v-if="main.volunteers.filter((volunteer) => volunteer.food_restrictions).length == 0">

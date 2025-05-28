@@ -2,6 +2,7 @@
 import { useMainStore } from '@/stores/main'
 import { FreeBusyStatus, type Volunteer } from '@/types/main'
 import { addHours, addMinutes } from 'date-fns'
+import VolunteerLabel from './VolunteerLabel.vue'
 
 const main = useMainStore()
 
@@ -83,7 +84,7 @@ const scrollToTop = function () {
         :key="volunteer.id"
       >
         <div class="row-header">
-          {{ volunteer.lastname }} {{ volunteer.firstname }} ({{ volunteer.department }})
+          <VolunteerLabel :volunteer="volunteer" />
         </div>
         <template v-for="hour in Array.from({ length: 24 }, (v, k) => k)" :key="hour">
           <div
