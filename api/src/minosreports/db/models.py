@@ -156,3 +156,4 @@ class Assignment(Base):
     )
     shift: Mapped["Shift"] = relationship(back_populates="assignments", init=False)
     role: Mapped[str] = mapped_column(index=True)
+    comments: Mapped[str | None]

@@ -78,7 +78,9 @@ def parse_affectations_csv(filename: Path, session: so.Session):
                 session.add(shift)
                 shift_in_db = session.execute(stmt).scalar_one()
 
-            assignment = Assignment(role=row["Qualification"])
+            assignment = Assignment(
+                role=row["Qualification"], comments=row["Informations complémentaires"]
+            )
             assignment.shift = shift_in_db
 
             nivol = row["NIVOL"].strip()
