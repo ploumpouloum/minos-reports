@@ -33,6 +33,7 @@ export interface Assignment {
   shiftId: string
   volunteerId: string | undefined
   role: string
+  comments: string | undefined
 }
 
 export enum FreeBusyStatus {

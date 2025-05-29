@@ -208,6 +208,7 @@ async def data(user_email: str = Depends(verify_authorization)):
                         "shiftId": assignment.shift_id,
                         "volunteerId": assignment.volunteer_id,
                         "role": assignment.role,
+                        "comments": assignment.comments,
                     }
                     for assignment in session.execute(assignements_stmt).scalars()
                 ]
