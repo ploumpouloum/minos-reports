@@ -77,6 +77,8 @@ const router = useRouter()
         <th>Bénévole</th>
         <th style="width: 7rem">Arrivée</th>
         <th style="width: 7rem">Départ</th>
+        <th style="width: 7rem">Téléphone</th>
+        <th style="width: 7rem">NIVOL</th>
         <th style="width: 10rem">Emargement</th>
         <th class="screen" style="width: 7rem">Affectations</th>
       </tr>
@@ -106,6 +108,12 @@ const router = useRouter()
               minute: '2-digit'
             })
           }}
+        </td>
+        <td>
+          {{ volunteer.phone_number }}
+        </td>
+        <td>
+          {{ volunteer.nivol }}
         </td>
         <td>
           <div class="fcenter screen">
