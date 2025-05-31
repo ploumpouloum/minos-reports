@@ -26,6 +26,7 @@ export interface Volunteer {
   department: string
   dlus_email: string
   arrived: boolean
+  phone_number: string
 }
 
 export interface Assignment {

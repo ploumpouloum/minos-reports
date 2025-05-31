@@ -178,6 +178,7 @@ async def data(user_email: str = Depends(verify_authorization)):
                     "roles": volunteer.roles,
                     "dlus_email": volunteer.dlus_email,
                     "arrived": arrived,
+                    "phone_number": volunteer.phone_number,
                 }
                 for volunteer, arrived in session.execute(volunteers_stmt)
             ],
